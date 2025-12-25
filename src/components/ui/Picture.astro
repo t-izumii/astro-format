@@ -1,0 +1,25 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  id?: string;
+  class?: string;
+  fetchpriority?: 'high' | 'low' | 'auto';
+}
+
+const { src, alt, width, height, id, class: className, fetchpriority } = Astro.props;
+const baseUrl = import.meta.env.BASE_URL;
+const fullSrc = src.startsWith('http') ? src : `${baseUrl}${src}`;
+---
+
+<img
+  src={fullSrc}
+  alt={alt}
+  width={width}
+  height={height}
+  id={id}
+  class={className}
+  fetchpriority={fetchpriority}
+/>

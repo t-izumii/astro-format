@@ -1,0 +1,18 @@
+{
+  "name": "nebulous-nebula",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && npm run cleanup",
+    "cleanup": "node scripts/cleanup-scripts.js",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^5.16.5"
+  },
+  "devDependencies": {
+    "sass": "^1.97.0"
+  }
+}
