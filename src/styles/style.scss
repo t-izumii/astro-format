@@ -1,10 +1,6 @@
-// グローバルスタイル
-@import 'variables';
-@import 'base';
-@import 'swiper/css/bundle';
-@import 'welcome';
-
-h1 {
-  color: $primary-color;
-  margin-bottom: 1rem;
-}
+@forward "./Abstracts/";
+@forward "./Base/";
+@forward "./Components/";
+@forward "./Features/";
+@forward "./Pages/";
+@forward "./Utilities/";
