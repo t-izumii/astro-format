@@ -1,6 +1,9 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const assetsDir = 'assets';
 
 // https://astro.build/config
@@ -12,6 +15,11 @@ export default defineConfig({
     assets: `${assetsDir}/chunk`,
   },
   vite: {
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './src'),
+      },
+    },
     build: {
       minify: false,
       assetsInlineLimit: 0,
@@ -33,7 +41,8 @@ export default defineConfig({
             if (!assetInfo.name) return `${assetsDir}/[name][extname]`;
             const ext = assetInfo.name.split('.').pop();
             if (ext === 'css') {
-              return `${assetsDir}/styles/style[extname]`;
+              const baseName = assetInfo.name.replace(/\.css$/, '');
+              return `${assetsDir}/styles/${baseName}[extname]`;
             }
             return `${assetsDir}/${assetInfo.name}`;
           },
