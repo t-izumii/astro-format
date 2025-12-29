@@ -1,6 +1,9 @@
-@forward "./Abstracts/";
+@forward "./Generic/";
 @forward "./Base/";
+@forward "./Objects/";
 @forward "./Components/";
-@forward "./Features/";
-@forward "./Pages/";
-@forward "./Utilities/";
+@forward "./Trumps/";
+
+h1 {
+  color: red;
+}
