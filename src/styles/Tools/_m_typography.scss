@@ -1,0 +1,21 @@
+// テキストの切り詰め
+@mixin text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// 複数行の切り詰め
+@mixin line-clamp($lines: 2) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines;
+  overflow: hidden;
+}
+
+// Leading trim（テキストの上下余白をトリミング）
+@mixin leading-trim {
+  --leading-trim: calc((1em - 1lh) / 2);
+  margin-block-start: calc(-1 * var(--leading-trim));
+  margin-block-end: calc(-1 * var(--leading-trim));
+}

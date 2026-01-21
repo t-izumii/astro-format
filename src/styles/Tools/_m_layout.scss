@@ -1,0 +1,11 @@
+// flexboxのセンタリング
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// アスペクト比を維持
+@mixin aspect-ratio($width, $height) {
+  aspect-ratio: $width / $height;
+}
