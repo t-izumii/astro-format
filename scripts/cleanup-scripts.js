@@ -13,7 +13,7 @@ try {
     rmSync(chunkDir, { recursive: true, force: true });
     console.log('✓ Removed chunk directory');
   }
-  
+
   console.log('✓ Cleanup complete');
 } catch (error) {
   console.error('Cleanup error:', error.message);
