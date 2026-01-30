@@ -18,5 +18,6 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.stylelint": "explicit",
     "source.fixAll.eslint": "explicit"
-  }
+  },
+  "liveServer.settings.root": "/dist/htdocs",
 }

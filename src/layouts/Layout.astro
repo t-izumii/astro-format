@@ -39,17 +39,6 @@ const canonicalUrl =
     <title>{pageMeta.title}</title>
     <meta name="title" content={pageMeta.title} />
     <meta name="description" content={pageMeta.description} />
-    {
-      siteMeta.keywords && (
-        <meta name="keywords" content={siteMeta.keywords.join(", ")} />
-      )
-    }
-    {siteMeta.author && <meta name="author" content={siteMeta.author} />}
-    {
-      siteMeta.themeColor && (
-        <meta name="theme-color" content={siteMeta.themeColor} />
-      )
-    }
     {pageMeta.noindex && <meta name="robots" content="noindex, nofollow" />}
 
     <!-- Canonical URL -->
@@ -78,16 +67,6 @@ const canonicalUrl =
     <meta property="twitter:title" content={pageMeta.title} />
     <meta property="twitter:description" content={pageMeta.description} />
     <meta property="twitter:image" content={ogImageUrl} />
-    {
-      siteMeta.twitterSite && (
-        <meta property="twitter:site" content={siteMeta.twitterSite} />
-      )
-    }
-    {
-      siteMeta.twitterCreator && (
-        <meta property="twitter:creator" content={siteMeta.twitterCreator} />
-      )
-    }
 
     <ScriptIndex />
   </head>

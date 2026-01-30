@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import preact from '@astrojs/preact';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const assetsDir = 'assets';
@@ -21,6 +22,7 @@ export default defineConfig({
       },
     },
     build: {
+      emptyOutDir: true,
       minify: true,
       assetsInlineLimit: 0,
       cssCodeSplit: false,
@@ -50,4 +52,5 @@ export default defineConfig({
       },
     },
   },
+  integrations: [preact()],
 });

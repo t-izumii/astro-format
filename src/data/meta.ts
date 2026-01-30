@@ -45,21 +45,14 @@ export const siteMeta: SiteMeta = {
 
   // OGP
   ogType: 'website',
-  ogImage: '/images/og-image.jpg',
+  ogImage: '/og.jpg',
 
   // Twitter Card
   twitterCard: 'summary_large_image',
-  // twitterSite: '@username',
-  // twitterCreator: '@username',
 
   // Favicon
   favicon: '/favicon.svg',
   appleTouchIcon: '/apple-touch-icon.png',
-
-  // その他
-  themeColor: '#ffffff',
-  author: 'Your Name',
-  keywords: ['Astro', 'Web', 'Frontend'],
 } as const;
 
 // ページメタデータを生成するヘルパー関数
