@@ -1,0 +1,14 @@
+@import '@/styles/abstracts';
+
+.c-picture {
+  img {
+    display: inline-block;
+    width: calc(var(--width) * 1px);
+    height: auto;
+
+    @include sp {
+      width: calc(var(--width-sp, var(--width)) * 1px);
+      height: auto;
+    }
+  }
+}
