@@ -1,11 +1,10 @@
-interface Source {
-  srcset: string;
-  media?: string;
-  type?: string;
-}
+// todo:改修
+// media="(max-width: 767px)"を渡せる構成に変更する
+// widthは単位付きで渡せるようにする
 
 interface Props {
   src: string;
+  srcSp?: string;
   alt: string;
   width?: number;
   widthSp?: number;
@@ -14,12 +13,11 @@ interface Props {
   className?: string;
   fetchpriority?: "high" | "low" | "auto";
   loading?: "lazy" | "eager";
-  sources?: Source[];
-  srcset?: string;
 }
 
 export default function Picture({
   src,
+  srcSp,
   alt,
   width,
   widthSp,
@@ -28,36 +26,25 @@ export default function Picture({
   className,
   fetchpriority,
   loading,
-  sources,
-  srcset,
 }: Props) {
-  const baseUrl = import.meta.env.BASE_URL || "";
-  const fullSrc = src.startsWith("http") ? src : `${baseUrl}${src}`;
 
-  const containerStyle = {
-    "--width": width,
-    "--width-sp": widthSp,
-    "--height": height,
-    "--height-sp": heightSp,
-  } as preact.CSSProperties;
+  const baseUrl = import.meta.env.BASE_URL || "";
+  const resolvePath = (path: string) =>
+    path.startsWith("http") ? path : `${baseUrl}${path}`;
 
   return (
-    <picture className={`c-picture ${className || ""}`} style={containerStyle}>
-      {sources?.map((source, index) => (
-        <source
-          key={index}
-          srcSet={
-            source.srcset.startsWith("http")
-              ? source.srcset
-              : `${baseUrl}${source.srcset}`
-          }
-          media={source.media}
-          type={source.type}
-        />
-      ))}
+    <picture
+      className={`c-picture ${className || ""}`}
+      style={{
+        "--width": width,
+        "--width-sp": widthSp,
+        "--height": height,
+        "--height-sp": heightSp,
+      } as preact.CSSProperties}
+    >
+      {srcSp && <source srcSet={resolvePath(srcSp)} media="(max-width: 767px)" />}
       <img
-        src={fullSrc}
-        srcSet={srcset}
+        src={resolvePath(src)}
         alt={alt}
         width={width}
         height={height}
