@@ -1,46 +1,85 @@
-# Astro Starter Kit: Basics
+# nebulous-nebula
 
-```sh
-npm create astro@latest -- --template basics
-```
+Astro + Preactを使用したWebプロジェクトです。
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## 技術スタック
 
-## 🚀 Project Structure
+- **Astro** - 静的サイトジェネレーター
+- **Preact** - UIコンポーネント
+- **Sass/SCSS** - スタイリング（ITCSS構造）
+- **GSAP** - アニメーション
+- **TypeScript** - 型安全性
 
-Inside of your Astro project, you'll see the following folders and files:
+## プロジェクト構造
 
 ```text
 /
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
+├── public/                # 静的ファイル
+├── scripts/              # ビルドスクリプト
+├── src/
+│   ├── components/       # コンポーネント
+│   │   ├── features/    # ドメイン固有コンポーネント
+│   │   ├── pages/       # ページ固有コンポーネント
+│   │   │   ├── about/
+│   │   │   └── top/
+│   │   └── ui/          # 再利用可能なUIコンポーネント
+│   │       └── picture/
+│   ├── data/            # データファイル
+│   ├── layouts/         # レイアウトテンプレート
+│   ├── pages/           # ページ（ルーティング）
+│   ├── scripts/         # クライアントサイドスクリプト
+│   │   ├── base/
+│   │   ├── components/
+│   │   ├── constants/
+│   │   └── utils/
+│   └── styles/          # スタイル（ITCSS構造）
+│       ├── Settings/    # 変数・設定
+│       ├── Tools/       # ミックスイン・関数
+│       ├── Generic/     # リセット・ノーマライズ
+│       ├── Base/        # 要素セレクタ
+│       ├── Objects/     # レイアウトパターン
+│       ├── Components/  # UIコンポーネント
+│       ├── Pages/       # ページ固有のスタイル
+│       └── Trumps/      # ユーティリティ・オーバーライド
 └── package.json
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## コマンド
 
-## 🧞 Commands
+プロジェクトのルートディレクトリで以下のコマンドを実行します：
 
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
+| コマンド | 説明 |
 | :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+| `npm install` | 依存関係のインストール |
+| `npm run dev` | 開発サーバー起動（`localhost:4321`） |
+| `npm run build` | 本番用ビルド（`./dist/`に出力） |
+| `npm run preview` | ビルドのプレビュー |
+| `npm run lint:css` | CSSのLint |
+| `npm run lint:css:fix` | CSSのLint（自動修正） |
+| `npm run lint:js` | JavaScriptのLint |
+| `npm run lint:js:fix` | JavaScriptのLint（自動修正） |
 
-## 👀 Want to learn more?
+## 開発
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+### パスエイリアス
+
+`@` を使用してsrcディレクトリを参照できます：
+
+```typescript
+import Component from '@/components/ui/Component';
+import '@/styles/main.scss';
+```
+
+### ビルド設定
+
+- ベースパス: `/htdocs`
+- アセット出力先: `dist/assets/`
+  - スクリプト: `assets/scripts/`
+  - スタイル: `assets/styles/`
+  - チャンク: `assets/chunk/`
+
+### スタイルガイド
+
+- ITCSS（Inverted Triangle CSS）アーキテクチャを採用
+- BEM命名規則を推奨
+- コンポーネント固有のスタイルは各コンポーネントディレクトリ内に配置
