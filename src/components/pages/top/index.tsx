@@ -6,10 +6,22 @@ export default function Pages() {
       <h2>TOP</h2>
 
       <Picture
-        src="/images/sample.jpg"
-        alt="Sample Image"
-        width={600}
-        height={400}
+        img={{
+          src: "https://placehold.jp/150x150.png",
+          alt: "Sample Image",
+          width: 600,
+          height: 400,
+        }}
+        sources={[
+          {
+            src: "https://placehold.jp/150x150.png",
+            width: 300,
+            height: 200,
+          }
+        ]}
+        size={{
+          width: "400px",
+        }}
       />
     </div>
   );

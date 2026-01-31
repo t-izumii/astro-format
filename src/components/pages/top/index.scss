@@ -1,3 +1,6 @@
+@use '@/styles/abstracts' as *;
+
 h2 {
+  font-size: fluid(20, 40);
   color: red;
 }

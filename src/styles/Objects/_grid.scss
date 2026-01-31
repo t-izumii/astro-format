@@ -1,20 +1,17 @@
 @use "../Settings/" as *;
 
-// Grid Layout System
-// CSS変数を使用した柔軟なgridレイアウト
 .o-grid {
-  display: grid;
-  grid-template-columns: repeat(
-    var(--grid-cols, 1),
-    minmax(var(--grid-min-size, 0), 1fr)
-  );
-  gap: var(--grid-gap, 0);
+  --_repeat: var(--_grid-repeat, auto-fit);
+  --_size: var(--_grid-min-size, 0);
+  --_gap: var(--_grid-gap, 0);
 
-  @include sp {
-    grid-template-columns: repeat(
-      var(--grid-cols-sp, var(--grid-cols, 1)),
-      minmax(var(--grid-min-size-sp, var(--grid-min-size, 0)), 1fr)
-    );
-    gap: var(--grid-gap-sp, var(--grid-gap, 0));
+  display: grid;
+  grid-template-columns: repeat(var(--_repeat), minmax(var(--_size), 1fr));
+  gap: var(--_gap);
+
+  @include responsive("md") {
+    --_repeat: var(--_grid-repeat-sp, var(--_grid-repeat, auto-fit));
+    --_size: var(--_grid-min-size-sp, var(--_grid-min-size, 100%));
+    --_gap: var(--_grid-gap-sp, var(--_grid-gap, 0));
   }
 }

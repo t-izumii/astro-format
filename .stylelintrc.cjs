@@ -14,6 +14,12 @@ module.exports = {
         ignoreAtRules: ["tailwind", "apply", "layer"],
       },
     ],
+    "custom-property-pattern": [
+      "^(_?[a-z][a-z0-9]*)([-_][a-z0-9]+)*$|^--[a-z0-9_-]+$", 
+      {
+        message: "Expected custom property name to be kebab-case or allow underscores",
+      },
+    ],
     "scss/dollar-variable-pattern": null,
     "scss/at-mixin-pattern": null,
     "scss/at-function-pattern": null,
@@ -34,5 +40,8 @@ module.exports = {
     // 値のルール
     "color-function-notation": "legacy",
     "alpha-value-notation": "number",
+
+    // mixin内でメディアクエリを生成する場合に必要
+    "no-invalid-position-declaration": null,
   },
 };

@@ -1,22 +1,27 @@
+@use "sass:map";
+@use "sass:meta";
+@use "sass:string";
 @use "../Settings/" as *;
 
-// レスポンシブ対応のmixin
-@mixin mq($breakpoint: $break-point) {
-  @media (max-width: #{$breakpoint}px) {
-    @content;
+@mixin responsive($breakpoint) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    @media screen and (#{string.unquote(map.get($breakpoints, $breakpoint))}) {
+      @content;
+    }
+  }
+  @else {
+    @error "指定されたブレークポイントは定義されていません。" + "指定できるブレークポイントは次のとおりです。 -> #{map.keys($breakpoints)}";
   }
 }
 
-// PC表示用
 @mixin pc {
-  @media (min-width: #{$break-point + 1}px) {
+  @media screen and (width >= 768px) {
     @content;
   }
 }
 
-// SP表示用
 @mixin sp {
-  @media (max-width: #{$break-point}px) {
+  @include responsive('md') {
     @content;
   }
 }

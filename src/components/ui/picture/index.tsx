@@ -1,68 +1,66 @@
 interface Source {
-  srcset: string;
+  src: string;
   media?: string;
-  type?: string;
+  width?: number;
+  height?: number;
 }
 
-interface Props {
+interface ImgProps {
   src: string;
   alt: string;
   width?: number;
-  widthSp?: number;
   height?: number;
-  heightSp?: number;
-  className?: string;
   fetchpriority?: "high" | "low" | "auto";
   loading?: "lazy" | "eager";
+}
+
+interface SizeProps {
+  width?: string;
+  widthSp?: string;
+}
+
+interface Props {
+  img: ImgProps;
+  size?: SizeProps;
+  className?: string;
   sources?: Source[];
-  srcset?: string;
 }
 
 export default function Picture({
-  src,
-  alt,
-  width,
-  widthSp,
-  height,
-  heightSp,
+  img,
+  size,
   className,
-  fetchpriority,
-  loading,
   sources,
-  srcset,
 }: Props) {
-  const baseUrl = import.meta.env.BASE_URL || "";
-  const fullSrc = src.startsWith("http") ? src : `${baseUrl}${src}`;
 
-  const containerStyle = {
-    "--width": width,
-    "--width-sp": widthSp,
-    "--height": height,
-    "--height-sp": heightSp,
-  } as preact.CSSProperties;
+  const baseUrl = import.meta.env.BASE_URL || "";
+  const resolvePath = (path: string) =>
+    path.startsWith("http") ? path : `${baseUrl}${path}`;
 
   return (
-    <picture className={`c-picture ${className || ""}`} style={containerStyle}>
+    <picture
+      className={`c-picture ${className || ""}`}
+      style={{
+        "--_width": size?.width ,
+        "--_width-sp": size?.widthSp,
+      } as preact.CSSProperties}
+    >
       {sources?.map((source, index) => (
         <source
           key={index}
-          srcSet={
-            source.srcset.startsWith("http")
-              ? source.srcset
-              : `${baseUrl}${source.srcset}`
-          }
-          media={source.media}
-          type={source.type}
+          srcSet={resolvePath(source.src)}
+          media={source.media || "width < 768px"}
+          width={source.width}
+          height={source.height}
         />
       ))}
       <img
-        src={fullSrc}
-        srcSet={srcset}
-        alt={alt}
-        width={width}
-        height={height}
-        fetchpriority={fetchpriority as any}
-        loading={loading}
+        src={resolvePath(img.src)}
+        alt={img.alt}
+        width={img.width}
+        height={img.height}
+        fetchpriority={img.fetchpriority as any}
+        loading={img.loading}
       />
     </picture>
   );

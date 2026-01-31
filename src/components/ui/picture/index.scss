@@ -2,13 +2,12 @@
 
 .c-picture {
   img {
-    display: inline-block;
-    width: calc(var(--width) * 1px);
+    width: var(--_width, auto);
     height: auto;
+    object-fit: cover;
 
-    @include sp {
-      width: calc(var(--width-sp, var(--width)) * 1px);
-      height: auto;
+    @include responsive('md') {
+      width: var(--_width-sp , var(--_width, auto));
     }
   }
 }
