@@ -10,7 +10,7 @@
   );
   gap: var(--grid-gap, 0);
 
-  @include sp {
+  @include responsive('md') {
     grid-template-columns: repeat(
       var(--grid-cols-sp, var(--grid-cols, 1)),
       minmax(var(--grid-min-size-sp, var(--grid-min-size, 0)), 1fr)

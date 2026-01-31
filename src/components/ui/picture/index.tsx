@@ -1,31 +1,36 @@
-// todo:改修
-// media="(max-width: 767px)"を渡せる構成に変更する
-// widthは単位付きで渡せるようにする
-
-interface Props {
+interface Source {
   src: string;
-  srcSp?: string;
+  media?: string;
+  width?: number;
+  height?: number;
+}
+
+interface ImgProps {
+  src: string;
   alt: string;
   width?: number;
-  widthSp?: number;
   height?: number;
-  heightSp?: number;
-  className?: string;
   fetchpriority?: "high" | "low" | "auto";
   loading?: "lazy" | "eager";
 }
 
+interface SizeProps {
+  width?: string;
+  widthSp?: string;
+}
+
+interface Props {
+  img: ImgProps;
+  size?: SizeProps;
+  className?: string;
+  sources?: Source[];
+}
+
 export default function Picture({
-  src,
-  srcSp,
-  alt,
-  width,
-  widthSp,
-  height,
-  heightSp,
+  img,
+  size,
   className,
-  fetchpriority,
-  loading,
+  sources,
 }: Props) {
 
   const baseUrl = import.meta.env.BASE_URL || "";
@@ -36,20 +41,26 @@ export default function Picture({
     <picture
       className={`c-picture ${className || ""}`}
       style={{
-        "--width": width,
-        "--width-sp": widthSp,
-        "--height": height,
-        "--height-sp": heightSp,
+        "--_width": size?.width ,
+        "--_width-sp": size?.widthSp,
       } as preact.CSSProperties}
     >
-      {srcSp && <source srcSet={resolvePath(srcSp)} media="(max-width: 767px)" />}
+      {sources?.map((source, index) => (
+        <source
+          key={index}
+          srcSet={resolvePath(source.src)}
+          media={source.media || "width < 768px"}
+          width={source.width}
+          height={source.height}
+        />
+      ))}
       <img
-        src={resolvePath(src)}
-        alt={alt}
-        width={width}
-        height={height}
-        fetchpriority={fetchpriority as any}
-        loading={loading}
+        src={resolvePath(img.src)}
+        alt={img.alt}
+        width={img.width}
+        height={img.height}
+        fetchpriority={img.fetchpriority as any}
+        loading={img.loading}
       />
     </picture>
   );
