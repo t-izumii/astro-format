@@ -37,7 +37,7 @@
   @return clamp(#{$min}, #{$preferred}, #{$max});
 }
 
-/// 複数のブレークポイントで異なるスロープを持つ流体タイポグラフィ
+/// 複数のブレークポイントで異なるスロープを持つ流体タイポグラフィ（zoom機能しない。）
 /// @param {Map} $sizes - ブレークポイントとフォントサイズのマップ
 /// @param {String} $property [font-size] - 適用するプロパティ
 /// @param {Number} $base-font-size [16] - ベースフォントサイズ (px)
@@ -65,7 +65,14 @@
     $max-width: list.nth($breakpoints, $i + 1);
     $min-size: map.get($sizes, $min-width);
     $max-size: map.get($sizes, $max-width);
-    $fluid-value: fluid($min-size, $max-size, $min-width, $max-width, $base-font-size, $unit);
+    $fluid-value: fluid(
+      $min-size,
+      $max-size,
+      $min-width,
+      $max-width,
+      $base-font-size,
+      $unit
+    );
 
     @if $i == 1 {
       // 最初の区間（最小幅以下を含む）
@@ -85,4 +92,3 @@
     }
   }
 }
-
