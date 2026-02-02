@@ -17,7 +17,7 @@ export default function Pages() {
             src: "https://placehold.jp/150x150.png",
             width: 300,
             height: 200,
-          }
+          },
         ]}
         size={{
           width: "400px",
