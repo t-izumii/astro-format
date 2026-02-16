@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "stylelint.vscode-stylelint",
+    "esbenp.prettier-vscode",
+    "editorconfig.editorconfig",
+    "astro-build.astro-vscode",
+    "deque-systems.vscode-axe-linter",
+    "pranaygp.vscode-css-peek",
+    "christian-kohler.path-intellisense",
+    "gruntfuggly.todo-tree"
+  ]
+}

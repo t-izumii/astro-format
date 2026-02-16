@@ -1,4 +1,5 @@
 import eslintPluginAstro from 'eslint-plugin-astro';
+import eslintConfigPrettier from 'eslint-config-prettier';
 
 export default [
   // 除外するファイル・ディレクトリ
@@ -14,9 +15,12 @@ export default [
   ...eslintPluginAstro.configs.recommended,
   {
     rules: {
-      // 必要に応じてルールをカスタマイズ
-      'no-unused-vars': 'warn',
+      'no-unused-vars': 'error',
       'no-console': 'warn',
+      'prefer-const': 'error',
+      'no-var': 'error',
     },
   },
+  // Prettierとの競合回避（最後に配置）
+  eslintConfigPrettier,
 ];
