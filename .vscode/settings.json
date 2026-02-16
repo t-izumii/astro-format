@@ -14,5 +14,14 @@
         "cmd": "cd ${workspaceFolder} && npx stylelint --fix ${file}"
       }
     ]
-  }
+  },
+  "cSpell.words": [
+    "markuplint",
+    "gsap",
+    "stylelint",
+    "eslint",
+    "prettierrc",
+    "astro",
+    "preact"
+  ]
 }

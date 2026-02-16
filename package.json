@@ -12,6 +12,7 @@
     "lint:css:fix": "stylelint \"**/*.{css,scss}\" --fix",
     "lint:js": "eslint .",
     "lint:js:fix": "eslint . --fix",
+    "lint:html": "markuplint \"src/**/*.{html,astro}\" \"src/**/*.tsx\"",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
@@ -22,11 +23,14 @@
     "throttle-debounce": "^5.0.2"
   },
   "devDependencies": {
+    "@markuplint/astro-parser": "^4.6.23",
+    "@markuplint/jsx-parser": "^4.7.23",
     "@types/throttle-debounce": "^5.0.2",
     "@typescript-eslint/parser": "^8.53.1",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.0",
     "eslint-plugin-astro": "^1.5.0",
+    "markuplint": "^4.14.1",
     "postcss-scss": "^4.0.9",
     "prettier": "^3.5.3",
     "sass": "^1.97.0",

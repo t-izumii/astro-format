@@ -1,0 +1,37 @@
+{
+  "extends": [
+    "markuplint:recommended"
+  ],
+  "parser": {
+    "\\.astro$": "@markuplint/astro-parser",
+    "\\.[jt]sx?$": "@markuplint/jsx-parser"
+  },
+  "parserOptions": {
+    "ignoreFrontMatter": true
+  },
+  "specs": {
+    "\\.astro$": "@markuplint/astro-parser",
+    "\\.[jt]sx?$": "@markuplint/jsx-parser"
+  },
+  "excludeFiles": [
+    "./dist/**/*",
+    "./node_modules/**/*"
+  ],
+  "rules": {
+    "character-reference": false
+  },
+  "pretenders": [
+    {
+      "selector": "ScriptIndex",
+      "as": "script"
+    }
+  ],
+  "nodeRules": [
+    {
+      "selector": "[key]",
+      "rules": {
+        "invalid-attr": false
+      }
+    }
+  ]
+}
