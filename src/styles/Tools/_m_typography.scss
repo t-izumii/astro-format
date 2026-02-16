@@ -9,5 +9,6 @@
 // Leading trim（テキストの上下余白をトリミング）
 @mixin leading-trim {
   --_leading-trim: calc((1em - 1lh) / 2);
+
   margin-block: calc(-1 * var(--_leading-trim));
 }

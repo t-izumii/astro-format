@@ -2,10 +2,17 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit",
-    "source.fixAll.stylelint": "explicit"
+    "source.fixAll.eslint": "explicit"
   },
   "css.validate": false,
   "scss.validate": false,
-  "stylelint.validate": ["css", "scss"]
+  "stylelint.validate": ["css", "scss"],
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "match": "\\.scss$",
+        "cmd": "cd ${workspaceFolder} && npx stylelint --fix ${file}"
+      }
+    ]
+  }
 }
