@@ -8,8 +8,7 @@
     @media screen and (#{string.unquote(map.get($breakpoints, $breakpoint))}) {
       @content;
     }
-  }
-  @else {
+  } @else {
     @error "指定されたブレークポイントは定義されていません。" + "指定できるブレークポイントは次のとおりです。 -> #{map.keys($breakpoints)}";
   }
 }
