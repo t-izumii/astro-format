@@ -1,3 +1,5 @@
 // componentsのstyle
 // src/components からすべてforwardする
-@forward "../../components/ui/"
+@forward '../../components/ui/';
+@forward '../../components/features/';
+@forward '../../components/pages/';

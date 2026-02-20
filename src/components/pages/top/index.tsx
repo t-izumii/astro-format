@@ -1,4 +1,5 @@
-import Picture from "../../ui/picture";
+import Picture from '../../ui/picture';
+import Button from '../../ui/button';
 
 export default function Pages() {
   return (
@@ -7,22 +8,24 @@ export default function Pages() {
 
       <Picture
         img={{
-          src: "https://placehold.jp/150x150.png",
-          alt: "Sample Image",
+          src: 'https://placehold.jp/150x150.png',
+          alt: 'Sample Image',
           width: 600,
           height: 400,
         }}
         sources={[
           {
-            src: "https://placehold.jp/150x150.png",
+            src: 'https://placehold.jp/150x150.png',
             width: 300,
             height: 200,
           },
         ]}
         size={{
-          width: "400px",
+          width: '400px',
         }}
       />
+
+      <Button label="test" />
     </div>
   );
 }
