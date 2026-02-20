@@ -29,15 +29,15 @@ export default function ProductCard({ product, onAddToCart }: Props) {
   };
 
   return (
-    <div className="c-productCard">
+    <div className="f-productCard">
       <img src={img} alt={name} width="200" height="200" />
 
-      <p className="c-productCard__name">{name}</p>
-      <p className="c-productCard__price">¥{price.toLocaleString()}</p>
+      <p className="f-productCard__name">{name}</p>
+      <p className="f-productCard__price">¥{price.toLocaleString()}</p>
 
       {/* ドメインルール：在庫状態バッジ */}
       <span
-        className={`c-productCard__stock --${stockConfig[stockStatus].color}`}
+        className={`f-productCard__stock --${stockConfig[stockStatus].color}`}
       >
         {stockConfig[stockStatus].label}
       </span>
