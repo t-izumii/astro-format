@@ -26,7 +26,7 @@ interface AnchorProps extends BaseProps {
 type Props = ButtonProps | AnchorProps;
 
 export default function Button({ label, href, className, ...rest }: Props) {
-  const classes = `c-button ${className ?? ''}`;
+  const classes = ['c-button', className].filter(Boolean).join(' ');
 
   if (href) {
     return (

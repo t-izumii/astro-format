@@ -44,7 +44,6 @@ const options: ComponentOptions = {
   media: windowWidth >= MIN_PC_WIDTH ? MEDIA_PC : MEDIA_SP,
 };
 
-// @ts-ignore
 let pageComponents: Component[] | null = null;
 
 /**

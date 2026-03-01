@@ -9,9 +9,8 @@
   --easing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 
   // z-index階層管理
-  $z-index-base: 500;
+  --z-index-base: 500;
 
   // レイヤー階層
-  $z-index-header: 700;
-
+  --z-index-header: 700;
 }

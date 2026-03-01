@@ -2,6 +2,8 @@ import { debounce } from "throttle-debounce";
 import { Component, type ComponentOptions } from "../../base/Component";
 
 export class SizeObserver extends Component {
+  private _rObserver: ResizeObserver | null = null;
+
   constructor(elTarget: Element, options: ComponentOptions) {
     super(elTarget, options);
 
@@ -9,7 +11,7 @@ export class SizeObserver extends Component {
   }
 
   private _setEventListeners() {
-    const rObserver = new ResizeObserver(
+    this._rObserver = new ResizeObserver(
       debounce(100, (entries: ResizeObserverEntry[]) => {
         entries.forEach((entry) => {
           entry.borderBoxSize.forEach((size) => {
@@ -25,10 +27,12 @@ export class SizeObserver extends Component {
         });
       })
     );
-    rObserver.observe(this._elTarget!);
+    this._rObserver.observe(this._elTarget!);
   }
 
   public override destroy() {
+    this._rObserver?.disconnect();
+    this._rObserver = null;
     super.destroy();
   }
 }

@@ -6,8 +6,8 @@
   aspect-ratio: var(--_aspect-ratio, auto);
 
   @include sp {
-    width: var(--display-width-sp, var(--_display-width, 100%));
-    aspect-ratio: var(--aspect-ratio-sp, var(--_aspect-ratio-pc, auto));
+    width: var(--_display-width-sp, var(--_display-width, 100%));
+    aspect-ratio: var(--_aspect-ratio-sp, var(--_aspect-ratio, auto));
   }
 
   img {

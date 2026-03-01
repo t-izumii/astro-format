@@ -13,16 +13,12 @@ export default function Pages() {
           width: 600,
           height: 400,
         }}
-        sources={[
-          {
-            src: 'https://placehold.jp/150x150.png',
-            width: 300,
-            height: 200,
-          },
-        ]}
-        size={{
-          width: '400px',
+        sp={{
+          src: 'https://placehold.jp/150x150.png',
+          width: 300,
+          height: 200,
         }}
+        width="400px"
       />
 
       <Button label="test" />

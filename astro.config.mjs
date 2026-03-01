@@ -31,7 +31,9 @@ export default defineConfig({
           entryFileNames: (info) => {
             let fileName = 'index';
             if (info.facadeModuleId) {
-              const match = info.facadeModuleId?.toLowerCase().match(/\/([^\/]+)\.astro/);
+              const match = info.facadeModuleId
+                ?.toLowerCase()
+                .match(/\/([^\/]+)\.astro/);
               if (match && match[1]) {
                 fileName = match[1];
               }

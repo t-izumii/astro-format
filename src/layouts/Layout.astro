@@ -37,7 +37,6 @@ const canonicalUrl =
 
     <!-- Primary Meta Tags -->
     <title>{pageMeta.title}</title>
-    <meta name="title" content={pageMeta.title} />
     <meta name="description" content={pageMeta.description} />
     {pageMeta.noindex && <meta name="robots" content="noindex, nofollow" />}
 
@@ -62,11 +61,11 @@ const canonicalUrl =
     <meta property="og:site_name" content={siteMeta.title} />
 
     <!-- Twitter -->
-    <meta property="twitter:card" content={siteMeta.twitterCard} />
-    <meta property="twitter:url" content={canonicalUrl} />
-    <meta property="twitter:title" content={pageMeta.title} />
-    <meta property="twitter:description" content={pageMeta.description} />
-    <meta property="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:card" content={siteMeta.twitterCard} />
+    <meta name="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={pageMeta.title} />
+    <meta name="twitter:description" content={pageMeta.description} />
+    <meta name="twitter:image" content={ogImageUrl} />
 
     <ScriptIndex />
   </head>

@@ -4,8 +4,10 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && npm run cleanup",
+    "build": "npm run clean && astro build && npm run cleanup && npm run format:dist",
+    "clean": "rm -rf dist",
     "cleanup": "node scripts/cleanup-scripts.js",
+    "format:dist": "prettier --write --ignore-path /dev/null \"dist/**/*.html\"",
     "preview": "astro preview",
     "astro": "astro",
     "lint:css": "stylelint \"**/*.{css,scss}\"",

@@ -1,6 +1,9 @@
 import { Component, type ComponentOptions } from "../../base/Component";
 
 export class InView extends Component {
+  private _iObserver: IntersectionObserver | null = null;
+  private _timeoutId: ReturnType<typeof setTimeout> | null = null;
+
   constructor(elTarget: Element, options: ComponentOptions) {
     super(elTarget, options);
 
@@ -9,26 +12,34 @@ export class InView extends Component {
 
   private _setEventListeners() {
     // IntersectionObserverの設定は少し遅らせる
-    setTimeout(() => {
-      const iObserver = new IntersectionObserver(
+    this._timeoutId = setTimeout(() => {
+      this._iObserver = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
-              this._elTarget?.classList.add(
-                this._elTarget.dataset.inViewClass!
-              );
-
-              iObserver.unobserve(this._elTarget!);
+              const cls = this._elTarget?.dataset.inViewClass;
+              if (cls) {
+                this._elTarget?.classList.add(cls);
+              }
+              this._iObserver?.unobserve(this._elTarget!);
             }
           });
         },
         { rootMargin: this._elTarget?.dataset.rootMargin }
       );
-      iObserver.observe(this._elTarget!);
+      if (this._elTarget) {
+        this._iObserver.observe(this._elTarget);
+      }
     }, 500);
   }
 
   public override destroy() {
+    if (this._timeoutId !== null) {
+      clearTimeout(this._timeoutId);
+      this._timeoutId = null;
+    }
+    this._iObserver?.disconnect();
+    this._iObserver = null;
     super.destroy();
   }
 }
