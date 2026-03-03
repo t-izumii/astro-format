@@ -1,7 +1,7 @@
 @use "sass:map";
 @use "sass:meta";
 @use "sass:string";
-@use "../Settings/" as *;
+@use "../settings/" as *;
 
 @mixin responsive($breakpoint) {
   @if map.has-key($breakpoints, $breakpoint) {

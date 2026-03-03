@@ -27,6 +27,7 @@
   "devDependencies": {
     "@markuplint/astro-parser": "^4.6.23",
     "@markuplint/jsx-parser": "^4.7.23",
+    "@types/node": "^25.3.3",
     "@types/throttle-debounce": "^5.0.2",
     "@typescript-eslint/parser": "^8.53.1",
     "eslint": "^9.39.2",
