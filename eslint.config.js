@@ -4,7 +4,13 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 export default [
   // 除外するファイル・ディレクトリ
   {
-    ignores: ['node_modules/', 'dist/', '.astro/', '*.min.js'],
+    ignores: [
+      'node_modules/',
+      'dist/',
+      '.astro/',
+      '*.min.js',
+      'scripts/cleanup-scripts.js',
+    ],
   },
   // Astro推奨設定
   ...eslintPluginAstro.configs.recommended,
