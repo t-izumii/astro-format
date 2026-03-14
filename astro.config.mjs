@@ -1,8 +1,9 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 import preact from '@astrojs/preact';
+import compress from 'astro-compress';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const assetsDir = 'assets';
@@ -19,6 +20,22 @@ export default defineConfig({
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
+      },
+    },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          importers: [
+            {
+              findFileUrl(url) {
+                if (!url.startsWith('@/')) return null;
+                return pathToFileURL(
+                  path.resolve(__dirname, 'src', url.slice(2))
+                );
+              },
+            },
+          ],
+        },
       },
     },
     build: {
@@ -42,17 +59,18 @@ export default defineConfig({
           },
           chunkFileNames: `${assetsDir}/chunk/[name].[hash].js`,
           assetFileNames: (assetInfo) => {
-            if (!assetInfo.name) return `${assetsDir}/[name][extname]`;
-            const ext = assetInfo.name.split('.').pop();
+            const name = assetInfo.names?.[0];
+            if (!name) return `${assetsDir}/[name][extname]`;
+            const ext = name.split('.').pop();
             if (ext === 'css') {
-              const baseName = assetInfo.name.replace(/\.css$/, '');
+              const baseName = name.replace(/\.css$/, '');
               return `${assetsDir}/styles/${baseName}[extname]`;
             }
-            return `${assetsDir}/${assetInfo.name}`;
+            return `${assetsDir}/${name}`;
           },
         },
       },
     },
   },
-  integrations: [preact()],
+  integrations: [preact(), compress({ HTML: false })],
 });
