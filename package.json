@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "astro dev --host",
     "build": "npm run clean && astro build && npm run cleanup && npm run format:dist",
     "clean": "rm -rf dist",
     "cleanup": "node scripts/cleanup-scripts.js",

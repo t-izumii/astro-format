@@ -7,10 +7,11 @@ import compress from 'astro-compress';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const assetsDir = 'assets';
+const base = '/htdocs';
 
 // https://astro.build/config
 export default defineConfig({
-  base: '/htdocs',
+  base: base,
   compressHTML: false,
   outDir: './dist',
   build: {
@@ -25,6 +26,7 @@ export default defineConfig({
     css: {
       preprocessorOptions: {
         scss: {
+          additionalData: `$base-url: '${base}';`,
           importers: [
             {
               findFileUrl(url) {

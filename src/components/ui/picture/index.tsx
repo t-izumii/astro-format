@@ -22,6 +22,7 @@ interface Props {
 }
 
 export default function Picture({ img, sp, width, widthSp, className }: Props) {
+  const loading = img.loading ?? 'lazy';
   const baseUrl = import.meta.env.BASE_URL || '';
   const resolvePath = (path: string) =>
     path.startsWith('http') ? path : `${baseUrl}${path}`;
@@ -56,7 +57,7 @@ export default function Picture({ img, sp, width, widthSp, className }: Props) {
         width={img.width}
         height={img.height}
         fetchpriority={img.fetchpriority as any}
-        loading={img.loading}
+        loading={loading}
       />
     </picture>
   );
