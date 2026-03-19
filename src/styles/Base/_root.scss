@@ -2,8 +2,12 @@
   scrollbar-gutter: stable;
   --fz: 1;
 
+  --scale: calc(100vw / 1280px);
+
   // フォントファミリー
-  --font-family-base: -apple-system, blinkmacsystemfont, "Segoe UI", "Helvetica Neue", arial, sans-serif;
+  --font-family-base:
+    -apple-system, blinkmacsystemfont, 'Segoe UI', 'Helvetica Neue', arial,
+    sans-serif;
 
   // カスタムイージング
   --easing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
@@ -13,4 +17,8 @@
 
   // レイヤー階層
   --z-index-header: 700;
+
+  @media screen and (width <= 960px) {
+    --scale: calc(100vw / 375px);
+  }
 }
