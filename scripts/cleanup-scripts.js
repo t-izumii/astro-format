@@ -74,9 +74,6 @@ try {
   code = inlineImports(code, chunkDir);
 
   // scripts/ ディレクトリを作成して script.js として書き出す
-  if (!existsSync(scriptsDir)) {
-    import('fs').then(({ mkdirSync }) => mkdirSync(scriptsDir, { recursive: true }));
-  }
   const { mkdirSync } = await import('fs');
   mkdirSync(scriptsDir, { recursive: true });
 
