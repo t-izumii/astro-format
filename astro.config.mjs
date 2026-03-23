@@ -40,26 +40,18 @@ export default defineConfig({
         },
       },
     },
+    esbuild: {
+      minifyIdentifiers: false,
+      minifySyntax: false,
+      minifyWhitespace: false,
+    },
     build: {
       emptyOutDir: true,
-      minify: true,
+      minify: false,
       assetsInlineLimit: 0,
       cssCodeSplit: false,
       rollupOptions: {
         output: {
-          entryFileNames: (info) => {
-            let fileName = 'index';
-            if (info.facadeModuleId) {
-              const match = info.facadeModuleId
-                ?.toLowerCase()
-                .match(/\/([^\/]+)\.astro/);
-              if (match && match[1]) {
-                fileName = match[1];
-              }
-            }
-            return `${assetsDir}/scripts/${fileName}.js`;
-          },
-          chunkFileNames: `${assetsDir}/chunk/[name].[hash].js`,
           assetFileNames: (assetInfo) => {
             const name = assetInfo.names?.[0];
             if (!name) return `${assetsDir}/[name][extname]`;
@@ -74,5 +66,8 @@ export default defineConfig({
       },
     },
   },
-  integrations: [preact(), compress({ HTML: false })],
+  integrations: [
+    preact(),
+    compress({ HTML: false, CSS: false, JavaScript: false }),
+  ],
 });
