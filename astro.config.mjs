@@ -47,19 +47,6 @@ export default defineConfig({
       cssCodeSplit: false,
       rollupOptions: {
         output: {
-          entryFileNames: (info) => {
-            let fileName = 'index';
-            if (info.facadeModuleId) {
-              const match = info.facadeModuleId
-                ?.toLowerCase()
-                .match(/\/([^\/]+)\.astro/);
-              if (match && match[1]) {
-                fileName = match[1];
-              }
-            }
-            return `${assetsDir}/scripts/${fileName}.js`;
-          },
-          chunkFileNames: `${assetsDir}/chunk/[name].[hash].js`,
           assetFileNames: (assetInfo) => {
             const name = assetInfo.names?.[0];
             if (!name) return `${assetsDir}/[name][extname]`;
