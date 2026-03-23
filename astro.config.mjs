@@ -40,11 +40,17 @@ export default defineConfig({
         },
       },
     },
+    esbuild: {
+      minifyIdentifiers: false,
+      minifySyntax: false,
+      minifyWhitespace: false,
+    },
     build: {
       emptyOutDir: true,
-      minify: true,
+      minify: false,
       assetsInlineLimit: 0,
       cssCodeSplit: false,
+      cssMinify: true,
       rollupOptions: {
         output: {
           assetFileNames: (assetInfo) => {
@@ -61,5 +67,5 @@ export default defineConfig({
       },
     },
   },
-  integrations: [preact(), compress({ HTML: false })],
+  integrations: [preact(), compress({ HTML: false, JavaScript: false })],
 });
