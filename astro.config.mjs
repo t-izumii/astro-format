@@ -50,7 +50,6 @@ export default defineConfig({
       minify: false,
       assetsInlineLimit: 0,
       cssCodeSplit: false,
-      cssMinify: true,
       rollupOptions: {
         output: {
           assetFileNames: (assetInfo) => {
@@ -67,5 +66,8 @@ export default defineConfig({
       },
     },
   },
-  integrations: [preact(), compress({ HTML: false, JavaScript: false })],
+  integrations: [
+    preact(),
+    compress({ HTML: false, CSS: false, JavaScript: false }),
+  ],
 });
