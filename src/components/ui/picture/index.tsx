@@ -27,6 +27,15 @@ export default function Picture({ img, sp, width, widthSp, className }: Props) {
   const resolvePath = (path: string) =>
     path.startsWith('http') ? path : `${baseUrl}${path}`;
 
+  const convertToRem = (value: string | undefined): string | undefined => {
+    if (!value) return undefined;
+    const numValue = parseFloat(value);
+    if (!isNaN(numValue) && value === String(numValue)) {
+      return `${numValue / 16}rem`;
+    }
+    return value;
+  };
+
   return (
     <picture
       className={`c-picture ${className || ''}`}
@@ -38,8 +47,8 @@ export default function Picture({ img, sp, width, widthSp, className }: Props) {
               : undefined,
           '--_aspect-ratio-sp':
             sp?.width && sp?.height ? `${sp.width} / ${sp.height}` : undefined,
-          '--_display-width': width ?? undefined,
-          '--_display-width-sp': widthSp ?? undefined,
+          '--_display-width': width ? convertToRem(width) : undefined,
+          '--_display-width-sp': widthSp ? convertToRem(widthSp) : undefined,
         } as preact.CSSProperties
       }
     >

@@ -1,3 +1,5 @@
 //  ここで各コンポーネントのstyleを読み込んでください。
-@forward "./top/";
-@forward "./about/";
+@forward './top/page';
+@forward './top/kv';
+@forward './top/feature';
+@forward './top/project';

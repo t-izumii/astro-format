@@ -1,15 +1,16 @@
-import { gsap } from "gsap";
-import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Component, type ComponentOptions } from "./base/Component";
-import { SizeObserver } from "./components/common/SizeObserver";
-import { WindowSize } from "./components/layout/WindowSize";
-import { MEDIA_PC, MEDIA_SP, MIN_PC_WIDTH } from "./constants/window-size";
-import { LoadScrollTo } from "./components/common/LoadScrollTo";
-import { ScrollToHandler } from "./components/common/ScrollToHandler";
-import { ScrollTo } from "./components/common/ScrollTo";
-import { InView } from "./components/common/InView";
-import { Scroll } from "./components/layout/Scroll";
+import { gsap } from 'gsap';
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Component, type ComponentOptions } from './base/Component';
+import { SizeObserver } from './components/common/SizeObserver';
+import { WindowSize } from './components/layout/WindowSize';
+import { MEDIA_PC, MEDIA_SP, MIN_PC_WIDTH } from './constants/window-size';
+import { LoadScrollTo } from './components/common/LoadScrollTo';
+import { ScrollToHandler } from './components/common/ScrollToHandler';
+import { ScrollTo } from './components/common/ScrollTo';
+import { InView } from './components/common/InView';
+import { Scroll } from './components/layout/Scroll';
+import { WebGl } from './components/webgl';
 // import { Events } from "./constants/events";
 // import { EventEmitter } from "./utils/EventEmitter";
 
@@ -23,15 +24,17 @@ const LAYOUT_COMPONENTS: ComponentList = [
 
 const PAGE_COMPONENTS: ComponentList = [
   // Layout
-  { selector: "body", component: WindowSize },
-  { selector: "body", component: Scroll },
-  { selector: "body", component: LoadScrollTo },
-  { selector: "body", component: ScrollToHandler },
+  { selector: 'body', component: WindowSize },
+  { selector: 'body', component: Scroll },
+  { selector: 'body', component: LoadScrollTo },
+  { selector: 'body', component: ScrollToHandler },
 
   // Common
-  { selector: ".js-sizeObserver", component: SizeObserver },
-  { selector: ".js-scrollTo", component: ScrollTo },
-  { selector: ".js-inView", component: InView },
+  { selector: '.js-sizeObserver', component: SizeObserver },
+  { selector: '.js-scrollTo', component: ScrollTo },
+  { selector: '.js-inView', component: InView },
+
+  { selector: '.js-webgl', component: WebGl },
 ];
 
 // setup gsap

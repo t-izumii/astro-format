@@ -1,0 +1,20 @@
+@use '@/styles/abstracts' as *;
+
+@scope (.l-header[data-scope='l-header']) to ([data-scope]) {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+
+  ._inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: rem(16);
+  }
+
+  ._navList {
+    display: flex;
+    gap: rem(20);
+  }
+}

@@ -1,6 +1,8 @@
+@use '@/styles/abstracts' as *;
+
 .o-container {
   box-sizing: unset;
-  max-width: 1200px;
-  padding-inline: 20px;
+  max-width: rem(1200);
+  padding-inline: rem(20);
   margin-inline: auto;
 }

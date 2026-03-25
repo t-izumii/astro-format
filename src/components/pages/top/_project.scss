@@ -1,0 +1,32 @@
+@use '@/styles/abstracts' as *;
+
+@scope (.p-project[data-scope='p-project']) to ([data-scope]) {
+  position: relative;
+  margin-top: rem(800);
+
+  ._list {
+    margin-top: rem(-600);
+  }
+
+  ._item {
+    border-bottom: 1px solid #000;
+
+    &:first-child {
+      border-top: 1px solid #000;
+    }
+  }
+
+  ._link {
+    display: block;
+    padding: rem(64);
+  }
+
+  ._thumb {
+    position: sticky;
+    top: 50%;
+    width: rem(400);
+    margin-right: rem(40);
+    margin-left: auto;
+    transform: translateY(-50%);
+  }
+}

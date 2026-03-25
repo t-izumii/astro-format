@@ -1,7 +1,3 @@
 export default function Footer() {
-  return (
-    <footer>
-      <h1>Footer</h1>
-    </footer>
-  );
+  return <footer className="l-footer" data-scope="l-footer"></footer>;
 }
