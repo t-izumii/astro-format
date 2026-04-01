@@ -26,6 +26,7 @@ Astro v6 + Preactを使用したWebプロジェクトです。
 │   │   │   ├── about/
 │   │   │   └── top/
 │   │   └── ui/          # 再利用可能なUIコンポーネント
+│   │       ├── icon/    # SVGアイコン管理
 │   │       └── picture/
 │   ├── data/            # データファイル
 │   ├── layouts/         # レイアウトテンプレート
@@ -116,6 +117,50 @@ astro build
 compress({ HTML: false, CSS: false, JavaScript: false });
 // CSS圧縮は Vite の cssMinify: true で対応
 ```
+
+### アイコンコンポーネント
+
+#### 使い方
+
+```tsx
+import Icon from '@/components/ui/icon';
+
+// 基本的な使い方
+<Icon name="arrow" />  // デフォルト: 1em
+
+// サイズ指定（数値）
+<Icon name="close" size={32} />  // 2rem (32÷16)
+
+// 幅・高さを個別指定
+<Icon name="menu" width={40} height={20} />
+
+// レスポンシブ対応
+<Icon name="search" size={48} spSize={32} />  // PC: 3rem, SP: 2rem
+
+// 文字列で単位指定も可能
+<Icon name="arrow" size="2em" />  // 親要素のfont-sizeに追従
+```
+
+#### アイコンの追加方法
+
+1. SVGファイルを `src/components/ui/icon/svg/` に配置
+2. ファイル名がそのままアイコン名になる
+
+```bash
+# 例: search.svg を追加
+src/components/ui/icon/svg/search.svg
+```
+
+3. コンポーネントで使用
+
+```tsx
+<Icon name="search" />
+```
+
+**注意点:**
+- 数値指定の場合、自動的にrem換算される（`24` → `1.5rem`）
+- 文字列指定の場合はそのまま適用される（`"2em"` → `2em`）
+- デフォルトサイズは `1em`（親要素の `font-size` に追従）
 
 ### スタイルガイド
 
