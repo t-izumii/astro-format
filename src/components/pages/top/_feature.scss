@@ -1,5 +1,0 @@
-@use '@/styles/abstracts' as *;
-
-@scope (.p-feature[data-scope='p-feature']) to ([data-scope]) {
-  margin-top: rem(200);
-}

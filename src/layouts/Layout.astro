@@ -5,7 +5,6 @@ import { siteMeta, generatePageMeta, type PageMeta } from "../data/meta";
 import { getPageMeta, type PageSlug } from "../data/pages";
 import Header from "../components/layout/header";
 import Footer from "../components/layout/footer";
-import Canvas from "@/components/layout/canvas";
 
 export interface Props extends PageMeta {
   pageSlug?: PageSlug;
@@ -73,7 +72,6 @@ const canonicalUrl =
     <ScriptIndex />
   </head>
   <body>
-    <Canvas />
     <Header />
     <slot />
     <Footer />

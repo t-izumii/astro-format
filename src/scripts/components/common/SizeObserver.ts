@@ -1,5 +1,5 @@
-import { debounce } from 'throttle-debounce';
-import { Component, type ComponentOptions } from '../../base/Component';
+import { debounce } from "throttle-debounce";
+import { Component, type ComponentOptions } from "../../base/Component";
 
 export class SizeObserver extends Component {
   private _rObserver: ResizeObserver | null = null;
@@ -16,11 +16,11 @@ export class SizeObserver extends Component {
         entries.forEach((entry) => {
           entry.borderBoxSize.forEach((size) => {
             this._elTarget!.style.setProperty(
-              '--_setWidth',
+              "--width",
               `${size.inlineSize}px`
             );
             this._elTarget!.style.setProperty(
-              '--_setHeight',
+              "--height",
               `${size.blockSize}px`
             );
           });
