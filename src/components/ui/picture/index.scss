@@ -1,7 +1,7 @@
 @use '@/styles/abstracts' as *;
 
 .c-picture {
-  display: block;
+  display: inline-block;
   width: var(--_display-width, 100%);
   aspect-ratio: var(--_aspect-ratio, auto);
 

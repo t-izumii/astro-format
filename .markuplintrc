@@ -32,6 +32,12 @@
       "rules": {
         "invalid-attr": false
       }
+    },
+    {
+      "selector": "[data-scope='c-icon'][dangerouslySetInnerHTML]",
+      "rules": {
+        "invalid-attr": false
+      }
     }
   ]
 }

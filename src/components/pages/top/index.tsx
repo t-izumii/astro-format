@@ -1,5 +1,6 @@
 import Picture from '../../ui/picture';
 import Button from '../../ui/button';
+import Icon from '@/components/ui/icon';
 
 export default function Pages() {
   return (
@@ -21,6 +22,7 @@ export default function Pages() {
         width="400px"
       />
 
+      <Icon name="arrow" width={40} height={40} />
       <Button label="test" />
     </div>
   );

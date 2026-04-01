@@ -26,7 +26,7 @@ export default defineConfig({
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: `$base-url: '${base}';`,
+          additionalData: `@use "@/styles/_abstracts" as *; $base-url: '${base}';`,
           importers: [
             {
               findFileUrl(url) {

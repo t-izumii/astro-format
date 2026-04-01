@@ -1,0 +1,22 @@
+@use '@/styles/abstracts' as *;
+
+@scope ([data-scope='c-icon']) to ([data-scope]) {
+  --_width: 1em;
+  --_height: 1em;
+
+  display: inline-block;
+  width: var(--_width);
+  height: var(--_height);
+  font-size: 0;
+  line-height: 1;
+
+  @include sp {
+    width: var(--_sp-width, var(--_width));
+    height: var(--_sp-height, var(--_height));
+  }
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
