@@ -1,4 +1,4 @@
-# nebulous-nebula
+# 開発環境について
 
 Astro v6 + Preactを使用したWebプロジェクトです。
 
