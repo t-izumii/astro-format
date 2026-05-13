@@ -105,18 +105,43 @@ astro build
   5. assets/chunk/ を削除
 ```
 
-#### JS・CSS の minify について
+#### minify について
 
-- **JS**: `astro-compress` の設定で圧縮可能
-- **CSS**: `astro-compress` の設定で圧縮可能
-
-`astro-compress` は CSS・SVG・画像の圧縮に使用しています。
+デフォルトではすべての圧縮を無効化しています。
 
 ```js
 // astro.config.mjs
 compress({ HTML: false, CSS: false, JavaScript: false });
-// CSS圧縮は Vite の cssMinify: true で対応
 ```
+
+| 種類 | 圧縮 | 備考                                                   |
+| :--- | :--- | :----------------------------------------------------- |
+| HTML | OFF  | ビルド後に Prettier で整形しているため `compress` の HTML 圧縮は使用不可 |
+| CSS  | OFF  | `astro-compress` の設定で圧縮可能                       |
+| JS   | OFF  | `astro-compress` の設定で圧縮可能                       |
+| SVG  | ON   | `astro-compress` で圧縮                                |
+| 画像 | ON   | `astro-compress` で圧縮                                |
+
+##### ⚠️ HTML を圧縮（minify）したい場合
+
+`npm run build` の最後に `format:dist`（Prettier による HTML 整形）が走るため、`compress({ HTML: true })` を有効にしても **Prettier によって展開され直されてしまう**、または整形処理でエラーになる可能性があります。
+
+HTML を圧縮したい場合は、`package.json` の `build` スクリプトから `format:dist` を除外してください。
+
+```diff
+- "build": "npm run clean && astro build && npm run cleanup && npm run format:dist",
++ "build": "npm run clean && astro build && npm run cleanup",
+```
+
+そのうえで `astro.config.mjs` の `compress` で HTML 圧縮を有効化します。
+
+```js
+compress({ HTML: true, CSS: false, JavaScript: false });
+```
+
+##### JS / CSS を圧縮したい場合
+
+`astro-compress` の該当オプションを `true` に切り替えるだけで有効になります（`format:dist` の削除は不要）。
 
 ### アイコンコンポーネント
 
