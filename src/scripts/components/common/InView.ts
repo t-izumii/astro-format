@@ -1,4 +1,4 @@
-import { Component, type ComponentOptions } from "../../base/Component";
+import { Component, type ComponentOptions } from '../../base/Component';
 
 export class InView extends Component {
   private _iObserver: IntersectionObserver | null = null;
