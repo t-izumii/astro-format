@@ -1,4 +1,4 @@
-@use "@/styles/abstracts" as *;
+@use '@/styles/abstracts' as *;
 
 /// グリッドレイアウトクラス
 ///
@@ -12,8 +12,8 @@
 /// @prop {String} --_grid-gap-sp [var(--_grid-gap)] - SPのアイテム間の溝。
 ///
 /// @example
-///   <div class="o-grid" style="--_grid-repeat: 3; --_grid-gap: 20px;">...</div>
-///   <div class="o-grid" style="--_grid-min-size: 200px; --_grid-repeat-sp: 1;">...</div>
+///   <Grid repeat={3} gap="20px">...</Grid>
+///   <Grid minSize="200px" repeatSp={1}>...</Grid>
 .o-grid {
   --_repeat: var(--_grid-repeat, auto-fit);
   --_size: min(var(--_grid-min-size, 0px), 100%);
@@ -26,7 +26,7 @@
   );
   gap: var(--_gap);
 
-  @include responsive("md") {
+  @include sp {
     --_repeat: var(--_grid-repeat-sp, var(--_grid-repeat, auto-fit));
     --_size: min(var(--_grid-min-size-sp, var(--_grid-min-size, 0px)), 100%);
     --_gap: var(--_grid-gap-sp, var(--_grid-gap, 0px));
