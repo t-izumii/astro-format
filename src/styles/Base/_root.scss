@@ -1,8 +1,9 @@
 :root {
   scrollbar-gutter: stable;
   --fz: 1;
+  --vw: 100vw;
 
-  --scale: calc(100vw / 1280px);
+  --scale: tan(atan2(var(--vw), 1280px));
 
   // フォントファミリー
   --font-family-base:
@@ -18,7 +19,7 @@
   // レイヤー階層
   --z-index-header: 700;
 
-  @media screen and (width <= 960px) {
-    --scale: calc(100vw / 375px);
+  @include sp {
+    --scale: tan(atan2(var(--vw), 375px));
   }
 }
