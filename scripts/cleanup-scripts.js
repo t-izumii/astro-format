@@ -1,4 +1,10 @@
-import { existsSync, readFileSync, writeFileSync, readdirSync, rmSync } from 'fs';
+import {
+  existsSync,
+  readFileSync,
+  writeFileSync,
+  readdirSync,
+  rmSync,
+} from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -49,11 +55,26 @@ function inlineImports(code, baseDir) {
 function rewriteHtmlScriptPath(htmlPath, oldSrc, newSrc) {
   if (!existsSync(htmlPath)) return;
   const html = readFileSync(htmlPath, 'utf-8');
-  const updated = html.replace(oldSrc, newSrc);
+  // 同一ページ内に複数参照があっても全て書き換える
+  const updated = html.split(oldSrc).join(newSrc);
   if (html !== updated) {
     writeFileSync(htmlPath, updated, 'utf-8');
     console.log(`✓ HTML 書き換え: ${htmlPath}`);
   }
+}
+
+// dist 以下の .html を再帰的に全て収集する
+function findHtmlFiles(dir) {
+  const result = [];
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const fullPath = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      result.push(...findHtmlFiles(fullPath));
+    } else if (entry.name.endsWith('.html')) {
+      result.push(fullPath);
+    }
+  }
+  return result;
 }
 
 // -------------------------------------------------------------------
@@ -85,15 +106,9 @@ try {
   const oldSrc = `assets/chunk/${entryFile}`;
   const newSrc = `assets/scripts/script.js`;
 
-  rewriteHtmlScriptPath(join(distDir, 'index.html'), oldSrc, newSrc);
-
-  // pages ディレクトリ以下の HTML も対象
-  const pages = readdirSync(distDir, { withFileTypes: true });
-  for (const p of pages) {
-    if (p.isDirectory()) {
-      const htmlPath = join(distDir, p.name, 'index.html');
-      rewriteHtmlScriptPath(htmlPath, oldSrc, newSrc);
-    }
+  // dist 以下の全 HTML を再帰的に書き換える（深い階層のページも対象）
+  for (const htmlPath of findHtmlFiles(distDir)) {
+    rewriteHtmlScriptPath(htmlPath, oldSrc, newSrc);
   }
 
   // chunk/ ディレクトリをまるごと削除
