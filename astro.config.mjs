@@ -18,6 +18,7 @@ export default defineConfig({
     assets: `${assetsDir}/chunk`,
   },
   vite: {
+    optimizeDeps: {
       rolldownOptions: {
         transform: {
           jsx: {
