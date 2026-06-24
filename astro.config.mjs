@@ -18,6 +18,16 @@ export default defineConfig({
     assets: `${assetsDir}/chunk`,
   },
   vite: {
+    optimizeDeps: {
+      rolldownOptions: {
+        transform: {
+          jsx: {
+            runtime: 'automatic',
+            importSource: 'preact',
+          },
+        },
+      },
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
