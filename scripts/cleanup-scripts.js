@@ -24,26 +24,92 @@ function findEntryChunk(dir) {
 }
 
 // -------------------------------------------------------------------
-// 2. import 文を再帰的にインライン展開する
+// 2-a. チャンクの export 文を解析して取り除く
+//      `export { localName as exportedName, ... };` を抽出し、
+//      { body: export を除いたコード, map: exportedName -> localName } を返す
+// -------------------------------------------------------------------
+function extractExports(code) {
+  const map = {};
+  const exportRe = /^export\s*\{([^}]*)\}\s*;?\s*$/gm;
+  const body = code.replace(exportRe, (_full, names) => {
+    for (const part of names.split(',')) {
+      const token = part.trim();
+      if (!token) continue;
+      const m = token.match(/^(\w+)(?:\s+as\s+(\w+))?$/);
+      if (!m) continue;
+      const local = m[1];
+      const exported = m[2] || m[1];
+      map[exported] = local;
+    }
+    return ''; // export 文は出力から除去
+  });
+  return { body, map };
+}
+
+// -------------------------------------------------------------------
+// 2-b. import 文を再帰的にインライン展開する
+//      ・副作用インポート         : import "./chunk.js";
+//      ・名前付きインポート       : import { _ as __vitePreload } from "./chunk.js";
+//      の両方に対応する（後者を無視すると Vite の preload-helper 等が
+//      参照だけ残って 404 になるため）
 // -------------------------------------------------------------------
 function inlineImports(code, baseDir) {
-  const importRe = /^import\s*["']([^"']+)["'];?\s*$/gm;
+  // group1: 名前付きインポートのバインディング(省略可) / group2: モジュールパス
+  const importRe =
+    /^import\s*(?:\{([^}]*)\}\s*from\s*)?["']([^"']+)["'];?\s*$/gm;
   let result = code;
   let match;
 
-  while ((match = importRe.exec(code)) !== null) {
-    const importPath = match[1];
-    if (!importPath.startsWith('.')) continue;
+  while ((match = importRe.exec(result)) !== null) {
+    const bindings = match[1]; // 名前付きでない場合は undefined
+    const importPath = match[2];
+    if (!importPath.startsWith('.')) {
+      // 外部モジュールはそのまま残してスキップ
+      importRe.lastIndex = match.index + match[0].length;
+      continue;
+    }
 
     const absPath = join(baseDir, importPath);
-    if (!existsSync(absPath)) continue;
+    if (!existsSync(absPath)) {
+      importRe.lastIndex = match.index + match[0].length;
+      continue;
+    }
 
     let chunkCode = readFileSync(absPath, 'utf-8');
     // 再帰的に内部のインポートも解決
     chunkCode = inlineImports(chunkCode, dirname(absPath));
 
-    result = result.replace(match[0], chunkCode);
-    importRe.lastIndex = 0; // 文字列が変わるのでリセット
+    let replacement;
+    if (!bindings) {
+      // 副作用インポート: export 文だけ取り除いて本体を展開
+      replacement = extractExports(chunkCode).body;
+    } else {
+      // 名前付きインポート: 本体を展開し、ローカル名へエイリアスを張る
+      const { body, map } = extractExports(chunkCode);
+      const aliasLines = bindings
+        .split(',')
+        .map((part) => {
+          const token = part.trim();
+          if (!token) return '';
+          const m = token.match(/^(\w+)(?:\s+as\s+(\w+))?$/);
+          if (!m) return '';
+          const imported = m[1]; // チャンク側の export 名
+          const localName = m[2] || m[1]; // 利用側で使う名前
+          const internal = map[imported] || imported; // チャンク内部の実体名
+          return internal === localName
+            ? ''
+            : `const ${localName} = ${internal};`;
+        })
+        .filter(Boolean)
+        .join('\n');
+      replacement = aliasLines ? `${body}\n${aliasLines}` : body;
+    }
+
+    result =
+      result.slice(0, match.index) +
+      replacement +
+      result.slice(match.index + match[0].length);
+    importRe.lastIndex = 0; // 文字列が変わるので先頭から再走査
   }
 
   return result;
