@@ -42,6 +42,7 @@
   "devDependencies": {
     "@markuplint/astro-parser": "^4.6.23",
     "@markuplint/jsx-parser": "^4.7.23",
+    "@splidejs/splide": "^4.1.4",
     "@types/node": "^25.3.3",
     "@types/throttle-debounce": "^5.0.2",
     "@typescript-eslint/parser": "^8.53.1",
@@ -54,6 +55,7 @@
     "markuplint": "^4.14.1",
     "postcss-scss": "^4.0.9",
     "prettier": "^3.5.3",
+    "prettier-plugin-astro": "^0.14.1",
     "sass": "^1.97.0",
     "sharp": "^0.34.5",
     "stylelint": "^17.0.0",

@@ -1,0 +1,36 @@
+.c-carousel {
+  width: 100%;
+}
+
+.c-carousel__slide {
+  width: 200px;
+}
+
+.c-carousel__slide img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* 矢印カスタマイズ */
+.c-carousel .splide__arrow {
+  background: rgb(0, 0, 0, 0.5);
+  opacity: 1;
+}
+
+.c-carousel .splide__arrow:hover {
+  background: rgb(0, 0, 0, 0.8);
+}
+
+.c-carousel .splide__arrow svg {
+  fill: #fff;
+}
+
+/* ページネーションカスタマイズ */
+.c-carousel .splide__pagination__page {
+  background: #ccc;
+}
+
+.c-carousel .splide__pagination__page.is-active {
+  background: #333;
+}

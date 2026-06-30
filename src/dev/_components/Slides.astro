@@ -1,0 +1,22 @@
+---
+import SlideDemo from "./SlideDemo.tsx";
+import SlideOverflowDemo from "./SlideOverflowDemo.tsx";
+---
+
+<section class="p-catalog__section">
+  <h2 class="p-catalog__title">Slide / Carousel</h2>
+
+  <div class="p-catalog__item" style="width: 100%;">
+    <small>通常（常にカルーセル）</small>
+    <div style="width: 100%;">
+      <SlideDemo />
+    </div>
+  </div>
+
+  <div class="p-catalog__item" style="width: 100%; margin-top: 2rem;">
+    <small>overflow時のみカルーセル（収まる時は横並び）</small>
+    <div style="width: 100%;">
+      <SlideOverflowDemo />
+    </div>
+  </div>
+</section>

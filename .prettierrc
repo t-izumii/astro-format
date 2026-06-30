@@ -4,5 +4,12 @@
   "trailingComma": "es5",
   "tabWidth": 2,
   "printWidth": 80,
-  "htmlWhitespaceSensitivity": "css"
+  "htmlWhitespaceSensitivity": "css",
+  "plugins": ["prettier-plugin-astro"],
+  "overrides": [
+    {
+      "files": "*.astro",
+      "options": { "parser": "astro" }
+    }
+  ]
 }
