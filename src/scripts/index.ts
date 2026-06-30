@@ -11,6 +11,8 @@ import { ScrollToHandler } from "./components/common/ScrollToHandler";
 import { ScrollTo } from "./components/common/ScrollTo";
 import { InView } from "./components/common/InView";
 import { Scroll } from "./components/layout/Scroll";
+import { Modal } from "./components/ui/modal";
+import { ModalOpen } from "./components/ui/modalOpen";
 // import { Events } from "./constants/events";
 // import { EventEmitter } from "./utils/EventEmitter";
 
@@ -34,6 +36,10 @@ const PAGE_COMPONENTS: ComponentList = [
   { selector: ".js-sizeObserver", component: SizeObserver },
   { selector: ".js-scrollTo", component: ScrollTo },
   { selector: ".js-inView", component: InView },
+
+  // UI
+  { selector: ".js-modal", component: Modal },
+  { selector: ".js-modalOpen", component: ModalOpen },
 ];
 
 // setup gsap

@@ -1,0 +1,21 @@
+.c-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: calc(100vw - 4rem);
+  height: calc(100vh - 4rem);
+  padding: 0;
+  margin: 0;
+  transform: translate(-50%, -50%);
+}
+
+.c-modal__container {
+  position: relative;
+}
+
+.c-modal__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  cursor: pointer;
+}

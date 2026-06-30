@@ -1,11 +1,22 @@
 import Picture from '../../ui/picture';
 import Button from '../../ui/button';
 import Icon from '@/components/ui/icon';
+import Modal from '../../ui/modal';
 
 export default function Pages() {
   return (
     <div>
       <h2>TOP</h2>
+
+      {/* モーダル動作確認用 */}
+      <button type="button" className="js-modalOpen" data-modal-target="test">
+        モーダルを開く
+      </button>
+
+      <Modal dataModalId="test">
+        <h3>テストモーダル</h3>
+        <p>これはテスト用のモーダルです。</p>
+      </Modal>
 
       <Picture
         img={{

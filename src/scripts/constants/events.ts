@@ -38,6 +38,6 @@ export type TEventPayloads = {
   };
   SCROLL_STOPPED: undefined;
   CHANGE_TOP_HELLO_ANIMATION: { no: number; dir: 'normal' | 'inverse' };
-  OPEN_MODAL: { id: string };
+  OPEN_MODAL: { id: string; onClose?: () => void };
   CLOSE_MODAL: { id: string };
 };
