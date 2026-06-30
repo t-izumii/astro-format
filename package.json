@@ -4,9 +4,8 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev --host",
-    "build": "npm run clean && astro build && npm run cleanup && npm run format:dist",
+    "build": "npm run clean && astro build && npm run format:dist",
     "clean": "rm -rf dist",
-    "cleanup": "node scripts/cleanup-scripts.js",
     "format:dist": "prettier --write --ignore-path /dev/null \"dist/**/*.html\"",
     "preview": "astro preview",
     "astro": "astro",
@@ -39,6 +38,7 @@
     "postcss-scss": "^4.0.9",
     "prettier": "^3.5.3",
     "sass": "^1.97.0",
+    "sharp": "^0.34.5",
     "stylelint": "^17.0.0",
     "stylelint-config-recess-order": "^7.6.0",
     "stylelint-config-standard-scss": "^17.0.0"

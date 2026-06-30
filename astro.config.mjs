@@ -4,6 +4,8 @@ import path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
 import preact from '@astrojs/preact';
 import compress from 'astro-compress';
+import imageOptimize from './integrations/image-optimize.mjs';
+import cleanupScripts from './integrations/cleanup-scripts.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const assetsDir = 'assets';
@@ -101,6 +103,12 @@ export default defineConfig({
   integrations: [
     devComponentsPreview(),
     preact(),
-    compress({ HTML: false, CSS: false, JavaScript: false }),
+    // HTML/CSS/JSは必要に応じて圧縮（true化）する。
+    // Image（Sharp）はAPNGを壊すため無効化し、画像圧縮はimageOptimizeで行う。
+    compress({ HTML: false, CSS: true, JavaScript: true, Image: false }),
+    // スクリプトチャンクを単一script.jsへインライン展開（compressのJS minify後に実行）
+    cleanupScripts(),
+    // dist出力後にsharpで画像最適化（APNGは素通し）
+    imageOptimize(),
   ],
 });

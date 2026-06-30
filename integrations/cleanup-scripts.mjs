@@ -4,14 +4,10 @@ import {
   writeFileSync,
   readdirSync,
   rmSync,
+  mkdirSync,
 } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const distDir = join(__dirname, '../dist');
-const chunkDir = join(distDir, 'assets/chunk');
-const scriptsDir = join(distDir, 'assets/scripts');
 
 // -------------------------------------------------------------------
 // 1. chunk/ 内のスクリプトエントリーを特定
@@ -25,8 +21,6 @@ function findEntryChunk(dir) {
 
 // -------------------------------------------------------------------
 // 2-a. チャンクの export 文を解析して取り除く
-//      `export { localName as exportedName, ... };` を抽出し、
-//      { body: export を除いたコード, map: exportedName -> localName } を返す
 // -------------------------------------------------------------------
 function extractExports(code) {
   const map = {};
@@ -48,23 +42,17 @@ function extractExports(code) {
 
 // -------------------------------------------------------------------
 // 2-b. import 文を再帰的にインライン展開する
-//      ・副作用インポート         : import "./chunk.js";
-//      ・名前付きインポート       : import { _ as __vitePreload } from "./chunk.js";
-//      の両方に対応する（後者を無視すると Vite の preload-helper 等が
-//      参照だけ残って 404 になるため）
 // -------------------------------------------------------------------
 function inlineImports(code, baseDir) {
-  // group1: 名前付きインポートのバインディング(省略可) / group2: モジュールパス
   const importRe =
     /^import\s*(?:\{([^}]*)\}\s*from\s*)?["']([^"']+)["'];?\s*$/gm;
   let result = code;
   let match;
 
   while ((match = importRe.exec(result)) !== null) {
-    const bindings = match[1]; // 名前付きでない場合は undefined
+    const bindings = match[1];
     const importPath = match[2];
     if (!importPath.startsWith('.')) {
-      // 外部モジュールはそのまま残してスキップ
       importRe.lastIndex = match.index + match[0].length;
       continue;
     }
@@ -76,15 +64,12 @@ function inlineImports(code, baseDir) {
     }
 
     let chunkCode = readFileSync(absPath, 'utf-8');
-    // 再帰的に内部のインポートも解決
     chunkCode = inlineImports(chunkCode, dirname(absPath));
 
     let replacement;
     if (!bindings) {
-      // 副作用インポート: export 文だけ取り除いて本体を展開
       replacement = extractExports(chunkCode).body;
     } else {
-      // 名前付きインポート: 本体を展開し、ローカル名へエイリアスを張る
       const { body, map } = extractExports(chunkCode);
       const aliasLines = bindings
         .split(',')
@@ -93,9 +78,9 @@ function inlineImports(code, baseDir) {
           if (!token) return '';
           const m = token.match(/^(\w+)(?:\s+as\s+(\w+))?$/);
           if (!m) return '';
-          const imported = m[1]; // チャンク側の export 名
-          const localName = m[2] || m[1]; // 利用側で使う名前
-          const internal = map[imported] || imported; // チャンク内部の実体名
+          const imported = m[1];
+          const localName = m[2] || m[1];
+          const internal = map[imported] || imported;
           return internal === localName
             ? ''
             : `const ${localName} = ${internal};`;
@@ -109,7 +94,7 @@ function inlineImports(code, baseDir) {
       result.slice(0, match.index) +
       replacement +
       result.slice(match.index + match[0].length);
-    importRe.lastIndex = 0; // 文字列が変わるので先頭から再走査
+    importRe.lastIndex = 0;
   }
 
   return result;
@@ -118,14 +103,13 @@ function inlineImports(code, baseDir) {
 // -------------------------------------------------------------------
 // 3. HTML 内のスクリプト参照パスを書き換える
 // -------------------------------------------------------------------
-function rewriteHtmlScriptPath(htmlPath, oldSrc, newSrc) {
+function rewriteHtmlScriptPath(htmlPath, oldSrc, newSrc, logger) {
   if (!existsSync(htmlPath)) return;
   const html = readFileSync(htmlPath, 'utf-8');
-  // 同一ページ内に複数参照があっても全て書き換える
   const updated = html.split(oldSrc).join(newSrc);
   if (html !== updated) {
     writeFileSync(htmlPath, updated, 'utf-8');
-    console.log(`✓ HTML 書き換え: ${htmlPath}`);
+    logger.info(`HTML 書き換え: ${htmlPath}`);
   }
 }
 
@@ -144,46 +128,58 @@ function findHtmlFiles(dir) {
 }
 
 // -------------------------------------------------------------------
-// メイン処理
+// メイン処理（出力ディレクトリを受け取って実行）
 // -------------------------------------------------------------------
-try {
+function cleanupScriptsRun(distDir, logger) {
+  const chunkDir = join(distDir, 'assets/chunk');
+  const scriptsDir = join(distDir, 'assets/scripts');
+
   const entryFile = findEntryChunk(chunkDir);
   if (!entryFile) {
-    console.log('⚠ エントリーチャンクが見つかりません。スキップします。');
-    process.exit(0);
+    logger.warn('エントリーチャンクが見つかりません。スキップします。');
+    return;
   }
 
   const entryPath = join(chunkDir, entryFile);
-  console.log(`✓ エントリー発見: ${entryFile}`);
+  logger.info(`エントリー発見: ${entryFile}`);
 
   // インライン展開
   let code = readFileSync(entryPath, 'utf-8');
   code = inlineImports(code, chunkDir);
 
   // scripts/ ディレクトリを作成して script.js として書き出す
-  const { mkdirSync } = await import('fs');
   mkdirSync(scriptsDir, { recursive: true });
-
   const outputPath = join(scriptsDir, 'script.js');
   writeFileSync(outputPath, code, 'utf-8');
-  console.log(`✓ 出力: assets/scripts/script.js`);
+  logger.info('出力: assets/scripts/script.js');
 
-  // HTML のパスを書き換え（base付きのパス → 新パス）
+  // HTML のパスを書き換え
   const oldSrc = `assets/chunk/${entryFile}`;
   const newSrc = `assets/scripts/script.js`;
-
-  // dist 以下の全 HTML を再帰的に書き換える（深い階層のページも対象）
   for (const htmlPath of findHtmlFiles(distDir)) {
-    rewriteHtmlScriptPath(htmlPath, oldSrc, newSrc);
+    rewriteHtmlScriptPath(htmlPath, oldSrc, newSrc, logger);
   }
 
   // chunk/ ディレクトリをまるごと削除
   rmSync(chunkDir, { recursive: true, force: true });
-  console.log('✓ chunk/ ディレクトリを削除しました');
+  logger.info('chunk/ ディレクトリを削除しました');
+  logger.info('cleanup 完了');
+}
 
-  console.log('✓ cleanup 完了');
-} catch (error) {
-  console.error('Cleanup error:', error.message);
-  console.error(error.stack);
-  process.exit(1);
+/**
+ * Astro が生成するスクリプトチャンクを単一の script.js にインライン展開し、
+ * HTML 参照を書き換えて chunk/ を削除する Astroインテグレーション。
+ * JS minify を行う compress より後ろに配置すること。
+ *
+ * @returns {import('astro').AstroIntegration}
+ */
+export default function cleanupScripts() {
+  return {
+    name: 'cleanup-scripts',
+    hooks: {
+      'astro:build:done': ({ dir, logger }) => {
+        cleanupScriptsRun(fileURLToPath(dir), logger);
+      },
+    },
+  };
 }
