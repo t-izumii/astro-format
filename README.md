@@ -63,7 +63,7 @@ Astro v7 + Preact を使用した Web プロジェクトです。
 | コマンド               | 説明                                           |
 | :--------------------- | :--------------------------------------------- |
 | `npm install`          | 依存関係のインストール（Husky フックも有効化） |
-| `npm run dev`          | 開発サーバー起動（`localhost:4321/htdocs`）    |
+| `npm run dev`          | 開発サーバー起動（`localhost:4321/`）          |
 | `npm run build`        | 本番用ビルド（`./dist/` に出力）               |
 | `npm run preview`      | ビルドのプレビュー                             |
 | `npm run lint:css`     | CSS の Lint（`:fix` で自動修正）               |
@@ -99,11 +99,11 @@ import "@/styles/style.scss";
 
 - **dev 限定**: `astro.config.mjs` の `devComponentsPreview` インテグレーションが、`command === "dev"` のときだけ `/components` ルートを注入します。
 - `src/dev/` は `src/pages` の外にあるため **`astro build` の対象にならず、本番バンドル（特に単一化された CSS）を汚染しません**。
-- アクセス: `npm run dev` → `http://localhost:4321/htdocs/components`
+- アクセス: `npm run dev` → `http://localhost:4321/components`
 
 ### ビルド設定
 
-- ベースパス: `/htdocs`
+- ベースパス: `/`
 - アセット出力先: `dist/assets/`
   - スクリプト: `assets/scripts/`
   - スタイル: `assets/styles/`
