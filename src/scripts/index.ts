@@ -93,3 +93,5 @@ const onDOMContentLoaded = () => {
 
 // deferで読み込んでいるため、DOMContentLoaded時に実行される
 onDOMContentLoaded();
+
+const x = 1;
