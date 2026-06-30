@@ -1,0 +1,38 @@
+---
+import Picture from "@/components/ui/picture";
+---
+
+<section class="p-catalog__section">
+  <h2 class="p-catalog__title">Picture</h2>
+  <div class="p-catalog__row">
+    <span class="p-catalog__item">
+      <Picture
+        img={{
+          src: "https://placehold.jp/300x200.png",
+          alt: "サンプル画像",
+          width: 300,
+          height: 200,
+        }}
+        width="300px"
+      />
+      <small>基本 (300×200)</small>
+    </span>
+    <span class="p-catalog__item">
+      <Picture
+        img={{
+          src: "https://placehold.jp/3a7bd5/ffffff/600x400.png?text=PC",
+          alt: "PC/SP切り替え",
+          width: 600,
+          height: 400,
+        }}
+        sp={{
+          src: "https://placehold.jp/d53a3a/ffffff/300x400.png?text=SP",
+          width: 300,
+          height: 400,
+        }}
+        width="300px"
+      />
+      <small>768px未満でSP画像に切替</small>
+    </span>
+  </div>
+</section>

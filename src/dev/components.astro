@@ -1,0 +1,89 @@
+---
+// コンポーネントプレビュー（開発確認用 / dev限定）
+// このファイルは src/pages の外にあるため astro build の対象にならず、
+// CSS/JSバンドルを一切汚染しない。
+// astro.config.mjs の devComponentsPreview インテグレーションが、
+// command === 'dev' のときだけ /components ルートとして注入する。
+import "@/styles/style.scss";
+import ScriptIndex from "@/layouts/script.astro";
+import Buttons from "./_components/Buttons.astro";
+import Icons from "./_components/Icons.astro";
+import Pictures from "./_components/Pictures.astro";
+import Modals from "./_components/Modals.astro";
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Components Preview</title>
+    <ScriptIndex />
+  </head>
+  <body>
+    <main class="p-catalog">
+      <header class="p-catalog__head">
+        <h1 class="p-catalog__heading">Components Preview</h1>
+      </header>
+
+      <div id="button"><Buttons /></div>
+      <div id="icon"><Icons /></div>
+      <div id="picture"><Pictures /></div>
+      <div id="modal"><Modals /></div>
+    </main>
+  </body>
+</html>
+
+
+<style lang="scss" is:global>
+  .p-catalog {
+    max-width: 960px;
+    padding: 2rem 1.5rem 6rem;
+    margin: 0 auto;
+    font-family:
+      system-ui,
+      -apple-system,
+      sans-serif;
+    color: #1a1a1a;
+  }
+  .p-catalog__head {
+    position: sticky;
+    top: 0;
+    padding: 1rem 0;
+    background: #fff;
+    border-bottom: 1px solid #e5e5e5;
+  }
+  .p-catalog__heading {
+    margin: 0 0 0.75rem;
+    font-size: 1.5rem;
+  }
+  .p-catalog__section {
+    padding: 2rem 0;
+    border-bottom: 1px dashed #ddd;
+  }
+  .p-catalog__title {
+    margin: 0 0 1.25rem;
+    font-size: 1.125rem;
+    color: #555;
+  }
+  .p-catalog__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+  .p-catalog__row--middle {
+    align-items: center;
+  }
+  .p-catalog__item {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+  .p-catalog__item small {
+    font-size: 0.75rem;
+    color: #999;
+  }
+</style>

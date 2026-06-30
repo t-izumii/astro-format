@@ -1,0 +1,22 @@
+---
+import Modal from "@/components/ui/modal";
+---
+
+<section class="p-catalog__section">
+  <h2 class="p-catalog__title">Modal</h2>
+  <div class="p-catalog__row">
+    <button
+      type="button"
+      class="js-modalOpen"
+      data-modal-target="catalog-modal"
+    >
+      モーダルを開く
+    </button>
+  </div>
+
+  <Modal dataModalId="catalog-modal">
+    <h3>カタログモーダル</h3>
+    <p>プレビュー用のモーダルです。</p>
+    <p>背景クリック / ESCキー / ×ボタン で閉じます。</p>
+  </Modal>
+</section>

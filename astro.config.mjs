@@ -9,6 +9,28 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const assetsDir = 'assets';
 const base = '/htdocs';
 
+/**
+ * 開発時のみコンポーネントプレビュー(/components)を注入するインテグレーション。
+ * エントリは src/pages の外(src/dev)にあるため、astro build では
+ * ルート自体が生成されず、CSS/JSバンドルを一切汚染しない。
+ *
+ * @returns {import('astro').AstroIntegration}
+ */
+function devComponentsPreview() {
+  return {
+    name: 'dev-components-preview',
+    hooks: {
+      'astro:config:setup': ({ command, injectRoute }) => {
+        if (command !== 'dev') return;
+        injectRoute({
+          pattern: '/components',
+          entrypoint: path.resolve(__dirname, './src/dev/components.astro'),
+        });
+      },
+    },
+  };
+}
+
 // https://astro.build/config
 export default defineConfig({
   base: base,
@@ -77,6 +99,7 @@ export default defineConfig({
     },
   },
   integrations: [
+    devComponentsPreview(),
     preact(),
     compress({ HTML: false, CSS: false, JavaScript: false }),
   ],
