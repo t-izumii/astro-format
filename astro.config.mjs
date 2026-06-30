@@ -9,7 +9,7 @@ import cleanupScripts from "./integrations/cleanup-scripts.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const assetsDir = "assets";
-const base = "/htdocs";
+const base = "/";
 
 /**
  * 開発時のみコンポーネントプレビュー(/components)を注入するインテグレーション。

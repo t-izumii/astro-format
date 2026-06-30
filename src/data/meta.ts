@@ -40,7 +40,7 @@ export const siteMeta: SiteMeta = {
   // 基本情報
   title: "Astro Basics",
   description: "Astro で構築されたウェブサイト",
-  siteUrl: "https://example.com/htdocs", // baseUrlを含む完全なURL
+  siteUrl: "https://example.com", // baseUrlを含む完全なURL
   locale: "ja_JP",
 
   // OGP

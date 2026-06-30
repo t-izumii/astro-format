@@ -78,7 +78,7 @@ import "@/styles/main.scss";
 
 ### ビルド設定
 
-- ベースパス: `/htdocs`
+- ベースパス: `/`
 - アセット出力先: `dist/assets/`
   - スクリプト: `assets/scripts/`
   - スタイル: `assets/styles/`
