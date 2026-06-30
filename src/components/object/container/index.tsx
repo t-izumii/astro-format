@@ -1,4 +1,4 @@
-import type { ComponentChildren } from 'preact';
+import type { ComponentChildren } from "preact";
 
 interface Props {
   children: ComponentChildren;
@@ -24,20 +24,20 @@ interface Props {
 export default function Container({
   children,
   className,
-  as = 'div',
+  as = "div",
   maxWidth,
   padding,
 }: Props) {
   const Tag = as as any;
-  const classes = ['o-container', className].filter(Boolean).join(' ');
+  const classes = ["o-container", className].filter(Boolean).join(" ");
 
   return (
     <Tag
       className={classes}
       style={
         {
-          '--_container-max-width': maxWidth,
-          '--_container-padding': padding,
+          "--_container-max-width": maxWidth,
+          "--_container-padding": padding,
         } as preact.CSSProperties
       }
     >

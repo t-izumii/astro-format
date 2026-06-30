@@ -2,10 +2,10 @@ import {
   disablePageScroll,
   enablePageScroll,
   markScrollable,
-} from '@fluejs/noscroll';
-import { Component, type ComponentOptions } from '../../base/Component';
-import { Events, type TEventPayloads } from '../../constants/events';
-import { EventEmitter } from '../../utils/EventEmitter';
+} from "@fluejs/noscroll";
+import { Component, type ComponentOptions } from "../../base/Component";
+import { Events, type TEventPayloads } from "../../constants/events";
+import { EventEmitter } from "../../utils/EventEmitter";
 
 export class Modal extends Component {
   private _dialog: HTMLDialogElement;
@@ -16,7 +16,7 @@ export class Modal extends Component {
     super(elTarget, options);
 
     this._dialog = this._elTarget as HTMLDialogElement;
-    this._closeButton = this._elTarget?.querySelector('.js-modalClose');
+    this._closeButton = this._elTarget?.querySelector(".js-modalClose");
 
     markScrollable(this._dialog);
 
@@ -31,10 +31,10 @@ export class Modal extends Component {
 
     EventEmitter.on(Events.OPEN_MODAL, this._handleOpen);
     if (this._closeButton) {
-      this._addEL(this._closeButton, 'click', this._handleCloseClick);
+      this._addEL(this._closeButton, "click", this._handleCloseClick);
     }
-    this._addEL(this._dialog, 'click', this._handleBackdropClick);
-    this._addEL(this._dialog, 'close', this._handleDialogClose);
+    this._addEL(this._dialog, "click", this._handleBackdropClick);
+    this._addEL(this._dialog, "close", this._handleDialogClose);
   }
 
   /**
@@ -43,11 +43,11 @@ export class Modal extends Component {
    * @param payload.id - 対象モーダルのdata-modal-id
    * @param payload.onClose - 閉じた後に実行されるコールバック
    */
-  private _handleOpen(payload: TEventPayloads['OPEN_MODAL']) {
+  private _handleOpen(payload: TEventPayloads["OPEN_MODAL"]) {
     if (this._dialog.dataset.modalId !== payload.id) return;
 
     this._onCloseCallback = payload.onClose;
-    document.body.classList.add('is-modalOpen');
+    document.body.classList.add("is-modalOpen");
     disablePageScroll();
     this._dialog.showModal();
   }
@@ -73,7 +73,7 @@ export class Modal extends Component {
    * モーダルが閉じた後の処理
    */
   private _handleDialogClose() {
-    document.body.classList.remove('is-modalOpen');
+    document.body.classList.remove("is-modalOpen");
     enablePageScroll();
     this._onCloseCallback?.();
     this._onCloseCallback = undefined;

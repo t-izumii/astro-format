@@ -1,6 +1,6 @@
-import { Component, type ComponentOptions } from '../../base/Component';
-import { Events } from '../../constants/events';
-import { EventEmitter } from '../../utils/EventEmitter';
+import { Component, type ComponentOptions } from "../../base/Component";
+import { Events } from "../../constants/events";
+import { EventEmitter } from "../../utils/EventEmitter";
 
 export class ModalOpen extends Component {
   constructor(elTarget: Element, options: ComponentOptions) {
@@ -10,7 +10,7 @@ export class ModalOpen extends Component {
 
   private _setEventListeners() {
     this._handleClick = this._handleClick.bind(this);
-    this._addEL(this._elTarget!, 'click', this._handleClick);
+    this._addEL(this._elTarget!, "click", this._handleClick);
   }
 
   private _handleClick(e: PointerEvent) {

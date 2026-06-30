@@ -1,7 +1,7 @@
 // SVGファイルを自動でインポート (eager: true で即座にロード)
-const icons = import.meta.glob<string>('./svg/*.svg', {
-  query: '?raw',
-  import: 'default',
+const icons = import.meta.glob<string>("./svg/*.svg", {
+  query: "?raw",
+  import: "default",
   eager: true,
 });
 
@@ -30,12 +30,12 @@ export default function Icon({
   const finalSpHeight = spHeight ?? spSize;
 
   const iconPath = `./svg/${name}.svg`;
-  const svgContent = icons[iconPath as keyof typeof icons] || '';
+  const svgContent = icons[iconPath as keyof typeof icons] || "";
 
   // 数値の場合はrem換算、文字列はそのまま
   const toRem = (value: number | string | undefined) => {
     if (value === undefined) return undefined;
-    return typeof value === 'number' ? `${value / 16}rem` : value;
+    return typeof value === "number" ? `${value / 16}rem` : value;
   };
 
   return (
@@ -44,10 +44,10 @@ export default function Icon({
       data-scope="c-icon"
       style={
         {
-          '--_width': toRem(finalWidth),
-          '--_height': toRem(finalHeight),
-          '--_sp-width': toRem(finalSpWidth),
-          '--_sp-height': toRem(finalSpHeight),
+          "--_width": toRem(finalWidth),
+          "--_height": toRem(finalHeight),
+          "--_sp-width": toRem(finalSpWidth),
+          "--_sp-height": toRem(finalSpHeight),
         } as preact.CSSProperties
       }
       dangerouslySetInnerHTML={{ __html: svgContent }}

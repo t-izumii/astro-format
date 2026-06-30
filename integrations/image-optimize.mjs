@@ -1,7 +1,7 @@
-import { readFileSync, writeFileSync, readdirSync } from 'fs';
-import { join, extname } from 'path';
-import { fileURLToPath } from 'url';
-import sharp from 'sharp';
+import { readFileSync, writeFileSync, readdirSync } from "fs";
+import { join, extname } from "path";
+import { fileURLToPath } from "url";
+import sharp from "sharp";
 
 // -------------------------------------------------------------------
 // 設定
@@ -15,7 +15,7 @@ const CONFIG = {
   gif: {},
 };
 
-const TARGET_EXTS = new Set(['.png', '.jpg', '.jpeg', '.webp', '.gif']);
+const TARGET_EXTS = new Set([".png", ".jpg", ".jpeg", ".webp", ".gif"]);
 
 // -------------------------------------------------------------------
 // APNG判定: acTLチャンクが最初のIDATより前に存在すればAPNG（アニメPNG）。
@@ -23,8 +23,8 @@ const TARGET_EXTS = new Set(['.png', '.jpg', '.jpeg', '.webp', '.gif']);
 // 検出して圧縮対象から除外（素通し）する。
 // -------------------------------------------------------------------
 function isApng(buf) {
-  const idat = buf.indexOf('IDAT');
-  const actl = buf.indexOf('acTL');
+  const idat = buf.indexOf("IDAT");
+  const actl = buf.indexOf("acTL");
   return actl !== -1 && (idat === -1 || actl < idat);
 }
 
@@ -48,8 +48,8 @@ async function optimizeFile(file) {
   const inputBuf = readFileSync(file);
 
   // APNGはsharpが扱えず静止画に潰すため、無加工で素通しする
-  if (ext === '.png' && isApng(inputBuf)) {
-    return { status: 'kept-apng' };
+  if (ext === ".png" && isApng(inputBuf)) {
+    return { status: "kept-apng" };
   }
 
   // animated:true で読み込み、アニメGIF/アニメWebPのフレームを保持
@@ -58,21 +58,21 @@ async function optimizeFile(file) {
 
   let pipeline = sharp(inputBuf, { animated: true });
   switch (ext) {
-    case '.jpg':
-    case '.jpeg':
+    case ".jpg":
+    case ".jpeg":
       pipeline = pipeline.jpeg(CONFIG.jpeg);
       break;
-    case '.webp':
+    case ".webp":
       pipeline = pipeline.webp(CONFIG.webp);
       break;
-    case '.png':
+    case ".png":
       pipeline = pipeline.png(CONFIG.png);
       break;
-    case '.gif':
+    case ".gif":
       pipeline = pipeline.gif(CONFIG.gif);
       break;
     default:
-      return { status: 'skip' };
+      return { status: "skip" };
   }
 
   const outputBuf = await pipeline.toBuffer();
@@ -82,24 +82,28 @@ async function optimizeFile(file) {
   if (isAnimated) {
     const outMeta = await sharp(outputBuf, { animated: true }).metadata();
     if ((outMeta.pages ?? 1) <= 1) {
-      return { status: 'kept-animated' };
+      return { status: "kept-animated" };
     }
   }
 
   // 縮まなかった場合は元画像を維持
   if (outputBuf.length >= inputBuf.length) {
-    return { status: 'kept-larger' };
+    return { status: "kept-larger" };
   }
 
   writeFileSync(file, outputBuf);
-  return { status: 'optimized', before: inputBuf.length, after: outputBuf.length };
+  return {
+    status: "optimized",
+    before: inputBuf.length,
+    after: outputBuf.length,
+  };
 }
 
 // 出力ディレクトリ配下の画像をまとめて最適化
 async function optimizeImages(distDir, logger) {
   const images = findImages(distDir);
   if (images.length === 0) {
-    logger.info('画像が見つかりませんでした。');
+    logger.info("画像が見つかりませんでした。");
     return;
   }
 
@@ -107,17 +111,17 @@ async function optimizeImages(distDir, logger) {
   let optimizedCount = 0;
 
   for (const file of images) {
-    const rel = file.replace(distDir + '/', '');
+    const rel = file.replace(distDir + "/", "");
     try {
       const r = await optimizeFile(file);
-      if (r.status === 'optimized') {
+      if (r.status === "optimized") {
         savedBytes += r.before - r.after;
         optimizedCount++;
         const pct = (((r.before - r.after) / r.before) * 100).toFixed(1);
         logger.info(`✓ ${rel}  -${pct}%`);
-      } else if (r.status === 'kept-apng') {
+      } else if (r.status === "kept-apng") {
         logger.info(`↷ ${rel}  APNG検出のため素通し(sharp非対応)`);
-      } else if (r.status === 'kept-animated') {
+      } else if (r.status === "kept-animated") {
         logger.info(`↷ ${rel}  アニメ保持のため元画像を維持`);
       }
     } catch (e) {
@@ -138,9 +142,9 @@ async function optimizeImages(distDir, logger) {
  */
 export default function imageOptimize() {
   return {
-    name: 'image-optimize',
+    name: "image-optimize",
     hooks: {
-      'astro:build:done': async ({ dir, logger }) => {
+      "astro:build:done": async ({ dir, logger }) => {
         await optimizeImages(fileURLToPath(dir), logger);
       },
     },

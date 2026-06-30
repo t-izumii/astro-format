@@ -1,4 +1,4 @@
-@use '@/styles/abstracts' as *;
+@use "@/styles/abstracts" as *;
 
 :root {
   scrollbar-gutter: stable;
@@ -9,7 +9,7 @@
 
   // フォントファミリー
   --font-family-base:
-    -apple-system, blinkmacsystemfont, 'Segoe UI', 'Helvetica Neue', arial,
+    -apple-system, blinkmacsystemfont, "Segoe UI", "Helvetica Neue", arial,
     sans-serif;
 
   // カスタムイージング

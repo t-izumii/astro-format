@@ -1,6 +1,6 @@
-import Button from '../../ui/button';
+import Button from "../../ui/button";
 
-type StockStatus = 'in_stock' | 'low_stock' | 'out_of_stock';
+type StockStatus = "in_stock" | "low_stock" | "out_of_stock";
 
 interface Product {
   id: string;
@@ -23,9 +23,9 @@ export default function ProductCard({ product, onAddToCart }: Props) {
     StockStatus,
     { label: string; color: string; canBuy: boolean }
   > = {
-    in_stock: { label: '在庫あり', color: 'green', canBuy: true },
-    low_stock: { label: '残りわずか', color: 'orange', canBuy: true },
-    out_of_stock: { label: '在庫なし', color: 'red', canBuy: false },
+    in_stock: { label: "在庫あり", color: "green", canBuy: true },
+    low_stock: { label: "残りわずか", color: "orange", canBuy: true },
+    out_of_stock: { label: "在庫なし", color: "red", canBuy: false },
   };
 
   return (

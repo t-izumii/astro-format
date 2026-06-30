@@ -1,6 +1,6 @@
-import type { ComponentChildren } from 'preact';
+import type { ComponentChildren } from "preact";
 
-type GridRepeat = number | 'auto-fit' | 'auto-fill';
+type GridRepeat = number | "auto-fit" | "auto-fill";
 
 interface Props {
   children: ComponentChildren;
@@ -44,7 +44,7 @@ interface Props {
 export default function Grid({
   children,
   className,
-  as = 'div',
+  as = "div",
   layout,
   repeat,
   minSize,
@@ -55,21 +55,21 @@ export default function Grid({
   gapSp,
 }: Props) {
   const Tag = as as any;
-  const classes = ['o-grid', className].filter(Boolean).join(' ');
+  const classes = ["o-grid", className].filter(Boolean).join(" ");
 
   return (
     <Tag
       className={classes}
       style={
         {
-          '--_grid-layout': layout,
-          '--_grid-repeat': repeat,
-          '--_grid-min-size': minSize,
-          '--_grid-gap': gap,
-          '--_grid-layout-sp': layoutSp,
-          '--_grid-repeat-sp': repeatSp,
-          '--_grid-min-size-sp': minSizeSp,
-          '--_grid-gap-sp': gapSp,
+          "--_grid-layout": layout,
+          "--_grid-repeat": repeat,
+          "--_grid-min-size": minSize,
+          "--_grid-gap": gap,
+          "--_grid-layout-sp": layoutSp,
+          "--_grid-repeat-sp": repeatSp,
+          "--_grid-min-size-sp": minSizeSp,
+          "--_grid-gap-sp": gapSp,
         } as preact.CSSProperties
       }
     >

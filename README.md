@@ -72,8 +72,8 @@ Astro v6 + Preactを使用したWebプロジェクトです。
 `@` を使用してsrcディレクトリを参照できます：
 
 ```typescript
-import Component from '@/components/ui/Component';
-import '@/styles/main.scss';
+import Component from "@/components/ui/Component";
+import "@/styles/main.scss";
 ```
 
 ### ビルド設定
@@ -114,13 +114,13 @@ astro build
 compress({ HTML: false, CSS: false, JavaScript: false });
 ```
 
-| 種類 | 圧縮 | 備考                                                   |
-| :--- | :--- | :----------------------------------------------------- |
+| 種類 | 圧縮 | 備考                                                                     |
+| :--- | :--- | :----------------------------------------------------------------------- |
 | HTML | OFF  | ビルド後に Prettier で整形しているため `compress` の HTML 圧縮は使用不可 |
-| CSS  | OFF  | `astro-compress` の設定で圧縮可能                       |
-| JS   | OFF  | `astro-compress` の設定で圧縮可能                       |
-| SVG  | ON   | `astro-compress` で圧縮                                |
-| 画像 | ON   | `astro-compress` で圧縮                                |
+| CSS  | OFF  | `astro-compress` の設定で圧縮可能                                        |
+| JS   | OFF  | `astro-compress` の設定で圧縮可能                                        |
+| SVG  | ON   | `astro-compress` で圧縮                                                  |
+| 画像 | ON   | `astro-compress` で圧縮                                                  |
 
 ##### ⚠️ HTML を圧縮（minify）したい場合
 
@@ -183,6 +183,7 @@ src/components/ui/icon/svg/search.svg
 ```
 
 **注意点:**
+
 - 数値指定の場合、自動的にrem換算される（`24` → `1.5rem`）
 - 文字列指定の場合はそのまま適用される（`"2em"` → `2em`）
 - デフォルトサイズは `1em`（親要素の `font-size` に追従）

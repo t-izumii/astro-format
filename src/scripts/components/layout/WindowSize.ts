@@ -2,11 +2,7 @@ import { debounce } from "throttle-debounce";
 import { Component, type ComponentOptions } from "../../base/Component";
 import { EventEmitter } from "../../utils/EventEmitter";
 import { Events } from "../../constants/events";
-import {
-  MEDIA_PC,
-  MEDIA_SP,
-  MIN_PC_WIDTH,
-} from "../../constants/window-size";
+import { MEDIA_PC, MEDIA_SP, MIN_PC_WIDTH } from "../../constants/window-size";
 
 export class WindowSize extends Component {
   constructor(elTarget: Element, options: ComponentOptions) {

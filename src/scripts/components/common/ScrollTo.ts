@@ -29,12 +29,13 @@ export class ScrollTo extends Component {
         ? parseFloat(this._elTarget.dataset.scrollOffset)
         : undefined;
 
-      const offsetHeader = this._elTarget?.dataset.scrollOffsetHeader === "true";
+      const offsetHeader =
+        this._elTarget?.dataset.scrollOffsetHeader === "true";
 
       // SCROLL_TOイベントをemit
       EventEmitter.emit(Events.SCROLL_TO, {
         target: scrollTarget,
-        options: { duration, offset, offsetHeader }
+        options: { duration, offset, offsetHeader },
       });
     }
   }

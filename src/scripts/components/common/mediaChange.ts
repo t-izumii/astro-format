@@ -1,7 +1,7 @@
-import { Component, type ComponentOptions } from '../../base/Component';
-import { Events } from '../../constants/events';
-import { MEDIA_PC, MEDIA_SP, MIN_PC_WIDTH } from '../../constants/window-size';
-import { EventEmitter } from '../../utils/EventEmitter';
+import { Component, type ComponentOptions } from "../../base/Component";
+import { Events } from "../../constants/events";
+import { MEDIA_PC, MEDIA_SP, MIN_PC_WIDTH } from "../../constants/window-size";
+import { EventEmitter } from "../../utils/EventEmitter";
 
 export class MediaChange extends Component {
   private _mql: MediaQueryList;
@@ -13,7 +13,7 @@ export class MediaChange extends Component {
     this._mql = window.matchMedia(`(min-width: ${MIN_PC_WIDTH}px)`);
 
     this._onChange = this._onChange.bind(this);
-    this._mql.addEventListener('change', this._onChange);
+    this._mql.addEventListener("change", this._onChange);
   }
 
   /**
@@ -27,7 +27,7 @@ export class MediaChange extends Component {
   }
 
   public override destroy() {
-    this._mql.removeEventListener('change', this._onChange);
+    this._mql.removeEventListener("change", this._onChange);
     super.destroy();
   }
 }

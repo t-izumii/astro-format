@@ -10,14 +10,14 @@ interface ButtonProps extends BaseProps {
   target?: never;
   rel?: never;
   disabled?: boolean;
-  type?: 'button' | 'submit' | 'reset';
+  type?: "button" | "submit" | "reset";
   onClick?: () => void;
 }
 
 // aタグ用のprops
 interface AnchorProps extends BaseProps {
   href: string;
-  target?: '_blank' | '_self' | '_parent' | '_top';
+  target?: "_blank" | "_self" | "_parent" | "_top";
   rel?: string;
   disabled?: never;
   type?: never;
@@ -26,7 +26,7 @@ interface AnchorProps extends BaseProps {
 type Props = ButtonProps | AnchorProps;
 
 export default function Button({ label, href, className, ...rest }: Props) {
-  const classes = ['c-button', className].filter(Boolean).join(' ');
+  const classes = ["c-button", className].filter(Boolean).join(" ");
 
   if (href) {
     return (

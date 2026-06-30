@@ -1,15 +1,15 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
-import path from 'path';
-import { fileURLToPath, pathToFileURL } from 'url';
-import preact from '@astrojs/preact';
-import compress from 'astro-compress';
-import imageOptimize from './integrations/image-optimize.mjs';
-import cleanupScripts from './integrations/cleanup-scripts.mjs';
+import { defineConfig } from "astro/config";
+import path from "path";
+import { fileURLToPath, pathToFileURL } from "url";
+import preact from "@astrojs/preact";
+import compress from "astro-compress";
+import imageOptimize from "./integrations/image-optimize.mjs";
+import cleanupScripts from "./integrations/cleanup-scripts.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const assetsDir = 'assets';
-const base = '/htdocs';
+const assetsDir = "assets";
+const base = "/htdocs";
 
 /**
  * 開発時のみコンポーネントプレビュー(/components)を注入するインテグレーション。
@@ -20,13 +20,13 @@ const base = '/htdocs';
  */
 function devComponentsPreview() {
   return {
-    name: 'dev-components-preview',
+    name: "dev-components-preview",
     hooks: {
-      'astro:config:setup': ({ command, injectRoute }) => {
-        if (command !== 'dev') return;
+      "astro:config:setup": ({ command, injectRoute }) => {
+        if (command !== "dev") return;
         injectRoute({
-          pattern: '/components',
-          entrypoint: path.resolve(__dirname, './src/dev/components.astro'),
+          pattern: "/components",
+          entrypoint: path.resolve(__dirname, "./src/dev/components.astro"),
         });
       },
     },
@@ -37,7 +37,7 @@ function devComponentsPreview() {
 export default defineConfig({
   base: base,
   compressHTML: false,
-  outDir: './dist',
+  outDir: "./dist",
   build: {
     assets: `${assetsDir}/chunk`,
   },
@@ -46,15 +46,15 @@ export default defineConfig({
       rolldownOptions: {
         transform: {
           jsx: {
-            runtime: 'automatic',
-            importSource: 'preact',
+            runtime: "automatic",
+            importSource: "preact",
           },
         },
       },
     },
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, './src'),
+        "@": path.resolve(__dirname, "./src"),
       },
     },
     css: {
@@ -64,9 +64,9 @@ export default defineConfig({
           importers: [
             {
               findFileUrl(url) {
-                if (!url.startsWith('@/')) return null;
+                if (!url.startsWith("@/")) return null;
                 return pathToFileURL(
-                  path.resolve(__dirname, 'src', url.slice(2))
+                  path.resolve(__dirname, "src", url.slice(2))
                 );
               },
             },
@@ -89,9 +89,9 @@ export default defineConfig({
           assetFileNames: (assetInfo) => {
             const name = assetInfo.names?.[0];
             if (!name) return `${assetsDir}/[name][extname]`;
-            const ext = name.split('.').pop();
-            if (ext === 'css') {
-              const baseName = name.replace(/\.css$/, '');
+            const ext = name.split(".").pop();
+            if (ext === "css") {
+              const baseName = name.replace(/\.css$/, "");
               return `${assetsDir}/styles/${baseName}[extname]`;
             }
             return `${assetsDir}/${name}`;

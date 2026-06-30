@@ -20,7 +20,7 @@
 }
 
 @mixin sp {
-  @include responsive('md') {
+  @include responsive("md") {
     @content;
   }
 }

@@ -5,9 +5,9 @@ import {
   readdirSync,
   rmSync,
   mkdirSync,
-} from 'fs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
+} from "fs";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 
 // -------------------------------------------------------------------
 // 1. chunk/ 内のスクリプトエントリーを特定
@@ -16,7 +16,7 @@ import { fileURLToPath } from 'url';
 function findEntryChunk(dir) {
   if (!existsSync(dir)) return null;
   const files = readdirSync(dir);
-  return files.find((f) => f.startsWith('script.astro_astro_type_script_'));
+  return files.find((f) => f.startsWith("script.astro_astro_type_script_"));
 }
 
 // -------------------------------------------------------------------
@@ -26,7 +26,7 @@ function extractExports(code) {
   const map = {};
   const exportRe = /^export\s*\{([^}]*)\}\s*;?\s*$/gm;
   const body = code.replace(exportRe, (_full, names) => {
-    for (const part of names.split(',')) {
+    for (const part of names.split(",")) {
       const token = part.trim();
       if (!token) continue;
       const m = token.match(/^(\w+)(?:\s+as\s+(\w+))?$/);
@@ -35,7 +35,7 @@ function extractExports(code) {
       const exported = m[2] || m[1];
       map[exported] = local;
     }
-    return ''; // export 文は出力から除去
+    return ""; // export 文は出力から除去
   });
   return { body, map };
 }
@@ -52,7 +52,7 @@ function inlineImports(code, baseDir) {
   while ((match = importRe.exec(result)) !== null) {
     const bindings = match[1];
     const importPath = match[2];
-    if (!importPath.startsWith('.')) {
+    if (!importPath.startsWith(".")) {
       importRe.lastIndex = match.index + match[0].length;
       continue;
     }
@@ -63,7 +63,7 @@ function inlineImports(code, baseDir) {
       continue;
     }
 
-    let chunkCode = readFileSync(absPath, 'utf-8');
+    let chunkCode = readFileSync(absPath, "utf-8");
     chunkCode = inlineImports(chunkCode, dirname(absPath));
 
     let replacement;
@@ -72,21 +72,21 @@ function inlineImports(code, baseDir) {
     } else {
       const { body, map } = extractExports(chunkCode);
       const aliasLines = bindings
-        .split(',')
+        .split(",")
         .map((part) => {
           const token = part.trim();
-          if (!token) return '';
+          if (!token) return "";
           const m = token.match(/^(\w+)(?:\s+as\s+(\w+))?$/);
-          if (!m) return '';
+          if (!m) return "";
           const imported = m[1];
           const localName = m[2] || m[1];
           const internal = map[imported] || imported;
           return internal === localName
-            ? ''
+            ? ""
             : `const ${localName} = ${internal};`;
         })
         .filter(Boolean)
-        .join('\n');
+        .join("\n");
       replacement = aliasLines ? `${body}\n${aliasLines}` : body;
     }
 
@@ -105,10 +105,10 @@ function inlineImports(code, baseDir) {
 // -------------------------------------------------------------------
 function rewriteHtmlScriptPath(htmlPath, oldSrc, newSrc, logger) {
   if (!existsSync(htmlPath)) return;
-  const html = readFileSync(htmlPath, 'utf-8');
+  const html = readFileSync(htmlPath, "utf-8");
   const updated = html.split(oldSrc).join(newSrc);
   if (html !== updated) {
-    writeFileSync(htmlPath, updated, 'utf-8');
+    writeFileSync(htmlPath, updated, "utf-8");
     logger.info(`HTML 書き換え: ${htmlPath}`);
   }
 }
@@ -120,7 +120,7 @@ function findHtmlFiles(dir) {
     const fullPath = join(dir, entry.name);
     if (entry.isDirectory()) {
       result.push(...findHtmlFiles(fullPath));
-    } else if (entry.name.endsWith('.html')) {
+    } else if (entry.name.endsWith(".html")) {
       result.push(fullPath);
     }
   }
@@ -131,12 +131,12 @@ function findHtmlFiles(dir) {
 // メイン処理（出力ディレクトリを受け取って実行）
 // -------------------------------------------------------------------
 function cleanupScriptsRun(distDir, logger) {
-  const chunkDir = join(distDir, 'assets/chunk');
-  const scriptsDir = join(distDir, 'assets/scripts');
+  const chunkDir = join(distDir, "assets/chunk");
+  const scriptsDir = join(distDir, "assets/scripts");
 
   const entryFile = findEntryChunk(chunkDir);
   if (!entryFile) {
-    logger.warn('エントリーチャンクが見つかりません。スキップします。');
+    logger.warn("エントリーチャンクが見つかりません。スキップします。");
     return;
   }
 
@@ -144,14 +144,14 @@ function cleanupScriptsRun(distDir, logger) {
   logger.info(`エントリー発見: ${entryFile}`);
 
   // インライン展開
-  let code = readFileSync(entryPath, 'utf-8');
+  let code = readFileSync(entryPath, "utf-8");
   code = inlineImports(code, chunkDir);
 
   // scripts/ ディレクトリを作成して script.js として書き出す
   mkdirSync(scriptsDir, { recursive: true });
-  const outputPath = join(scriptsDir, 'script.js');
-  writeFileSync(outputPath, code, 'utf-8');
-  logger.info('出力: assets/scripts/script.js');
+  const outputPath = join(scriptsDir, "script.js");
+  writeFileSync(outputPath, code, "utf-8");
+  logger.info("出力: assets/scripts/script.js");
 
   // HTML のパスを書き換え
   const oldSrc = `assets/chunk/${entryFile}`;
@@ -162,8 +162,8 @@ function cleanupScriptsRun(distDir, logger) {
 
   // chunk/ ディレクトリをまるごと削除
   rmSync(chunkDir, { recursive: true, force: true });
-  logger.info('chunk/ ディレクトリを削除しました');
-  logger.info('cleanup 完了');
+  logger.info("chunk/ ディレクトリを削除しました");
+  logger.info("cleanup 完了");
 }
 
 /**
@@ -175,9 +175,9 @@ function cleanupScriptsRun(distDir, logger) {
  */
 export default function cleanupScripts() {
   return {
-    name: 'cleanup-scripts',
+    name: "cleanup-scripts",
     hooks: {
-      'astro:build:done': ({ dir, logger }) => {
+      "astro:build:done": ({ dir, logger }) => {
         cleanupScriptsRun(fileURLToPath(dir), logger);
       },
     },

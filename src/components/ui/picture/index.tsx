@@ -9,8 +9,8 @@ interface ImgProps {
   alt: string;
   width?: number;
   height?: number;
-  fetchpriority?: 'high' | 'low' | 'auto';
-  loading?: 'lazy' | 'eager';
+  fetchpriority?: "high" | "low" | "auto";
+  loading?: "lazy" | "eager";
 }
 
 interface Props {
@@ -42,24 +42,24 @@ interface Props {
  * <Picture img={{ src: 'assets/images/kv.jpg', alt: 'KV', fetchpriority: 'high', loading: 'eager' }} width="100%" />
  */
 export default function Picture({ img, sp, width, widthSp, className }: Props) {
-  const loading = img.loading ?? 'lazy';
-  const baseUrl = import.meta.env.BASE_URL || '';
+  const loading = img.loading ?? "lazy";
+  const baseUrl = import.meta.env.BASE_URL || "";
   const resolvePath = (path: string) =>
-    path.startsWith('http') ? path : `${baseUrl}${path}`;
+    path.startsWith("http") ? path : `${baseUrl}${path}`;
 
   return (
     <picture
-      className={`c-picture ${className || ''}`}
+      className={`c-picture ${className || ""}`}
       style={
         {
-          '--_aspect-ratio':
+          "--_aspect-ratio":
             img.width && img.height
               ? `${img.width} / ${img.height}`
               : undefined,
-          '--_aspect-ratio-sp':
+          "--_aspect-ratio-sp":
             sp?.width && sp?.height ? `${sp.width} / ${sp.height}` : undefined,
-          '--_display-width': width ?? undefined,
-          '--_display-width-sp': widthSp ?? undefined,
+          "--_display-width": width ?? undefined,
+          "--_display-width-sp": widthSp ?? undefined,
         } as preact.CSSProperties
       }
     >

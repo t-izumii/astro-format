@@ -20,7 +20,7 @@ export class LoadScrollTo extends Component {
       // SCROLL_TOイベントをemit
       EventEmitter.emit(Events.SCROLL_TO, {
         target: target,
-        options: { duration: 1, offsetHeader: false }
+        options: { duration: 1, offsetHeader: false },
       });
     }
   }
