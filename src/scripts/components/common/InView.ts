@@ -17,10 +17,8 @@ export class InView extends Component {
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
-              const cls = this._elTarget?.dataset.inViewClass;
-              if (cls) {
-                this._elTarget?.classList.add(cls);
-              }
+              const cls = this._elTarget?.dataset.inViewClass ?? "is-inView";
+              this._elTarget?.classList.add(cls);
               this._iObserver?.unobserve(this._elTarget!);
             }
           });
