@@ -1,6 +1,9 @@
+import type { MEDIA_PC, MEDIA_SP } from "./window-size";
+
 export const Events = {
   // Window
   WINDOW_RESIZED: "WINDOW_RESIZED",
+  MEDIA_CHANGED: "MEDIA_CHANGED",
 
   // // Content
   // CONTENT_RESIZED: "CONTENT_RESIZED",
@@ -22,6 +25,7 @@ export const Events = {
 
 export type TEventPayloads = {
   WINDOW_RESIZED: undefined;
+  MEDIA_CHANGED: { media: typeof MEDIA_PC | typeof MEDIA_SP };
   // CONTENT_RESIZED: { isHorizontal: boolean, isVertical: boolean };
   SCROLL_STATE_CHANGE: { needsStop: boolean };
   SCROLL: { scrollPosition: number; diff: number };
