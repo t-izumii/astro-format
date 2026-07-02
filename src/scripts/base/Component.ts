@@ -1,4 +1,5 @@
 import { MEDIA_PC, MEDIA_SP } from "../constants/window-size";
+import { Ticker } from "../utils/Ticker";
 
 export type ComponentOptions = {
   windowWidth: number;
@@ -13,6 +14,8 @@ type EventListenerTarget = {
   removeEventListener: (event: any, callback: EventListenerCallback) => void;
 };
 
+type TTickCallback = (payload: { delta: number; fps: number }) => void;
+
 export class Component {
   protected _isDestroyed = false;
   protected _elTarget: HTMLElement | null;
@@ -25,6 +28,8 @@ export class Component {
         callback: EventListenerCallback;
       }[]
     | null = [];
+
+  private _rafCallbacks: Set<TTickCallback> | null = new Set();
 
   constructor(elTarget: Element, options: ComponentOptions) {
     this._elTarget = elTarget as HTMLElement;
@@ -70,6 +75,24 @@ export class Component {
   }
 
   /**
+   * rafの購読処理
+   * @param callback
+   */
+  protected _addRAF(callback: TTickCallback) {
+    this._rafCallbacks!.add(callback);
+    Ticker.on(callback);
+  }
+
+  /**
+   * rafの購読解除処理
+   * @param callback
+   */
+  protected _removeRAF(callback: TTickCallback) {
+    this._rafCallbacks!.delete(callback);
+    Ticker.off(callback);
+  }
+
+  /**
    * 後始末処理
    */
   public destroy() {
@@ -80,6 +103,12 @@ export class Component {
       listener.target.removeEventListener(listener.event, listener.callback);
     });
     this._eventListeners = null;
+
+    // rafの購読を解除
+    this._rafCallbacks!.forEach((callback) => {
+      Ticker.off(callback);
+    });
+    this._rafCallbacks = null;
 
     // エレメントの参照を解除
     this._elTarget = null;
