@@ -13,6 +13,8 @@ Astro v7 + Preact を使用した Web プロジェクトです。
 - **sharp** - ビルド後の画像最適化（自作インテグレーション）
 - **astro-compress** - HTML / CSS / JS / SVG の圧縮
 - **Husky + lint-staged** - コミット時の自動 Lint / フォーマット
+- **stats.js** - FPS 計測パネル（開発時のみ表示）
+- **lil-gui** - デバッグ用パラメータ調整 GUI（開発時のみ表示）
 
 ## プロジェクト構造
 
@@ -42,7 +44,7 @@ Astro v7 + Preact を使用した Web プロジェクトです。
 │   │   ├── base/              # Component 基底クラス
 │   │   ├── components/        # 挙動コンポーネント（common / layout / ui）
 │   │   ├── constants/         # 定数（events / window-size）
-│   │   ├── utils/             # EventEmitter など
+│   │   ├── utils/             # EventEmitter / Ticker（raf・fps） / Gui（lil-gui） など
 │   │   └── index.ts           # コンポーネント登録・初期化のエントリ
 │   └── styles/                # スタイル（ITCSS 構造）
 │       ├── settings/          # 変数・設定
@@ -92,6 +94,30 @@ import "@/styles/style.scss";
 - コンポーネント間の通知は `src/scripts/utils/EventEmitter.ts`（`Events` 定数ベースの型付き pub/sub）で行う。
 
 例: モーダルは `components/ui/modal`（見た目）＋ `scripts/components/ui/modal.ts`（開閉挙動）の2点セット。
+
+### Component 基底クラスの共通機能
+
+`Component`（`src/scripts/base/Component.ts`）を継承すると、以下の購読系ヘルパーが使え、いずれも `destroy()` 時に自動で解除されます（明示的な後始末忘れによるリークを防ぐため）。
+
+| メソッド                 | 用途                                                             |
+| :----------------------- | :--------------------------------------------------------------- |
+| `_addEL` / `_removeEL`   | DOM イベントリスナーの購読・解除                                 |
+| `_addRAF` / `_removeRAF` | 毎フレームのコールバック購読（`delta` / `fps` を受け取る）       |
+| `_addGUI`                | `lil-gui` の folder を取得し、パラメータ調整用コントロールを追加 |
+
+```ts
+// raf購読の例
+this._addRAF(({ delta, fps }) => {
+  // 毎フレーム呼ばれる
+});
+
+// lil-guiの例（開発時のみ有効）
+const folder = this._addGUI("SampleComponent");
+folder?.add(this._options, "speed", 0, 10);
+```
+
+- `_addRAF` は `src/scripts/utils/Ticker.ts` の唯一の `requestAnimationFrame` ループに購読する仕組みで、fps の計算・計測も一元管理されます。開発時のみ `stats.js` の FPS パネルが表示されます（`import.meta.env.DEV` で分岐しているため本番バンドルには含まれません）。
+- `_addGUI` は `src/scripts/utils/Gui.ts` が持つアプリ全体で共有の `lil-gui` インスタンスに対して folder を追加します。こちらも開発時のみ有効（本番では `null` を返す）です。
 
 ### コンポーネントプレビュー
 

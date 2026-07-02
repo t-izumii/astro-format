@@ -1,5 +1,7 @@
+import type GUI from "lil-gui";
 import { MEDIA_PC, MEDIA_SP } from "../constants/window-size";
 import { Ticker } from "../utils/Ticker";
+import { Gui } from "../utils/Gui";
 
 export type ComponentOptions = {
   windowWidth: number;
@@ -30,6 +32,8 @@ export class Component {
     | null = [];
 
   private _rafCallbacks: Set<TTickCallback> | null = new Set();
+
+  private _guiFolder: GUI | null = null;
 
   constructor(elTarget: Element, options: ComponentOptions) {
     this._elTarget = elTarget as HTMLElement;
@@ -93,6 +97,20 @@ export class Component {
   }
 
   /**
+   * lil-guiのfolder追加処理（開発時のみ有効）
+   * @param name
+   */
+  protected _addGUI(name: string): GUI | null {
+    const gui = Gui.instance;
+
+    if (!gui) return null;
+
+    this._guiFolder = gui.addFolder(name);
+
+    return this._guiFolder;
+  }
+
+  /**
    * 後始末処理
    */
   public destroy() {
@@ -109,6 +127,10 @@ export class Component {
       Ticker.off(callback);
     });
     this._rafCallbacks = null;
+
+    // lil-guiのfolderを解除
+    this._guiFolder?.destroy();
+    this._guiFolder = null;
 
     // エレメントの参照を解除
     this._elTarget = null;
