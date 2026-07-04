@@ -4,6 +4,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Component, type ComponentOptions } from "./base/Component";
 import { SizeObserver } from "./components/common/SizeObserver";
 import { WindowSize } from "./components/layout/WindowSize";
+import { AssetLoader } from "./components/layout/AssetLoader";
 import { MediaChange } from "./components/common/mediaChange";
 import { MEDIA_PC, MEDIA_SP, MIN_PC_WIDTH } from "./constants/window-size";
 import { LoadScrollTo } from "./components/common/LoadScrollTo";
@@ -27,6 +28,7 @@ const LAYOUT_COMPONENTS: ComponentList = [
 
 const PAGE_COMPONENTS: ComponentList = [
   // Layout
+  { selector: "body", component: AssetLoader },
   { selector: "body", component: WindowSize },
   { selector: "body", component: MediaChange },
   { selector: "body", component: Scroll },
