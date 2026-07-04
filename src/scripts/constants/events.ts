@@ -5,6 +5,13 @@ export const Events = {
   WINDOW_RESIZED: "WINDOW_RESIZED",
   MEDIA_CHANGED: "MEDIA_CHANGED",
 
+  // Asset
+  ASSET_LOAD_PROGRESS: "ASSET_LOAD_PROGRESS",
+  // ASSET_LOAD_PROGRESSは完了リソース単位で階段状に更新されるため、
+  // 表示用にイージングで滑らかに補間した値をこちらで別途通知する
+  ASSET_LOAD_PROGRESS_EASED: "ASSET_LOAD_PROGRESS_EASED",
+  ASSET_LOADED: "ASSET_LOADED",
+
   // // Content
   // CONTENT_RESIZED: "CONTENT_RESIZED",
 
@@ -25,6 +32,9 @@ export const Events = {
 export type TEventPayloads = {
   WINDOW_RESIZED: undefined;
   MEDIA_CHANGED: { media: typeof MEDIA_PC | typeof MEDIA_SP };
+  ASSET_LOAD_PROGRESS: { loaded: number; total: number; progress: number };
+  ASSET_LOAD_PROGRESS_EASED: { progress: number };
+  ASSET_LOADED: undefined;
   // CONTENT_RESIZED: { isHorizontal: boolean, isVertical: boolean };
   SCROLL_STATE_CHANGE: { needsStop: boolean };
   SCROLL: { scrollPosition: number; diff: number };
