@@ -5,31 +5,44 @@
 /// @prop {String} --_grid-layout - カラムの直接指定（例: 1fr 100px 1fr）。指定時は repeat 計算を無視。
 /// @prop {String | Number} --_grid-repeat [auto-fit] - PCのカラム数指定（数値 or auto-fit / auto-fill）。
 /// @prop {String} --_grid-min-size [0px] - PCのカラム最小幅。
-/// @prop {String} --_grid-gap [0px] - PCのアイテム間の溝。
+/// @prop {String} --_grid-gap [0px] - PCのアイテム間の溝（縦横一括）。
+/// @prop {String} --_grid-column-gap [var(--_grid-gap)] - PCの列方向の溝。指定時は --_grid-gap を上書き。
+/// @prop {String} --_grid-row-gap [var(--_grid-gap)] - PCの行方向の溝。指定時は --_grid-gap を上書き。
 /// @prop {String} --_grid-layout-sp - SP用のカラム直接指定。未指定時は PC の値を継承。
 /// @prop {String | Number} --_grid-repeat-sp [var(--_grid-repeat)] - SPのカラム数指定。
 /// @prop {String} --_grid-min-size-sp [var(--_grid-min-size)] - SPのカラム最小幅。
-/// @prop {String} --_grid-gap-sp [var(--_grid-gap)] - SPのアイテム間の溝。
+/// @prop {String} --_grid-gap-sp [var(--_grid-gap)] - SPのアイテム間の溝（縦横一括）。
+/// @prop {String} --_grid-column-gap-sp - SPの列方向の溝。未指定時は SP一括 → PC個別 → PC一括 の順に継承。
+/// @prop {String} --_grid-row-gap-sp - SPの行方向の溝。未指定時は SP一括 → PC個別 → PC一括 の順に継承。
 ///
 /// @example
-///   <Grid repeat={3} gap="20px">...</Grid>
-///   <Grid minSize="200px" repeatSp={1}>...</Grid>
+///   <Grid repeat={3} gap={20}>...</Grid>
+///   <Grid repeat={3} columnGap={20} rowGap={40}>...</Grid>
+///   <Grid minSize="200px" repeatSp={1} rowGapSp={16}>...</Grid>
 .o-grid {
   --_repeat: var(--_grid-repeat, auto-fit);
   --_size: min(var(--_grid-min-size, 0px), 100%);
-  --_gap: var(--_grid-gap, 0px);
+  --_column-gap: var(--_grid-column-gap, var(--_grid-gap, 0px));
+  --_row-gap: var(--_grid-row-gap, var(--_grid-gap, 0px));
 
   display: grid;
   grid-template-columns: var(
     --_grid-layout,
     repeat(var(--_repeat), minmax(var(--_size), 1fr))
   );
-  gap: var(--_gap);
+  gap: var(--_row-gap) var(--_column-gap);
 
   @include sp {
     --_repeat: var(--_grid-repeat-sp, var(--_grid-repeat, auto-fit));
     --_size: min(var(--_grid-min-size-sp, var(--_grid-min-size, 0px)), 100%);
-    --_gap: var(--_grid-gap-sp, var(--_grid-gap, 0px));
+    --_column-gap: var(
+      --_grid-column-gap-sp,
+      var(--_grid-gap-sp, var(--_grid-column-gap, var(--_grid-gap, 0px)))
+    );
+    --_row-gap: var(
+      --_grid-row-gap-sp,
+      var(--_grid-gap-sp, var(--_grid-row-gap, var(--_grid-gap, 0px)))
+    );
 
     grid-template-columns: var(
       --_grid-layout-sp,
