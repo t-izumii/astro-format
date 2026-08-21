@@ -3,6 +3,7 @@ import {
   readFileSync,
   writeFileSync,
   readdirSync,
+  renameSync,
   rmSync,
   mkdirSync,
 } from "fs";
@@ -133,6 +134,7 @@ function findHtmlFiles(dir) {
 function cleanupScriptsRun(distDir, logger) {
   const chunkDir = join(distDir, "assets/chunk");
   const scriptsDir = join(distDir, "assets/scripts");
+  const stylesDir = join(distDir, "assets/styles");
 
   const entryFile = findEntryChunk(chunkDir);
   if (!entryFile) {
@@ -149,6 +151,7 @@ function cleanupScriptsRun(distDir, logger) {
 
   // scripts/ ディレクトリを作成して script.js として書き出す
   mkdirSync(scriptsDir, { recursive: true });
+  mkdirSync(stylesDir, { recursive: true });
   const outputPath = join(scriptsDir, "script.js");
   writeFileSync(outputPath, code, "utf-8");
   logger.info("出力: assets/scripts/script.js");
@@ -160,6 +163,23 @@ function cleanupScriptsRun(distDir, logger) {
     rewriteHtmlScriptPath(htmlPath, oldSrc, newSrc, logger);
   }
 
+  // Astro は script 経由で読み込まれた CSS も chunk/ に出力する。
+  // 参照が残ったまま chunk/ を消すと 404 になるため、styles/ へ退避する
+  for (const file of readdirSync(chunkDir)) {
+    if (!file.endsWith(".css")) continue;
+
+    renameSync(join(chunkDir, file), join(stylesDir, file));
+    for (const htmlPath of findHtmlFiles(distDir)) {
+      rewriteHtmlScriptPath(
+        htmlPath,
+        `assets/chunk/${file}`,
+        `assets/styles/${file}`,
+        logger
+      );
+    }
+    logger.info(`CSS を退避: assets/styles/${file}`);
+  }
+
   // chunk/ ディレクトリをまるごと削除
   rmSync(chunkDir, { recursive: true, force: true });
   logger.info("chunk/ ディレクトリを削除しました");
@@ -169,7 +189,6 @@ function cleanupScriptsRun(distDir, logger) {
 /**
  * Astro が生成するスクリプトチャンクを単一の script.js にインライン展開し、
  * HTML 参照を書き換えて chunk/ を削除する Astroインテグレーション。
- * JS minify を行う compress より後ろに配置すること。
  *
  * @returns {import('astro').AstroIntegration}
  */

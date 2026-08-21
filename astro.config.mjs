@@ -3,7 +3,6 @@ import { defineConfig } from "astro/config";
 import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import preact from "@astrojs/preact";
-import compress from "astro-compress";
 import imageOptimize from "./integrations/image-optimize.mjs";
 import cleanupScripts from "./integrations/cleanup-scripts.mjs";
 
@@ -74,17 +73,13 @@ export default defineConfig({
         },
       },
     },
-    esbuild: {
-      minifyIdentifiers: false,
-      minifySyntax: false,
-      minifyWhitespace: false,
-    },
     build: {
       emptyOutDir: true,
-      minify: false,
+      minify: "oxc",
+      cssMinify: "lightningcss",
       assetsInlineLimit: 0,
       cssCodeSplit: false,
-      rollupOptions: {
+      rolldownOptions: {
         output: {
           assetFileNames: (assetInfo) => {
             const name = assetInfo.names?.[0];
@@ -103,10 +98,7 @@ export default defineConfig({
   integrations: [
     devComponentsPreview(),
     preact(),
-    // HTML/CSS/JSは必要に応じて圧縮（true化）する。
-    // Image（Sharp）はAPNGを壊すため無効化し、画像圧縮はimageOptimizeで行う。
-    compress({ HTML: false, CSS: true, JavaScript: true, Image: false }),
-    // スクリプトチャンクを単一script.jsへインライン展開（compressのJS minify後に実行）
+    // スクリプトチャンクを単一script.jsへインライン展開
     cleanupScripts(),
     // dist出力後にsharpで画像最適化（APNGは素通し）
     imageOptimize(),
