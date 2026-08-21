@@ -11,6 +11,7 @@ import Icons from "./_components/Icons.astro";
 import Pictures from "./_components/Pictures.astro";
 import Modals from "./_components/Modals.astro";
 import Slides from "./_components/Slides.astro";
+import Marquees from "./_components/Marquees.astro";
 ---
 
 <!doctype html>
@@ -33,6 +34,7 @@ import Slides from "./_components/Slides.astro";
       <div id="picture"><Pictures /></div>
       <div id="modal"><Modals /></div>
       <div id="slide"><Slides /></div>
+      <div id="marquee"><Marquees /></div>
     </main>
   </body>
 </html>
@@ -86,5 +88,21 @@ import Slides from "./_components/Slides.astro";
   .p-catalog__item small {
     font-size: 0.75rem;
     color: #999;
+  }
+  .p-catalog__item--full {
+    display: flex;
+    width: 100%;
+  }
+  .p-catalog__item--full + .p-catalog__item--full {
+    margin-top: 2rem;
+  }
+  .p-catalog__marquee {
+    width: 100%;
+  }
+  .p-catalog__marqueeItem {
+    padding-inline-end: 2rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    white-space: nowrap;
   }
 </style>

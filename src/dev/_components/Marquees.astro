@@ -1,0 +1,42 @@
+---
+import MarqueeDemo from "./MarqueeDemo.tsx";
+---
+
+<section class="p-catalog__section">
+  <h2 class="p-catalog__title">Marquee</h2>
+
+  <div class="p-catalog__item p-catalog__item--full">
+    <small>デフォルト（左流れ / speed 30）</small>
+    <div class="p-catalog__marquee">
+      <MarqueeDemo />
+    </div>
+  </div>
+
+  <div class="p-catalog__item p-catalog__item--full">
+    <small>speed=120（高速）／画像入り</small>
+    <div class="p-catalog__marquee">
+      <MarqueeDemo speed={120} withImage />
+    </div>
+  </div>
+
+  <div class="p-catalog__item p-catalog__item--full">
+    <small>direction=-1（右流れ）</small>
+    <div class="p-catalog__marquee">
+      <MarqueeDemo direction={-1} />
+    </div>
+  </div>
+
+  <div class="p-catalog__item p-catalog__item--full">
+    <small>pauseOnHover（ホバーで減速停止）</small>
+    <div class="p-catalog__marquee">
+      <MarqueeDemo pauseOnHover />
+    </div>
+  </div>
+
+  <div class="p-catalog__item p-catalog__item--full">
+    <small>scrollBoost（スクロール速度でブースト）</small>
+    <div class="p-catalog__marquee">
+      <MarqueeDemo scrollBoost />
+    </div>
+  </div>
+</section>

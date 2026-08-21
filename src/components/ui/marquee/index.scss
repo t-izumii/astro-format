@@ -1,0 +1,27 @@
+@use "@/styles/abstracts" as *;
+
+.c-marquee {
+  contain: paint;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.c-marquee__track {
+  display: flex;
+  will-change: transform;
+}
+
+.c-marquee__set {
+  display: flex;
+  flex: none;
+}
+
+.c-marquee[data-pause-on-hover] {
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c-marquee {
+    overflow-x: auto;
+  }
+}

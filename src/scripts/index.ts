@@ -16,6 +16,7 @@ import { Scroll } from "./components/layout/Scroll";
 import { Modal } from "./components/ui/modal";
 import { ModalOpen } from "./components/ui/modalOpen";
 import { Carousel } from "./components/ui/carousel";
+import { Marquee } from "./components/ui/marquee";
 // import { Events } from "./constants/events";
 // import { EventEmitter } from "./utils/EventEmitter";
 
@@ -46,6 +47,7 @@ const PAGE_COMPONENTS: ComponentList = [
   { selector: ".js-modal", component: Modal },
   { selector: ".js-modalOpen", component: ModalOpen },
   { selector: ".js-carousel", component: Carousel },
+  { selector: ".js-marquee", component: Marquee },
 ];
 
 // setup gsap
