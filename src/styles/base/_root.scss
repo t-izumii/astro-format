@@ -1,5 +1,11 @@
 @use "@/styles/abstracts" as *;
 
+@property --vw {
+  syntax: "<length>";
+  initial-value: 0;
+  inherits: true;
+}
+
 :root {
   scrollbar-gutter: stable;
   --fz: 1;
