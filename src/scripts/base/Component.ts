@@ -92,9 +92,8 @@ export class Component {
   /**
    * EventEmitterの購読処理
    *
-   * _addELと同じく、destroy()で自動的に解除される。EventEmitterの
-   * リスナーは静的に保持されるため、解除し忘れるとSPA遷移のたびに
-   * 破棄済みコンポーネントのハンドラが積み上がる。
+   * EventEmitterのリスナーは静的に保持されるため、解除し忘れるとSPA遷移の
+   * たびに破棄済みのハンドラが積み上がる。
    *
    * @param event
    * @param callback
@@ -158,21 +157,15 @@ export class Component {
   /**
    * サブクラス固有の後始末（オーバーライド用）
    *
-   * destroy()から高々1回だけ呼ばれる。二重呼び出しのガードは基底が持つ
-   * ので不要で、super呼び出しも不要。基底が参照をnullにする前・かつ
-   * _isDestroyedが立った後に走るため、RAFループ側のガードは既に効く。
+   * destroy()から高々1回、基底が参照をnullにする前に呼ばれる。
    */
   protected _onDestroy() {}
 
   /**
-   * 後始末処理
+   * 後始末処理。オーバーライドせず_onDestroy()を使う
    *
-   * オーバーライドしないこと。固有の後始末は_onDestroy()に書く。
-   *
-   * Why テンプレートメソッド: SPA遷移では同一インスタンスにdestroyが
-   * 重ねて走り得るが、ガードをサブクラスに書かせると書き忘れた1つが
-   * 例外になる。super.destroy()の呼び忘れも同様に解除漏れになる。
-   * 呼び出し順とガードを基底に閉じ込めて、構造的に守れるようにする。
+   * SPA遷移では同一インスタンスにdestroyが重ねて走り得る。ガードやsuper
+   * 呼び出しをサブクラスに書かせると、書き忘れた1つが例外や解除漏れになる。
    */
   public destroy() {
     if (this._isDestroyed) return;

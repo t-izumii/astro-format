@@ -42,16 +42,10 @@ export class EventEmitter {
   /**
    * イベントを発火する
    *
-   * 配信はqueueMicrotaskで現在の同期ブロックの終了後まで遅らせる。
-   * emitした直後に同じ同期ブロック内でonした購読者にも届くため、
-   * 生成順への暗黙の依存が生まれない。AssetProgress.init()が計測対象
-   * 0件のときコンストラクタ内から同期でemitし、その2行下でonしている
-   * のが実例で、同期配信にするとローディングが永久に終わらなくなる。
-   *
-   * Why not requestAnimationFrame: 1フレーム遅れるうえ、rAFの中から
-   * emitすると次フレーム送りになる。背景タブではrAFが止まりイベントが
-   * 溜まる。クリック起点のイベントではuser activationを失い、Safariで
-   * gesture依存のAPIが弾かれ得る。マイクロタスクにはいずれもない。
+   * 同期配信だとemitより後にonした購読者に届かない。AssetProgress.init()は
+   * 計測対象0件のとき、コンストラクタ内でemitした2行下でonしている。
+   * requestAnimationFrameでは1フレーム遅延、rAF内emitの次フレーム送り、
+   * 背景タブでの滞留、クリック起点でのuser activation喪失が起きる。
    *
    * @param event
    * @param payload
@@ -63,18 +57,10 @@ export class EventEmitter {
   /**
    * 登録済みリスナーへ実際に配信する
    *
-   * 配信中の購読変更に対して、次の3つを同時に満たす必要がある。
-   * - 配信中にoffされても、後続のリスナーが飛ばされない
-   * - 配信中にoffされたリスナーは呼ばない（破棄済みのものを叩かない）
-   * - 配信中にonされたリスナーは今回の配信に混ぜない
-   *
    * SPA遷移では1つのイベントの配信中に全コンポーネントのdestroy(=off)と
-   * 再生成(=on)が走るため、3つとも実際に踏む。スナップショットを回しつつ
-   * 呼び出し直前に在籍を確認することで満たす。
-   *
-   * Why not 生のSet.forEach: 反復中に追加された値を訪問するため、遷移で
-   * 生成されたばかりのコンポーネントが、自分を生んだイベントを受け取る。
-   * Why not 配列のsplice: 配信中の解除で後続のリスナーが飛ばされる。
+   * 再生成(=on)が走る。生のSet.forEachは反復中に追加された値を訪問するため
+   * 生成されたばかりのコンポーネントが自分を生んだイベントを受け取り、
+   * 配列のspliceは配信中の解除で後続のリスナーが飛ばされる。
    *
    * @param event
    * @param payload
@@ -90,8 +76,6 @@ export class EventEmitter {
       // console.error("[EventEmitter] Targets not found.", event);
       return;
     }
-
-    // event !== "TICK" && console.log("EventEmitter.emit", event);
 
     Array.from(targetListeners).forEach((listener) => {
       if (!targetListeners.has(listener)) return;
