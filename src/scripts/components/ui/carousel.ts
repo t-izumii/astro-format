@@ -72,9 +72,8 @@ export class Carousel extends Component {
     this._splide?.refresh();
   }
 
-  public override destroy() {
+  protected override _onDestroy() {
     this._splide?.destroy();
     this._splide = null;
-    super.destroy();
   }
 }

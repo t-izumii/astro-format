@@ -23,8 +23,8 @@ export class AssetLoader extends Component {
     super(elTarget, options);
 
     AssetProgress.init();
-    EventEmitter.on(Events.ASSET_LOADED, this._onAssetLoaded);
-    EventEmitter.on(Events.ASSET_LOAD_PROGRESS, this._onAssetLoadProgress);
+    this._addEE(Events.ASSET_LOADED, this._onAssetLoaded);
+    this._addEE(Events.ASSET_LOAD_PROGRESS, this._onAssetLoadProgress);
   }
 
   private _handleAssetLoadProgress(
@@ -85,10 +85,7 @@ export class AssetLoader extends Component {
     this._elTarget?.classList.add("is-loaded");
   }
 
-  public override destroy() {
+  protected override _onDestroy() {
     gsap.killTweensOf(this._easedProgress);
-    EventEmitter.off(Events.ASSET_LOADED, this._onAssetLoaded);
-    EventEmitter.off(Events.ASSET_LOAD_PROGRESS, this._onAssetLoadProgress);
-    super.destroy();
   }
 }

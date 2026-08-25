@@ -285,7 +285,7 @@ export class Marquee extends Component {
 
   /* ---------------- Lifecycle ---------------- */
 
-  public override destroy() {
+  protected override _onDestroy() {
     this._destroyed = true;
 
     cancelAnimationFrame(this._raf);
@@ -300,7 +300,5 @@ export class Marquee extends Component {
     this._st = null;
     this._ro = null;
     this._io = null;
-
-    super.destroy();
   }
 }

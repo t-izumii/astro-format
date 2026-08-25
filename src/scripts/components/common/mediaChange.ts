@@ -26,8 +26,7 @@ export class MediaChange extends Component {
     EventEmitter.emit(Events.MEDIA_CHANGED, { media });
   }
 
-  public override destroy() {
+  protected override _onDestroy() {
     this._mql.removeEventListener("change", this._onChange);
-    super.destroy();
   }
 }

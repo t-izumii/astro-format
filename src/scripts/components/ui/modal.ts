@@ -5,7 +5,6 @@ import {
 } from "@fluejs/noscroll";
 import { Component, type ComponentOptions } from "../../base/Component";
 import { Events, type TEventPayloads } from "../../constants/events";
-import { EventEmitter } from "../../utils/EventEmitter";
 
 export class Modal extends Component {
   private _dialog: HTMLDialogElement;
@@ -29,7 +28,7 @@ export class Modal extends Component {
     this._handleBackdropClick = this._handleBackdropClick.bind(this);
     this._handleDialogClose = this._handleDialogClose.bind(this);
 
-    EventEmitter.on(Events.OPEN_MODAL, this._handleOpen);
+    this._addEE(Events.OPEN_MODAL, this._handleOpen);
     if (this._closeButton) {
       this._addEL(this._closeButton, "click", this._handleCloseClick);
     }
@@ -79,9 +78,7 @@ export class Modal extends Component {
     this._onCloseCallback = undefined;
   }
 
-  public override destroy() {
+  protected override _onDestroy() {
     if (this._dialog.open) enablePageScroll();
-    EventEmitter.off(Events.OPEN_MODAL, this._handleOpen);
-    super.destroy();
   }
 }

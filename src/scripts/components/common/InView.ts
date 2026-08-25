@@ -31,13 +31,12 @@ export class InView extends Component {
     }, 500);
   }
 
-  public override destroy() {
+  protected override _onDestroy() {
     if (this._timeoutId !== null) {
       clearTimeout(this._timeoutId);
       this._timeoutId = null;
     }
     this._iObserver?.disconnect();
     this._iObserver = null;
-    super.destroy();
   }
 }

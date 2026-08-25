@@ -29,6 +29,8 @@ export const Events = {
   CHANGE_TOP_HELLO_ANIMATION: "CHANGE_TOP_HELLO_ANIMATION",
 } as const;
 
+export type TEvents = keyof typeof Events;
+
 export type TEventPayloads = {
   WINDOW_RESIZED: undefined;
   MEDIA_CHANGED: { media: typeof MEDIA_PC | typeof MEDIA_SP };

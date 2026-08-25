@@ -30,9 +30,8 @@ export class SizeObserver extends Component {
     this._rObserver.observe(this._elTarget!);
   }
 
-  public override destroy() {
+  protected override _onDestroy() {
     this._rObserver?.disconnect();
     this._rObserver = null;
-    super.destroy();
   }
 }

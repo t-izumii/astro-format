@@ -21,8 +21,11 @@ Astro v7 + **Preact**（React ではない）の静的サイト。`base: "/"`、
 
 - **見た目**: `src/components/`（Preact `.tsx` / Astro）。`js-` クラスと `data-*` 属性を出力する。
 - **挙動**: `src/scripts/components/`。`src/scripts/base/Component.ts` を継承し、`src/scripts/index.ts` の `PAGE_COMPONENTS` に `{ selector: ".js-xxx", component: Xxx }` で登録する。
-- 挙動クラスは `constructor(elTarget, options)` / `_setEventListeners()` / `public override destroy()` の形に揃える。DOM リスナーは基底の `_addEL` を使う（`destroy` で自動解除される）。`EventEmitter.on` は管理外なので `destroy` で手動 `off` する。
+- 挙動クラスは `constructor(elTarget, options)` / `_setEventListeners()` / `protected override _onDestroy()` の形に揃える。購読は必ず基底経由にする（いずれも `destroy` で自動解除される）: DOM リスナーは `_addEL`、毎フレーム処理は `_addRAF`（`Ticker`）、イベントバスは **`_addEE`**（`EventEmitter.on` を直接呼ばない）。
+- **`destroy()` はオーバーライドしない。固有の後始末は `_onDestroy()` に書く**（テンプレートメソッド）。二重呼び出しのガードと呼び出し順は基底が持つので、サブクラス側にガードも `super` 呼び出しも要らない。SPA 遷移では同一インスタンスに destroy が重ねて走り得るため、ガードをサブクラスに書かせる形にしない。
 - コンポーネント間通知は `src/scripts/utils/EventEmitter.ts`。イベント名と payload 型は `src/scripts/constants/events.ts` の `Events` / `TEventPayloads` に追加する。
+- **毎フレームのイベントをバスに流さない**（`Ticker` が rAF を単独で持つ）。`EventEmitter.ts` に残る `TICK` への言及は前案件の名残で、このリポジトリには存在しない。
+- `emit` は `queueMicrotask` 越しに配信する。**emit した直後に同じ同期ブロックで `on` した購読者にも届く**（`AssetProgress.init()` が計測対象 0 件のときコンストラクタ内から同期 emit し、その 2 行下で `on` しているのが実例）。同期配信に変えるとここが黙って落ちる。
 
 ## 必ず守るルール（過去にハマった点）
 

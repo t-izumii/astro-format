@@ -1,7 +1,6 @@
 import { gsap } from "gsap";
 import { Component, type ComponentOptions } from "../../base/Component";
 import { Events, type TEventPayloads } from "../../constants/events";
-import { EventEmitter } from "../../utils/EventEmitter";
 
 export class ScrollToHandler extends Component {
   constructor(elTarget: Element, options: ComponentOptions) {
@@ -11,7 +10,7 @@ export class ScrollToHandler extends Component {
 
   private _setEventListeners() {
     this._handleScrollTo = this._handleScrollTo.bind(this);
-    EventEmitter.on(Events.SCROLL_TO, this._handleScrollTo);
+    this._addEE(Events.SCROLL_TO, this._handleScrollTo);
   }
 
   private _handleScrollTo(payload: TEventPayloads["SCROLL_TO"]) {
@@ -50,7 +49,6 @@ export class ScrollToHandler extends Component {
   }
 
   public override destroy() {
-    EventEmitter.off(Events.SCROLL_TO, this._handleScrollTo);
     super.destroy();
   }
 }

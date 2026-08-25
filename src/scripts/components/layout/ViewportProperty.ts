@@ -102,7 +102,7 @@ export class ViewportProperty extends Component {
     );
   }
 
-  public override destroy() {
+  protected override _onDestroy() {
     if (this._rafId !== null) {
       window.cancelAnimationFrame(this._rafId);
       this._rafId = null;
@@ -111,7 +111,5 @@ export class ViewportProperty extends Component {
       clearTimeout(this._orientationTimerId);
       this._orientationTimerId = null;
     }
-
-    super.destroy();
   }
 }
