@@ -78,6 +78,7 @@ export class EventEmitter {
     }
 
     Array.from(targetListeners).forEach((listener) => {
+      // 配信中にdestroyされたコンポーネントのハンドラは呼ばない
       if (!targetListeners.has(listener)) return;
 
       try {
