@@ -1,6 +1,8 @@
 @use "@/styles/abstracts" as *;
 
 .c-icon {
+  // 公開変数 --color: アイコンの色。未指定時は親の文字色を継承する。
+  --_color: var(--color, inherit);
   --_size: var(--size, 1em);
   --_width: var(--width, var(--_size));
   --_height: var(--height, var(--_size));
@@ -12,6 +14,7 @@
   width: var(--_width);
   height: var(--_height);
   line-height: 1;
+  color: var(--_color);
 
   @include sp {
     width: var(--_width-sp);

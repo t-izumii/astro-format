@@ -81,3 +81,9 @@ TypeScript・HTML Lint・ビルド・差分検査に合格。型定義変更前�
 依頼に合わせ Header / Footer を各ディレクトリの index.tsx へ移動し、index.scss と集約用 \_index.scss を追加。既存 import はディレクトリの index に解決される。仮スタイルは固定の l-header / l-footer に限定し、余白を `--_padding: var(--padding, 0)` で解決する。
 
 適用基準は CLAUDE.md の関連ファイルの隣接配置と変数規約、基盤 rules/components.md「契約変更後もサポートする利用を成立させる」、rules/css-design.md「意図した対象と状態に適用する」、rules/code-quality.md「名前から役割と値の意味を読めるようにする」。利用側の import と CSS 集約をビルドで確認し、型チェック・CSS / HTML Lint・差分検査に合格。開発トップページの DOM と算出スタイルで両クラス、内部変数0、padding 0px を確認した。新規操作はなく、画面操作の再検証は行っていない。
+
+## Icon の個別色指定
+
+公開変数 --color を追加し、内部 --\_color を経由して color に適用。SVG の currentColor が各インスタンスの色を参照する。SVG ルートへの一括 fill / stroke 指定は撤去し、元の fill="none" と各パスの描画指定を保持した。README に新規 SVG の currentColor 規約を記載。
+
+CLAUDE.md の公開変数規約と、基盤 rules/css-design.md「意図した対象と状態に適用する」、rules/components.md「利用条件の範囲で独立して動作する」を適用。開発カタログに同じ SVG の赤・青・緑の3例を追加し、各パスの算出 stroke が指定色に一致し fill は none のままであること、未指定時に親の文字色を継承することをブラウザで確認。型チェック・CSS / HTML Lint・ビルドに合格。

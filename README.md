@@ -72,9 +72,13 @@ Button の disabled・type・style・onClick・ARIA 属性は標準属性型か�
 
 ### アイコン
 
+色は各 Icon の `--color` で個別に指定します。未指定時は親の文字色を継承します。追加する単色 SVG は塗りを `fill="currentColor"`、線を `stroke="currentColor"` にし、描画しない部分の `none` は維持します。固定色の SVG はその色を保持するため、`--color` では変わりません。
+
 ```tsx
 <Icon name="arrow" />
 <Icon name="arrow" style={{ "--size": "2.5rem", "--size-sp": "1.5rem" }} />
+<Icon name="arrow" style={{ "--color": "#c62828" }} />
+<Icon name="arrow" style={{ "--color": "#1565c0" }} />
 ```
 
 SVG は `components/ui/icon/svg/` へ追加します。既定サイズは親の文字サイズに従う `1em`。幅と高さを別々に指定する場合は `--width` / `--height`、SP 用はそれぞれ `-sp` を使います。装飾として既定で `aria-hidden="true"` を付けます。アイコンだけのボタンには Button 側の `aria-label` などで操作名を付けてください。
