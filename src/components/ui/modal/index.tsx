@@ -1,13 +1,22 @@
-import type { ComponentChildren } from "preact";
+import type { JSX } from "preact";
 
-interface Props {
-  children?: ComponentChildren;
-  dataModalId: string;
-}
+type Props = JSX.IntrinsicElements["dialog"] & {
+  "data-modal-id": string;
+};
 
-export default function Modal({ children, dataModalId }: Props) {
+export default function Modal({
+  children,
+  class: className,
+  className: extraClass,
+  ...rest
+}: Props) {
   return (
-    <dialog className="c-modal js-modal" data-modal-id={dataModalId}>
+    <dialog
+      {...rest}
+      className={["c-modal", "js-modal", className, extraClass]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <div className="c-modal__container js-modalContainer">
         <button
           className="c-modal__close js-modalClose"

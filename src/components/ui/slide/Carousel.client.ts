@@ -1,5 +1,5 @@
 import Splide, { type Options } from "@splidejs/splide";
-import { Component, type ComponentOptions } from "../../base/Component";
+import { Component, type ComponentOptions } from "@/scripts/base/Component";
 
 export class Carousel extends Component {
   private _splide: Splide | null = null;

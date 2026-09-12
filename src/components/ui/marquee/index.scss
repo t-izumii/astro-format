@@ -16,7 +16,7 @@
   flex: none;
 }
 
-.c-marquee[data-pause-on-hover] {
+.c-marquee:where([data-pause-on-hover]) {
   pointer-events: auto;
 }
 

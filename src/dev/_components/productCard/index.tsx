@@ -1,4 +1,4 @@
-import Button from "../../ui/button";
+import Button from "@/components/ui/button";
 
 type StockStatus = "in_stock" | "low_stock" | "out_of_stock";
 
@@ -44,10 +44,11 @@ export default function ProductCard({ product, onAddToCart }: Props) {
 
       {/* ドメインルール：在庫なしならボタンを無効化 */}
       <Button
-        label="カートに追加"
         disabled={!stockConfig[stockStatus].canBuy}
         onClick={() => onAddToCart(id)}
-      />
+      >
+        カートに追加
+      </Button>
     </div>
   );
 }

@@ -3,8 +3,8 @@ import {
   enablePageScroll,
   markScrollable,
 } from "@fluejs/noscroll";
-import { Component, type ComponentOptions } from "../../base/Component";
-import { Events, type TEventPayloads } from "../../constants/events";
+import { Component, type ComponentOptions } from "@/scripts/base/Component";
+import { Events, type TEventPayloads } from "@/scripts/constants/events";
 
 export class Modal extends Component {
   private _dialog: HTMLDialogElement;

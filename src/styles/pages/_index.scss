@@ -1,2 +1,2 @@
-// src/components からすべてforwardする
+// ページ固有スタイルは部品に隣接させ、共通部品の後に集約する。
 @forward "../../components/pages/";

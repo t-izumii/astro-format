@@ -1,44 +1,21 @@
-// 共通props
-interface BaseProps {
-  label: string;
-  className?: string;
-}
+import type { JSX } from "preact";
 
-// buttonタグ用のprops
-interface ButtonProps extends BaseProps {
-  href?: never;
-  target?: never;
-  rel?: never;
-  disabled?: boolean;
-  type?: "button" | "submit" | "reset";
-  onClick?: () => void;
-}
+type Props = JSX.IntrinsicElements["button"];
 
-// aタグ用のprops
-interface AnchorProps extends BaseProps {
-  href: string;
-  target?: "_blank" | "_self" | "_parent" | "_top";
-  rel?: string;
-  disabled?: never;
-  type?: never;
-}
-
-type Props = ButtonProps | AnchorProps;
-
-export default function Button({ label, href, className, ...rest }: Props) {
-  const classes = ["c-button", className].filter(Boolean).join(" ");
-
-  if (href) {
-    return (
-      <a href={href} className={classes} {...rest}>
-        {label}
-      </a>
-    );
-  }
-
+export default function Button({
+  children,
+  class: className,
+  className: extraClass,
+  type = "button",
+  ...rest
+}: Props) {
   return (
-    <button className={classes} {...rest}>
-      {label}
+    <button
+      {...rest}
+      type={type}
+      className={["c-button", className, extraClass].filter(Boolean).join(" ")}
+    >
+      {children}
     </button>
   );
 }

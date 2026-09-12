@@ -1,4 +1,4 @@
-import { Component, type ComponentOptions } from "../../base/Component";
+import { Component, type ComponentOptions } from "@/scripts/base/Component";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 

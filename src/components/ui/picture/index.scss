@@ -2,17 +2,25 @@
 
 .c-picture {
   display: inline-block;
-  width: var(--_display-width, 100%);
-  aspect-ratio: var(--_aspect-ratio, auto);
+  width: var(--picture-width, 100%);
+  max-width: 100%;
 
   @include sp {
-    width: var(--_display-width-sp, var(--_display-width, 100%));
-    aspect-ratio: var(--_aspect-ratio-sp, var(--_aspect-ratio, auto));
+    width: var(--picture-width-sp, var(--picture-width, 100%));
   }
+}
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.c-picture > :where(img) {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: var(--picture-aspect-ratio, auto);
+  object-fit: var(--picture-fit, cover);
+
+  @include sp {
+    aspect-ratio: var(
+      --picture-aspect-ratio-sp,
+      var(--picture-aspect-ratio, auto)
+    );
   }
 }

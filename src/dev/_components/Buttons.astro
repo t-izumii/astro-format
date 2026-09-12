@@ -1,19 +1,28 @@
 ---
 import Button from "@/components/ui/button";
+import ActionLink from "@/components/ui/link";
+import Icon from "@/components/ui/icon";
 ---
 
 <section class="p-catalog__section">
-  <h2 class="p-catalog__title">Button</h2>
+  <h2 class="p-catalog__title">Button / Link</h2>
   <div class="p-catalog__row">
-    <Button label="通常ボタン" />
-    <Button label="リンク (a)" href="/" />
-    <Button
-      label="新規タブ"
-      href="https://example.com"
-      target="_blank"
-      rel="noopener"
-    />
-    <Button label="submit" type="submit" />
-    <Button label="無効" disabled />
+    <Button>通常ボタン</Button>
+    <ActionLink href="/">リンク (a)</ActionLink>
+    <ActionLink href="https://example.com" target="_blank" rel="noopener"
+      >新規タブ</ActionLink
+    >
+    <Button type="submit">submit</Button>
+    <Button disabled>無効</Button>
+    <Button><Icon name="arrow" />進む</Button>
+    <Button class="p-catalog__customButton">クラスで上書き</Button>
   </div>
 </section>
+
+<style is:global>
+  .p-catalog__customButton {
+    --button-padding: 0.75rem 2rem;
+    --button-background: #222;
+    --button-color: #fff;
+  }
+</style>

@@ -1,40 +1,36 @@
-import Picture from "../../ui/picture";
-import Button from "../../ui/button";
+import Picture from "@/components/ui/picture";
+import Button from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
-import Modal from "../../ui/modal";
+import Modal from "@/components/ui/modal";
 
-export default function Pages() {
+export default function Page() {
   return (
     <div>
-      <h2>TOP</h2>
-
-      {/* モーダル動作確認用 */}
-      <button type="button" className="js-modalOpen" data-modal-target="test">
+      <h2 className="p-home__heading">TOP</h2>
+      <Button class="js-modalOpen" data-modal-target="test">
         モーダルを開く
-      </button>
-
-      <Modal dataModalId="test">
-        <h3>テストモーダル</h3>
+      </Button>
+      <Modal data-modal-id="test" aria-labelledby="test-title">
+        <h3 id="test-title">テストモーダル</h3>
         <p>これはテスト用のモーダルです。</p>
       </Modal>
-
-      <Picture
-        img={{
-          src: "https://placehold.jp/150x150.png",
-          alt: "Sample Image",
-          width: 600,
-          height: 400,
-        }}
-        sp={{
-          src: "https://placehold.jp/150x150.png",
-          width: 300,
-          height: 200,
-        }}
-        width="400px"
-      />
-
-      <Icon name="arrow" width={40} height={40} />
-      <Button label="test" />
+      <Picture style={{ "--picture-width": "400px" }}>
+        <source
+          srcSet="https://placehold.jp/150x150.png"
+          media="(width < 768px)"
+          width={300}
+          height={200}
+        />
+        <img
+          src="https://placehold.jp/150x150.png"
+          alt="Sample Image"
+          width={600}
+          height={400}
+          loading="lazy"
+        />
+      </Picture>
+      <Icon name="arrow" style={{ "--icon-size": "2.5rem" }} />
+      <Button>test</Button>
     </div>
   );
 }

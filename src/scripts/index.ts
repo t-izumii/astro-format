@@ -13,10 +13,10 @@ import { ScrollToHandler } from "./components/common/ScrollToHandler";
 import { ScrollTo } from "./components/common/ScrollTo";
 import { InView } from "./components/common/InView";
 import { Scroll } from "./components/layout/Scroll";
-import { Modal } from "./components/ui/modal";
-import { ModalOpen } from "./components/ui/modalOpen";
-import { Carousel } from "./components/ui/carousel";
-import { Marquee } from "./components/ui/marquee";
+import { Modal } from "@/components/ui/modal/Modal.client";
+import { ModalOpen } from "@/components/ui/modal/ModalOpen.client";
+import { Carousel } from "@/components/ui/slide/Carousel.client";
+import { Marquee } from "@/components/ui/marquee/Marquee.client";
 // import { Events } from "./constants/events";
 // import { EventEmitter } from "./utils/EventEmitter";
 

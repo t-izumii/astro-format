@@ -5,17 +5,25 @@ import Icon from "@/components/ui/icon";
 <section class="p-catalog__section">
   <h2 class="p-catalog__title">Icon</h2>
   <div class="p-catalog__row p-catalog__row--middle">
-    <span class="p-catalog__item">
-      <Icon name="arrow" size={24} />
-      <small>size=24</small>
-    </span>
-    <span class="p-catalog__item">
-      <Icon name="arrow" size={40} />
-      <small>size=40</small>
-    </span>
-    <span class="p-catalog__item">
-      <Icon name="arrow" width={64} height={64} />
-      <small>64×64</small>
-    </span>
+    <span class="p-catalog__item"
+      ><Icon name="arrow" /><small>既定値 1em</small></span
+    >
+    <span class="p-catalog__item"
+      ><Icon name="arrow" style={{ "--icon-size": "1.5rem" }} /><small
+        >24px</small
+      ></span
+    >
+    <span class="p-catalog__item"
+      ><Icon
+        name="arrow"
+        style={{ "--icon-size": "2.5rem", "--icon-size-sp": "1.5rem" }}
+      /><small>PC 40px / SP 24px</small></span
+    >
+    <span class="p-catalog__item"
+      ><Icon
+        name="arrow"
+        style={{ "--icon-width": "4rem", "--icon-height": "4rem" }}
+      /><small>64×64</small></span
+    >
   </div>
 </section>

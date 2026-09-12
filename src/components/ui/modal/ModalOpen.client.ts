@@ -1,6 +1,6 @@
-import { Component, type ComponentOptions } from "../../base/Component";
-import { Events } from "../../constants/events";
-import { EventEmitter } from "../../utils/EventEmitter";
+import { Component, type ComponentOptions } from "@/scripts/base/Component";
+import { Events } from "@/scripts/constants/events";
+import { EventEmitter } from "@/scripts/utils/EventEmitter";
 
 export class ModalOpen extends Component {
   constructor(elTarget: Element, options: ComponentOptions) {

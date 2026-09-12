@@ -1,0 +1,34 @@
+---
+import Container from "@/components/object/container";
+import Grid from "@/components/object/grid";
+---
+
+<section class="p-catalog__section">
+  <h2 class="p-catalog__title">Container / Grid</h2>
+  <Container
+    class="p-catalog__layout"
+    style={{ "--container-max-width": "720px", "--container-padding": "16px" }}
+  >
+    <Grid
+      class="p-catalog__grid"
+      style={{
+        "--grid-repeat": 3,
+        "--grid-repeat-sp": 1,
+        "--grid-gap": "20px",
+        "--grid-row-gap-sp": "12px",
+      }}
+    >
+      <p>一つ目</p><p>二つ目</p><p>三つ目</p>
+    </Grid>
+  </Container>
+</section>
+
+<style is:global>
+  .p-catalog__layout {
+    background: #f0f0f0;
+  }
+  .p-catalog__grid > :where(p) {
+    padding: 1rem;
+    border: 1px solid #999;
+  }
+</style>

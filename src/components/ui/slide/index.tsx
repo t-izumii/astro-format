@@ -1,4 +1,4 @@
-import { toChildArray, type ComponentChildren } from "preact";
+import { toChildArray, type JSX } from "preact";
 
 interface BreakpointOptions {
   perPage?: number;
@@ -9,9 +9,7 @@ interface BreakpointOptions {
   destroy?: boolean;
 }
 
-interface Props {
-  children: ComponentChildren;
-  className?: string;
+interface Props extends JSX.HTMLAttributes<HTMLDivElement> {
   overflowOnly?: boolean;
   options?: {
     type?: "slide" | "loop";
@@ -29,9 +27,11 @@ interface Props {
 
 export default function Carousel({
   children,
-  className,
+  class: className,
+  className: extraClass,
   overflowOnly = false,
   options = {},
+  ...rest
 }: Props) {
   const {
     type = "slide",
@@ -48,7 +48,8 @@ export default function Carousel({
 
   return (
     <div
-      className={["c-carousel", "splide", "js-carousel", className]
+      {...rest}
+      className={["c-carousel", "splide", "js-carousel", className, extraClass]
         .filter(Boolean)
         .join(" ")}
       data-overflow-only={overflowOnly ? "true" : undefined}

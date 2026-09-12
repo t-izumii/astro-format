@@ -6,6 +6,7 @@
 // command === 'dev' のときだけ /components ルートとして注入する。
 import "@/styles/style.scss";
 import ScriptIndex from "@/layouts/script.astro";
+import Layouts from "./_components/Layouts.astro";
 import Buttons from "./_components/Buttons.astro";
 import Icons from "./_components/Icons.astro";
 import Pictures from "./_components/Pictures.astro";
@@ -29,6 +30,7 @@ import Marquees from "./_components/Marquees.astro";
         <h1 class="p-catalog__heading">Components Preview</h1>
       </header>
 
+      <div id="layout"><Layouts /></div>
       <div id="button"><Buttons /></div>
       <div id="icon"><Icons /></div>
       <div id="picture"><Pictures /></div>
