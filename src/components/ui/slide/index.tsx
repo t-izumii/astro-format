@@ -49,7 +49,8 @@ export default function Carousel({
   return (
     <div
       {...rest}
-      className={["c-carousel", "splide", "js-carousel", className, extraClass]
+      data-carousel=""
+      className={["c-carousel", "splide", className, extraClass]
         .filter(Boolean)
         .join(" ")}
       data-overflow-only={overflowOnly ? "true" : undefined}

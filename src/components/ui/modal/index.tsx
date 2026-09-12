@@ -13,13 +13,12 @@ export default function Modal({
   return (
     <dialog
       {...rest}
-      className={["c-modal", "js-modal", className, extraClass]
-        .filter(Boolean)
-        .join(" ")}
+      className={["c-modal", className, extraClass].filter(Boolean).join(" ")}
     >
-      <div className="c-modal__container js-modalContainer">
+      <div className="c-modal__container">
         <button
-          className="c-modal__close js-modalClose"
+          className="c-modal__close"
+          data-modal-close=""
           type="button"
           aria-label="閉じる"
         >

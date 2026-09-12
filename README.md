@@ -50,7 +50,7 @@ import Icon from "@/components/ui/icon";
 <Button style={{ "--button-padding": "0.75rem 2rem" }}>保存</Button>
 ```
 
-Button は `button`（既定の type は `button`）、Link は `a` を描画します。Astro テンプレートでは HTML Lint の解析との衝突を避けるため、リンク部品を `ActionLink` として import します。イベントハンドラーを使う Preact 部品は Astro 側で適切な `client:*` 指定が必要です。既存の `.js-modalOpen` などは共通スクリプトが初期化するため hydration は不要です。
+Button は `button`（既定の type は `button`）、Link は `a` を描画します。Astro テンプレートでは HTML Lint の解析との衝突を避けるため、リンク部品を `ActionLink` として import します。イベントハンドラーを使う Preact 部品は Astro 側で適切な `client:*` 指定が必要です。既存の `data-modal-target` などは共通スクリプトが初期化するため hydration は不要です。
 
 表示用変数は `--button-gap`、`--button-padding`、`--button-font-size`、`--button-color`、`--button-background`。Link には同じ用途の `--link-*` があります。
 
@@ -118,7 +118,7 @@ Grid の変数は `--grid-layout`（列定義を直接指定）、`--grid-repeat
 ### モーダル
 
 ```tsx
-<Button class="js-modalOpen" data-modal-target="sample">開く</Button>
+<Button data-modal-target="sample">開く</Button>
 <Modal data-modal-id="sample" aria-labelledby="sample-title">
   <h2 id="sample-title">確認</h2>
   <p>内容をここに書きます。</p>
@@ -156,6 +156,29 @@ SCSS の共通変数・mixin は `styles/settings` / `styles/tools`、部品固�
 公開変数は `var(--部品名-用途, 既定値)` で読みます。変数をルートに固定値として再定義すると親からの継承を遮るため、既定値は var のフォールバックに置きます。変数へ渡す値も利用側が知る契約なので、不要に増やしません。
 
 ## スクリプト基盤
+
+JavaScript の接続先は `data-*` 属性に統一します。名前は kebab-case、目印だけの属性は空文字、対象や設定を表す属性には値を渡します。
+
+| 属性                                | 用途                                              |
+| ----------------------------------- | ------------------------------------------------- |
+| `data-size-observer`                | 要素の寸法を監視し、`--width` / `--height` へ反映 |
+| `data-scroll-to="#target"`          | 指定した要素へスクロール                          |
+| `data-in-view`                      | 画面内に入った要素へ状態クラスを付与              |
+| `data-modal-id="sample"`            | モーダルの初期化と識別                            |
+| `data-modal-target="sample"`        | 対応するモーダルを開く                            |
+| `data-modal-close`                  | モーダル内の閉じるボタン                          |
+| `data-carousel`                     | カルーセルを初期化                                |
+| `data-marquee` / `data-marquee-set` | マーキーの初期化 / 内容のまとまり                 |
+
+```html
+<button type="button" data-modal-target="sample">開く</button>
+<a href="#details" data-scroll-to="#details" data-scroll-duration="0.3"
+  >詳細へ</a
+>
+<div data-size-observer data-in-view>内容</div>
+```
+
+設定属性が対象の識別も兼ねられる場合、目印を重ねません。未使用だったモーダルのコンテナ用フックは撤去しています。状態を表す `is-*`、装飾用の `c-*`、Splide が必要とする `splide*` クラスは、それぞれの用途で使います。
 
 `src/scripts/index.ts` がセレクタと Component クラスを登録・初期化します。UI 固有のクラスは各 UI ディレクトリにある `.client.ts`、ページ全体のサイズ監視・スクロールなどは `src/scripts/components/` にあります。
 

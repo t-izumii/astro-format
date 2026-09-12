@@ -117,7 +117,7 @@ export class Marquee extends Component {
     this._root.classList.add("c-marquee");
 
     // Preact が出した構造があればそれを使う（DOM を移動しない）
-    const set = this._root.querySelector<HTMLElement>(".c-marquee__set");
+    const set = this._root.querySelector<HTMLElement>("[data-marquee-set]");
     if (set?.parentElement) {
       this._elSet = set;
       this._elTrack = set.parentElement;
@@ -129,6 +129,7 @@ export class Marquee extends Component {
     track.className = "c-marquee__track";
     const newSet = document.createElement("div");
     newSet.className = "c-marquee__set";
+    newSet.dataset.marqueeSet = "";
 
     while (this._root.firstChild) newSet.appendChild(this._root.firstChild);
     track.appendChild(newSet);

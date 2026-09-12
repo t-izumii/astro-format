@@ -39,15 +39,15 @@ const PAGE_COMPONENTS: ComponentList = [
   { selector: "body", component: ScrollToHandler },
 
   // Common
-  { selector: ".js-sizeObserver", component: SizeObserver },
-  { selector: ".js-scrollTo", component: ScrollTo },
-  { selector: ".js-inView", component: InView },
+  { selector: "[data-size-observer]", component: SizeObserver },
+  { selector: "[data-scroll-to]", component: ScrollTo },
+  { selector: "[data-in-view]", component: InView },
 
   // UI
-  { selector: ".js-modal", component: Modal },
-  { selector: ".js-modalOpen", component: ModalOpen },
-  { selector: ".js-carousel", component: Carousel },
-  { selector: ".js-marquee", component: Marquee },
+  { selector: "[data-modal-id]", component: Modal },
+  { selector: "[data-modal-target]", component: ModalOpen },
+  { selector: "[data-carousel]", component: Carousel },
+  { selector: "[data-marquee]", component: Marquee },
 ];
 
 // setup gsap

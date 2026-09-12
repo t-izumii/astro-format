@@ -15,7 +15,7 @@ export class Modal extends Component {
     super(elTarget, options);
 
     this._dialog = this._elTarget as HTMLDialogElement;
-    this._closeButton = this._elTarget?.querySelector(".js-modalClose");
+    this._closeButton = this._elTarget?.querySelector("[data-modal-close]");
 
     markScrollable(this._dialog);
 

@@ -7,9 +7,7 @@ export default function Page() {
   return (
     <div>
       <h2 className="p-home__heading">TOP</h2>
-      <Button class="js-modalOpen" data-modal-target="test">
-        モーダルを開く
-      </Button>
+      <Button data-modal-target="test">モーダルを開く</Button>
       <Modal data-modal-id="test" aria-labelledby="test-title">
         <h3 id="test-title">テストモーダル</h3>
         <p>これはテスト用のモーダルです。</p>

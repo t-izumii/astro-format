@@ -26,6 +26,7 @@ Astro v7 + **Preact**（React ではない）の静的サイト。`base: "/"`、
 - 内容に応じたスタイルは `:where(:has(...))` 等で部品側が判断する。利用側のクラス一つで上書きできる詳細度に保つ。任意の枠の生成は children / slot の有無で判定する。
 - props は標準属性・データ・振る舞い・children で表せない構造に使う。Button と Link のように役割が異なるものを prop で切り替えない。Grid / Container は div の薄い拡張とし、別の要素には `o-grid` / `o-container` クラスを直接使う。
 - ネイティブ属性の型を継承し、`class` / `className`、`style`、`aria-*`、`data-*` を DOM に渡す。部品固有の制御 props は DOM に流さない。
+- JavaScript の接続には kebab-case の `data-*` 属性を使う。初期化登録・DOM 検索・出力側を同時に更新する。`data-modal-target` / `data-scroll-to` のような設定属性が目印を兼ねる場合は重複したフックを追加しない。状態クラスや外部ライブラリの必須クラスとは区別する。
 - **構造と挙動の責任は分け、配置は隣接させる**。UI の挙動は各部品の `.client.ts`、ページを横断する実行基盤は `src/scripts/`。挙動は `Component` を継承し、`src/scripts/index.ts` の `PAGE_COMPONENTS` に登録する。`.client.ts` という名前だけでは実行されない。
 - 挙動クラスは `constructor(elTarget, options)` / `_setEventListeners()` / `protected override _onDestroy()` の形に揃える。購読は必ず基底経由にする（いずれも `destroy` で自動解除される）: DOM リスナーは `_addEL`、毎フレーム処理は `_addRAF`（`Ticker`）、イベントバスは **`_addEE`**（`EventEmitter.on` を直接呼ばない）。
 - **`destroy()` はオーバーライドしない。固有の後始末は `_onDestroy()` に書く**（テンプレートメソッド）。二重呼び出しのガードと呼び出し順は基底が持つので、サブクラス側にガードも `super` 呼び出しも要らない。SPA 遷移では同一インスタンスに destroy が重ねて走り得るため、ガードをサブクラスに書かせる形にしない。

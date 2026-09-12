@@ -5,13 +5,12 @@ import Modal from "@/components/ui/modal";
 <section class="p-catalog__section">
   <h2 class="p-catalog__title">Modal</h2>
   <div class="p-catalog__row">
-    <button
-      type="button"
-      class="js-modalOpen"
-      data-modal-target="catalog-modal"
-    >
+    <button type="button" data-modal-target="catalog-modal">
       モーダルを開く
     </button>
+    <a href="#layout" data-scroll-to="#layout" data-scroll-duration="0.1"
+      >レイアウト例へ移動</a
+    >
   </div>
 
   <Modal data-modal-id="catalog-modal" aria-labelledby="catalog-modal-title">

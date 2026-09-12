@@ -20,16 +20,17 @@ export default function Marquee({
   return (
     <div
       {...rest}
-      className={["c-marquee", "js-marquee", className, extraClass]
-        .filter(Boolean)
-        .join(" ")}
+      data-marquee=""
+      className={["c-marquee", className, extraClass].filter(Boolean).join(" ")}
       data-speed={speed}
       data-direction={direction}
       data-pause-on-hover={pauseOnHover ? "" : undefined}
       data-scroll-boost={scrollBoost ? "" : undefined}
     >
       <div className="c-marquee__track">
-        <div className="c-marquee__set">{children}</div>
+        <div className="c-marquee__set" data-marquee-set="">
+          {children}
+        </div>
       </div>
     </div>
   );
