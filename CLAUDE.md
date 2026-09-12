@@ -22,10 +22,12 @@ Astro v7 + **Preact**（React ではない）の静的サイト。`base: "/"`、
 - 関連ファイルがある部品はディレクトリにまとめる。構造の `index.tsx`、スタイル、`{ComponentName}.client.ts`、固有の `spec.md`・テストを隣接させる。1 ファイルで完結するものは単独でよい。
 - 迷ったら利用するページの部品ディレクトリ内に隣接させる。実際に別ページでも同じ責務で必要になってから共通へ移す。実ページ未使用の商品カード例は `src/dev/_components/productCard/` に置く。
 - 内容は Preact の `children`、Astro の slot で渡す。ラベル・アイコンの有無・footer の有無を見た目制御の props にしない。
-- 色・寸法・間隔は `class` / `style` と公開 CSS カスタムプロパティで調整する。公開変数には `--icon-size` のように部品名を付け、CSS の `var()` に既定値を持たせる。
-- 内容に応じたスタイルは `:where(:has(...))` 等で部品側が判断する。利用側のクラス一つで上書きできる詳細度に保つ。任意の枠の生成は children / slot の有無で判定する。
+- 色・寸法・間隔は `style` の公開 CSS カスタムプロパティで調整する。公開名は `--size`、内部名は `--_size` とし、部品のルートで `--_size: var(--size, 1em)` のように解決する。実際の宣言は内部変数を参照する。公開名に部品名の接頭辞を付けない。
+- 内容に応じたスタイルは `:where(:has(...))` 等で部品側が判断する。内部の詳細度は低く保ち、利用側の調整は公開変数に限定する。任意の枠の生成は children / slot の有無で判定する。
 - props は標準属性・データ・振る舞い・children で表せない構造に使う。Button と Link のように役割が異なるものを prop で切り替えない。Grid / Container は div の薄い拡張とし、別の要素には `o-grid` / `o-container` クラスを直接使う。
-- ネイティブ属性の型を継承し、`class` / `className`、`style`、`aria-*`、`data-*` を DOM に渡す。部品固有の制御 props は DOM に流さない。
+- DOM を包む部品の `interface Props` は対応する Preact の HTML 属性型を継承し、children と部品固有の入力だけを明記する。標準属性を個別に列挙せず、`...rest` で DOM に渡す。`Omit` や独自の共通 props 型は使わない。
+- 属性型は `import type { ButtonHTMLAttributes } from "preact"` のように直接 import する。非推奨の `JSX.ButtonHTMLAttributes` / `JSX.HTMLAttributes` などは使わない。
+- 内部クラスは部品で固定する。継承型は `class` / `className` も受け付けるが、利用側から追加クラスは渡さず、表示調整は公開 CSS 変数で行う。部品固有の制御 props は分割代入し、DOM に流さない。props が不要な部品に空の定義を追加しない。
 - JavaScript の接続には kebab-case の `data-*` 属性を使う。初期化登録・DOM 検索・出力側を同時に更新する。`data-modal-target` / `data-scroll-to` のような設定属性が目印を兼ねる場合は重複したフックを追加しない。状態クラスや外部ライブラリの必須クラスとは区別する。
 - **構造と挙動の責任は分け、配置は隣接させる**。UI の挙動は各部品の `.client.ts`、ページを横断する実行基盤は `src/scripts/`。挙動は `Component` を継承し、`src/scripts/index.ts` の `PAGE_COMPONENTS` に登録する。`.client.ts` という名前だけでは実行されない。
 - 挙動クラスは `constructor(elTarget, options)` / `_setEventListeners()` / `protected override _onDestroy()` の形に揃える。購読は必ず基底経由にする（いずれも `destroy` で自動解除される）: DOM リスナーは `_addEL`、毎フレーム処理は `_addRAF`（`Ticker`）、イベントバスは **`_addEE`**（`EventEmitter.on` を直接呼ばない）。
@@ -46,7 +48,7 @@ Astro v7 + **Preact**（React ではない）の静的サイト。`base: "/"`、
 
 - `@/styles/_abstracts` は `astro.config.mjs` の `additionalData` で**全 scss に自動 injection 済み**。各ファイルで `@use "@/styles/abstracts"` を重複させない。
 - コンポーネント scss は各ディレクトリに置き、`src/components/ui/_index.scss` 等で `@forward "./xxx/";` 集約する。
-- クラス接頭辞: ui=`c-` / 業務部品=`f-` / pages=`p-`。BEM 命名。
+- クラス接頭辞: ui=`c-` / layout=`l-` / 業務部品=`f-` / pages=`p-`。BEM 命名。
 - パスエイリアス `@` → `src`。
 
 ### ビルドパイプライン（インテグレーション）

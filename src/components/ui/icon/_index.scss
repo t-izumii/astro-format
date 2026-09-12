@@ -1,21 +1,21 @@
 @use "@/styles/abstracts" as *;
 
 .c-icon {
+  --_size: var(--size, 1em);
+  --_width: var(--width, var(--_size));
+  --_height: var(--height, var(--_size));
+  --_width-sp: var(--width-sp, var(--size-sp, var(--_width)));
+  --_height-sp: var(--height-sp, var(--size-sp, var(--_height)));
+
   display: inline-block;
   flex-shrink: 0;
-  width: var(--icon-width, var(--icon-size, 1em));
-  height: var(--icon-height, var(--icon-size, 1em));
+  width: var(--_width);
+  height: var(--_height);
   line-height: 1;
 
   @include sp {
-    width: var(
-      --icon-width-sp,
-      var(--icon-size-sp, var(--icon-width, var(--icon-size, 1em)))
-    );
-    height: var(
-      --icon-height-sp,
-      var(--icon-size-sp, var(--icon-height, var(--icon-size, 1em)))
-    );
+    width: var(--_width-sp);
+    height: var(--_height-sp);
   }
 }
 

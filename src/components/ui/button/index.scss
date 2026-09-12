@@ -1,15 +1,21 @@
 .c-button {
+  --_gap: var(--gap, 0.5em);
+  --_padding: var(--padding, 1rem);
+  --_font-size: var(--font-size, 1rem);
+  --_color: var(--color, #000);
+  --_background: var(--background, #fff);
+
   display: inline-flex;
-  gap: var(--button-gap, 0.5em);
+  gap: var(--_gap);
   align-items: center;
   justify-content: center;
-  padding: var(--button-padding, 1rem);
+  padding: var(--_padding);
   font-family: Arial, Helvetica, sans-serif;
-  font-size: var(--button-font-size, 1rem);
+  font-size: var(--_font-size);
   line-height: 1;
-  color: var(--button-color, #000);
+  color: var(--_color);
   text-decoration: none;
-  background: var(--button-background, #fff);
+  background: var(--_background);
   border: 1px solid currentcolor;
   box-shadow: none;
 }

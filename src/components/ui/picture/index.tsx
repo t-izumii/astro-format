@@ -1,18 +1,12 @@
-import type { JSX } from "preact";
+import type { ComponentChildren, HTMLAttributes } from "preact";
 
-type Props = JSX.IntrinsicElements["picture"];
+interface Props extends HTMLAttributes<HTMLPictureElement> {
+  children: ComponentChildren;
+}
 
-export default function Picture({
-  children,
-  class: className,
-  className: extraClass,
-  ...rest
-}: Props) {
+export default function Picture({ children, ...rest }: Props) {
   return (
-    <picture
-      {...rest}
-      className={["c-picture", className, extraClass].filter(Boolean).join(" ")}
-    >
+    <picture {...rest} className="c-picture">
       {children}
     </picture>
   );

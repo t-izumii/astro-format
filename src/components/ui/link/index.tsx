@@ -1,18 +1,13 @@
-import type { JSX } from "preact";
+import type { ComponentChildren, AnchorHTMLAttributes } from "preact";
 
-type Props = JSX.IntrinsicElements["a"] & { href: string };
+interface Props extends AnchorHTMLAttributes<HTMLAnchorElement> {
+  children: ComponentChildren;
+  href: string;
+}
 
-export default function Link({
-  children,
-  class: className,
-  className: extraClass,
-  ...rest
-}: Props) {
+export default function Link({ children, ...rest }: Props) {
   return (
-    <a
-      {...rest}
-      className={["c-link", className, extraClass].filter(Boolean).join(" ")}
-    >
+    <a {...rest} className="c-link">
       {children}
     </a>
   );

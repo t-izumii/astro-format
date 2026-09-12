@@ -1,20 +1,12 @@
-import type { JSX } from "preact";
+import type { ComponentChildren, HTMLAttributes } from "preact";
 
-type Props = JSX.IntrinsicElements["div"];
+interface Props extends HTMLAttributes<HTMLDivElement> {
+  children: ComponentChildren;
+}
 
-export default function Container({
-  children,
-  class: className,
-  className: extraClass,
-  ...rest
-}: Props) {
+export default function Container({ children, ...rest }: Props) {
   return (
-    <div
-      {...rest}
-      className={["o-container", className, extraClass]
-        .filter(Boolean)
-        .join(" ")}
-    >
+    <div {...rest} className="o-container">
       {children}
     </div>
   );

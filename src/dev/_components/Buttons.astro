@@ -15,14 +15,12 @@ import Icon from "@/components/ui/icon";
     <Button type="submit">submit</Button>
     <Button disabled>無効</Button>
     <Button><Icon name="arrow" />進む</Button>
-    <Button class="p-catalog__customButton">クラスで上書き</Button>
+    <Button
+      style={{
+        "--padding": "0.75rem 2rem",
+        "--background": "#222",
+        "--color": "#fff",
+      }}>CSS 変数で調整</Button
+    >
   </div>
 </section>
-
-<style is:global>
-  .p-catalog__customButton {
-    --button-padding: 0.75rem 2rem;
-    --button-background: #222;
-    --button-color: #fff;
-  }
-</style>

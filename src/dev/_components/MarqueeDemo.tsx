@@ -1,12 +1,12 @@
 import Marquee from "@/components/ui/marquee";
 
-type Props = {
+interface Props {
   speed?: number;
   direction?: 1 | -1;
   pauseOnHover?: boolean;
   scrollBoost?: boolean;
   withImage?: boolean;
-};
+}
 
 const TEXTS = ["MARQUEE", "★", "ENDLESS", "★", "SCROLLING", "★"];
 

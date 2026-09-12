@@ -1,11 +1,12 @@
-import type { JSX } from "preact";
+import type { ComponentChildren, HTMLAttributes } from "preact";
 
-type Props = JSX.HTMLAttributes<HTMLDivElement> & {
+interface Props extends HTMLAttributes<HTMLDivElement> {
+  children: ComponentChildren;
   speed?: number;
   direction?: 1 | -1;
   pauseOnHover?: boolean;
   scrollBoost?: boolean;
-};
+}
 
 export default function Marquee({
   children,
@@ -13,15 +14,13 @@ export default function Marquee({
   direction,
   pauseOnHover,
   scrollBoost,
-  class: className,
-  className: extraClass,
   ...rest
 }: Props) {
   return (
     <div
       {...rest}
       data-marquee=""
-      className={["c-marquee", className, extraClass].filter(Boolean).join(" ")}
+      className="c-marquee"
       data-speed={speed}
       data-direction={direction}
       data-pause-on-hover={pauseOnHover ? "" : undefined}

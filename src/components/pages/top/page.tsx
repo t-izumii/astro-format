@@ -12,7 +12,7 @@ export default function Page() {
         <h3 id="test-title">テストモーダル</h3>
         <p>これはテスト用のモーダルです。</p>
       </Modal>
-      <Picture style={{ "--picture-width": "400px" }}>
+      <Picture style={{ "--width": "400px" }}>
         <source
           srcSet="https://placehold.jp/150x150.png"
           media="(width < 768px)"
@@ -27,7 +27,7 @@ export default function Page() {
           loading="lazy"
         />
       </Picture>
-      <Icon name="arrow" style={{ "--icon-size": "2.5rem" }} />
+      <Icon name="arrow" style={{ "--size": "2.5rem" }} />
       <Button>test</Button>
     </div>
   );

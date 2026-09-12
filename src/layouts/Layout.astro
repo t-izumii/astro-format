@@ -1,13 +1,19 @@
 ---
 import "../styles/style.scss";
 import ScriptIndex from "./script.astro";
-import { siteMeta, generatePageMeta, type PageMeta } from "../data/meta";
+import { siteMeta, generatePageMeta } from "../data/meta";
 import { getPageMeta, type PageSlug } from "../data/pages";
 import Header from "../components/layout/header";
 import Footer from "../components/layout/footer";
 
-export interface Props extends PageMeta {
+export interface Props {
   pageSlug?: PageSlug;
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  ogType?: string;
+  noindex?: boolean;
+  canonical?: string;
 }
 
 // pageSlugが渡された場合はpages.tsから取得、そうでなければpropsを使用

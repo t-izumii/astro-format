@@ -1,15 +1,21 @@
 .c-link {
+  --_gap: var(--gap, 0.5em);
+  --_padding: var(--padding, 1rem);
+  --_font-size: var(--font-size, 1rem);
+  --_color: var(--color, #000);
+  --_background: var(--background, #fff);
+
   display: inline-flex;
-  gap: var(--link-gap, 0.5em);
+  gap: var(--_gap);
   align-items: center;
   justify-content: center;
-  padding: var(--link-padding, 1rem);
+  padding: var(--_padding);
   font-family: Arial, Helvetica, sans-serif;
-  font-size: var(--link-font-size, 1rem);
+  font-size: var(--_font-size);
   line-height: 1;
-  color: var(--link-color, #000);
+  color: var(--_color);
   text-decoration: none;
-  background: var(--link-background, #fff);
+  background: var(--_background);
   border: 1px solid currentcolor;
   box-shadow: none;
 }

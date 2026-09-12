@@ -1,9 +1,16 @@
 .c-carousel {
+  --_slide-width: var(--slide-width, 200px);
+  --_arrow-background: var(--arrow-background, rgb(0, 0, 0, 0.5));
+  --_arrow-hover-background: var(--arrow-hover-background, rgb(0, 0, 0, 0.8));
+  --_arrow-color: var(--arrow-color, #fff);
+  --_pagination-color: var(--pagination-color, #ccc);
+  --_pagination-active-color: var(--pagination-active-color, #333);
+
   width: 100%;
 }
 
 .c-carousel__slide {
-  width: var(--carousel-slide-width, 200px);
+  width: var(--_slide-width);
 }
 
 .c-carousel__slide > :where(img) {
@@ -14,23 +21,23 @@
 
 /* 矢印カスタマイズ */
 .c-carousel .splide__arrow {
-  background: var(--carousel-arrow-background, rgb(0, 0, 0, 0.5));
+  background: var(--_arrow-background);
   opacity: 1;
 }
 
 .c-carousel .splide__arrow:hover {
-  background: var(--carousel-arrow-hover-background, rgb(0, 0, 0, 0.8));
+  background: var(--_arrow-hover-background);
 }
 
 .c-carousel .splide__arrow svg {
-  fill: var(--carousel-arrow-color, #fff);
+  fill: var(--_arrow-color);
 }
 
 /* ページネーションカスタマイズ */
 .c-carousel .splide__pagination__page {
-  background: var(--carousel-pagination-color, #ccc);
+  background: var(--_pagination-color);
 }
 
 .c-carousel .splide__pagination__page.is-active {
-  background: var(--carousel-pagination-active-color, #333);
+  background: var(--_pagination-active-color);
 }

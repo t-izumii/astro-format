@@ -1,20 +1,12 @@
-import type { JSX } from "preact";
+import type { ComponentChildren, ButtonHTMLAttributes } from "preact";
 
-type Props = JSX.IntrinsicElements["button"];
+interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
+  children: ComponentChildren;
+}
 
-export default function Button({
-  children,
-  class: className,
-  className: extraClass,
-  type = "button",
-  ...rest
-}: Props) {
+export default function Button({ children, type = "button", ...rest }: Props) {
   return (
-    <button
-      {...rest}
-      type={type}
-      className={["c-button", className, extraClass].filter(Boolean).join(" ")}
-    >
+    <button {...rest} type={type} className="c-button">
       {children}
     </button>
   );

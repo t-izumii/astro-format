@@ -1,33 +1,33 @@
 @use "@/styles/abstracts" as *;
 
 .o-grid {
-  --_repeat: var(--grid-repeat, auto-fit);
-  --_size: min(var(--grid-min-size, 0px), 100%);
-  --_column-gap: var(--grid-column-gap, var(--grid-gap, 0px));
-  --_row-gap: var(--grid-row-gap, var(--grid-gap, 0px));
+  --_repeat: var(--repeat, auto-fit);
+  --_min-size: var(--min-size, 0px);
+  --_gap: var(--gap, 0px);
+  --_column-gap: var(--column-gap, var(--_gap));
+  --_row-gap: var(--row-gap, var(--_gap));
+  --_layout: var(
+    --layout,
+    repeat(var(--_repeat), minmax(min(var(--_min-size), 100%), 1fr))
+  );
+  --_repeat-sp: var(--repeat-sp, var(--_repeat));
+  --_min-size-sp: var(--min-size-sp, var(--_min-size));
+  --_column-gap-sp: var(--column-gap-sp, var(--gap-sp, var(--_column-gap)));
+  --_row-gap-sp: var(--row-gap-sp, var(--gap-sp, var(--_row-gap)));
+  --_layout-sp: var(
+    --layout-sp,
+    var(
+      --layout,
+      repeat(var(--_repeat-sp), minmax(min(var(--_min-size-sp), 100%), 1fr))
+    )
+  );
 
   display: grid;
-  grid-template-columns: var(
-    --grid-layout,
-    repeat(var(--_repeat), minmax(var(--_size), 1fr))
-  );
+  grid-template-columns: var(--_layout);
   gap: var(--_row-gap) var(--_column-gap);
 
   @include sp {
-    --_repeat: var(--grid-repeat-sp, var(--grid-repeat, auto-fit));
-    --_size: min(var(--grid-min-size-sp, var(--grid-min-size, 0px)), 100%);
-    --_column-gap: var(
-      --grid-column-gap-sp,
-      var(--grid-gap-sp, var(--grid-column-gap, var(--grid-gap, 0px)))
-    );
-    --_row-gap: var(
-      --grid-row-gap-sp,
-      var(--grid-gap-sp, var(--grid-row-gap, var(--grid-gap, 0px)))
-    );
-
-    grid-template-columns: var(
-      --grid-layout-sp,
-      var(--grid-layout, repeat(var(--_repeat), minmax(var(--_size), 1fr)))
-    );
+    grid-template-columns: var(--_layout-sp);
+    gap: var(--_row-gap-sp) var(--_column-gap-sp);
   }
 }
