@@ -60,6 +60,7 @@ const options: ComponentOptions = {
   media: windowWidth >= MIN_PC_WIDTH ? MEDIA_PC : MEDIA_SP,
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- 下のコメントアウトしたページ遷移時の破棄・再生成で参照する
 let pageComponents: Component[] | null = null;
 
 /**
