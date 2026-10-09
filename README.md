@@ -88,26 +88,26 @@ SVG は `components/ui/icon/svg/` へ追加します。既定サイズは親の�
 ```tsx
 import Picture from "@/components/ui/picture";
 
-<Picture style={{ "--width": "400px" }}>
-  <source
-    srcSet="/assets/images/hero-sp.jpg"
-    media="(width < 768px)"
-    width={300}
-    height={400}
-  />
-  <img
-    src="/assets/images/hero.jpg"
-    alt="メインビジュアルの説明"
-    width={600}
-    height={400}
-    loading="lazy"
-  />
-</Picture>;
+<Picture
+  style={{ "--width": "400px" }}
+  sp={{
+    srcSet: "/assets/images/hero-sp.jpg",
+    width: 300,
+    height: 400,
+  }}
+  img={{
+    src: "/assets/images/hero.jpg",
+    alt: "メインビジュアルの説明",
+    width: 600,
+    height: 400,
+    loading: "lazy",
+  }}
+/>;
 ```
 
-画像の URL・代替文・寸法・読み込み優先度はネイティブの source / img に指定します。Astro テンプレートでは `srcset` 表記を使います。BASE_URL が `/` 以外なら、利用側で `import.meta.env.BASE_URL` を URL に反映します。Picture は URL を書き換えません。
+画像の URL・代替文・寸法・読み込み優先度は `img`（img の属性）と `sp`（SP 用 source の属性、省略可）に渡し、children は受け取りません。`sp` の `media` は `(width < 768px)` で固定です。BASE_URL が `/` 以外なら、利用側で `import.meta.env.BASE_URL` を URL に反映します。Picture は URL を書き換えません。
 
-表示幅は `--width` / `--width-sp`、トリミングは `--aspect-ratio` / `--aspect-ratio-sp` と `--fit` で指定します。未指定なら画像本来の縦横比を使います。`width` / `height` 属性は表示用 prop に置き換えず img / source に残します。
+表示幅は `--width` / `--width-sp` で指定します。縦横比は `img` / `sp` の `width` / `height` 属性から自動で決まるため、CSS では管理しません。`width` / `height` は表示用 prop に置き換えず `img` / `sp` に残します。
 
 ### レイアウト
 
@@ -163,7 +163,7 @@ Carousel の装飾は `--slide-width`、`--arrow-background`、`--arrow-hover-ba
 
 Marquee の `speed` / `direction` / `pauseOnHover` / `scrollBoost` は挙動を指定します。
 
-**Astro から Preact へ複数の子を渡すと、一つの slot として渡されます。** Carousel のように `toChildArray` で子を分割する部品は、`.tsx` のラッパーから各子を渡します。実例は `src/dev/_components/SlideDemo.tsx`。単純に children を描画する Button / Picture / Modal は Astro から直接利用できます。
+**Astro から Preact へ複数の子を渡すと、一つの slot として渡されます。** Carousel のように `toChildArray` で子を分割する部品は、`.tsx` のラッパーから各子を渡します。実例は `src/dev/_components/SlideDemo.tsx`。単純に children を描画する Button / Modal は Astro から直接利用できます。
 
 ## CSS の設計
 
@@ -243,7 +243,7 @@ CSS は単一バンドル。JS は `integrations/cleanup-scripts.mjs` がビル�
 | `Button label="保存"`              | `<Button>保存</Button>`                         |
 | `Button href="/"`                  | `<Link href="/">トップ</Link>`                  |
 | Icon の size / width / SP 用 props | `--size` / `--width` / `-sp` 変数               |
-| Picture の img / sp                | 子の img / source                               |
+| Picture の img / sp                | `img` / `sp` props                              |
 | Picture の width / widthSp         | `--width` / `--width-sp`                        |
 | Container の maxWidth / padding    | `--max-width` / `--padding`                     |
 | Grid の repeat / gap など          | `--repeat` / `--gap` など（寸法は CSS 単位）    |

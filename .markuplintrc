@@ -24,10 +24,6 @@
     {
       "selector": "ScriptIndex",
       "as": "script"
-    },
-    {
-      "selector": "Picture",
-      "as": "picture"
     }
   ],
   "nodeRules": [

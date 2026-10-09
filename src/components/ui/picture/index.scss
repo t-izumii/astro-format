@@ -3,8 +3,6 @@
 .c-picture {
   --_width: var(--width, 100%);
   --_width-sp: var(--width-sp, var(--_width));
-  --_aspect-ratio: var(--aspect-ratio, auto);
-  --_aspect-ratio-sp: var(--aspect-ratio-sp, var(--_aspect-ratio));
   --_fit: var(--fit, cover);
 
   display: inline-block;
@@ -20,10 +18,5 @@
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: var(--_aspect-ratio);
   object-fit: var(--_fit);
-
-  @include sp {
-    aspect-ratio: var(--_aspect-ratio-sp);
-  }
 }

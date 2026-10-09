@@ -1,13 +1,19 @@
-import type { ComponentChildren, HTMLAttributes } from "preact";
+import type {
+  HTMLAttributes,
+  ImgHTMLAttributes,
+  SourceHTMLAttributes,
+} from "preact";
 
 interface Props extends HTMLAttributes<HTMLPictureElement> {
-  children: ComponentChildren;
+  img: ImgHTMLAttributes;
+  sp?: SourceHTMLAttributes;
 }
 
-export default function Picture({ children, ...rest }: Props) {
+export default function Picture({ img, sp, ...rest }: Props) {
   return (
     <picture {...rest} className="c-picture">
-      {children}
+      {sp && <source {...sp} media="(width < 768px)" />}
+      <img {...img} />
     </picture>
   );
 }

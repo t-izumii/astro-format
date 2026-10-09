@@ -12,21 +12,20 @@ export default function Page() {
         <h3 id="test-title">テストモーダル</h3>
         <p>これはテスト用のモーダルです。</p>
       </Modal>
-      <Picture style={{ "--width": "400px" }}>
-        <source
-          srcSet="https://placehold.jp/150x150.png"
-          media="(width < 768px)"
-          width={300}
-          height={200}
-        />
-        <img
-          src="https://placehold.jp/150x150.png"
-          alt="Sample Image"
-          width={600}
-          height={400}
-          loading="lazy"
-        />
-      </Picture>
+      <Picture
+        sp={{
+          srcSet: "https://placehold.jp/150x150.png",
+          width: 300,
+          height: 200,
+        }}
+        img={{
+          src: "https://placehold.jp/150x150.png",
+          alt: "Sample Image",
+          width: 600,
+          height: 400,
+          loading: "lazy",
+        }}
+      />
       <Icon name="arrow" style={{ "--size": "2.5rem" }} />
       <Button>test</Button>
     </div>
