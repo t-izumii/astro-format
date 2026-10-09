@@ -11,7 +11,7 @@
   --fz: 1;
   --vw: 100vw;
 
-  --scale: tan(atan2(var(--vw), 1280px));
+  --scale: tan(atan2(var(--vw), #{$design-width-pc}px));
 
   // フォントファミリー
   --font-family-base:
@@ -21,13 +21,7 @@
   // カスタムイージング
   --easing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 
-  // z-index階層管理
-  --z-index-base: 500;
-
-  // レイヤー階層
-  --z-index-header: 700;
-
   @include sp {
-    --scale: tan(atan2(var(--vw), 375px));
+    --scale: tan(atan2(var(--vw), #{$design-width-sp}px));
   }
 }

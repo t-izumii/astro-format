@@ -37,58 +37,91 @@
   @return clamp(#{$min}, #{$preferred}, #{$max});
 }
 
-/// 複数のブレークポイントで異なるスロープを持つ流体タイポグラフィ（zoom機能しない。）
-/// @param {Map} $sizes - ブレークポイントとフォントサイズのマップ
-/// @param {String} $property [font-size] - 適用するプロパティ
+/// 複数のブレークポイントを直線でつなぐ値を返す関数（fluid-stepped の関数版）
+/// 区間ごとに傾きが変わり、最初の幅以下は最初のサイズ、最後の幅以上は最後のサイズで止まる
+/// 値は calc() で返すので、padding や margin にも使える。幅は px 固定なので、ブラウザ拡大には反応しない
+/// @param {Map} $sizes - ブレークポイント (px) とサイズ (px) のマップ。幅は昇順で 2 つ以上
 /// @param {Number} $base-font-size [16] - ベースフォントサイズ (px)
-/// @param {String} $unit [vw] - 相対単位 (vw, svi, vi, lvi, cqi など)
+/// @return {String} - calc() 関数の文字列
 /// @example
-///   @include fluid-stepped(
-///     $sizes: (375: 10, 1280: 20, 1920: 40)
-///   );
-@mixin fluid-stepped(
-  $sizes,
-  $property: font-size,
-  $base-font-size: 16,
-  $unit: vw
-) {
-  $breakpoints: map.keys($sizes);
-  $count: list.length($breakpoints);
+///   padding-block: fluid-steps((768: 40, 1280: 80, 1600: 100));
+@function fluid-steps($sizes, $base-font-size: 16) {
+  $widths: map.keys($sizes);
+  $count: list.length($widths);
 
   @if $count < 2 {
-    @error "fluid-stepped requires at least 2 breakpoints";
+    @error "fluid-steps requires at least 2 breakpoints";
   }
 
-  // 各区間でメディアクエリと fluid() を生成
+  $first-size: map.get($sizes, list.nth($widths, 1));
+  $result: #{math.div($first-size, $base-font-size) * 1rem};
+
   @for $i from 1 through $count - 1 {
-    $min-width: list.nth($breakpoints, $i);
-    $max-width: list.nth($breakpoints, $i + 1);
-    $min-size: map.get($sizes, $min-width);
-    $max-size: map.get($sizes, $max-width);
-    $fluid-value: fluid(
-      $min-size,
-      $max-size,
-      $min-width,
-      $max-width,
-      $base-font-size,
-      $unit
+    $from: list.nth($widths, $i);
+    $to: list.nth($widths, $i + 1);
+    $slope: math.div(
+      map.get($sizes, $to) - map.get($sizes, $from),
+      $to - $from
     );
-
-    @if $i == 1 {
-      // 最初の区間（最小幅以下を含む）
-      @media (max-width: #{$max-width}px) {
-        #{$property}: #{$fluid-value};
-      }
-    } @else if $i == $count - 1 {
-      // 最後の区間（最大幅以上を含む）
-      @media (min-width: #{$min-width + 1}px) {
-        #{$property}: #{$fluid-value};
-      }
-    } @else {
-      // 中間の区間
-      @media (min-width: #{$min-width + 1}px) and (max-width: #{$max-width}px) {
-        #{$property}: #{$fluid-value};
-      }
-    }
+    $result: "#{$result} + #{$slope} * (clamp(#{$from}px, 100vw, #{$to}px) - #{$from}px)";
   }
+
+  @return calc(#{$result});
+}
+
+/// 基準幅のサイズと 3 つの幅を渡して、最小幅 → 基準幅 → 最大幅を 2 本の直線でつなぐ値を返す関数
+/// 最小幅・最大幅でのサイズは、比例した値から $rem-ratio の分だけ基準サイズ側へ寄せて決める
+/// @param {Number} $base-size - 基準幅のときのサイズ (px)
+/// @param {Number} $base-width - 基準幅 (px)
+/// @param {Number} $min-width - 最小幅 (px)
+/// @param {Number} $max-width - 最大幅 (px)
+/// @param {Number} $rem-ratio [0.4] - 基準サイズ側に残す割合 (0〜1)。0 で純粋な比例
+/// @return {String} - calc() 関数の文字列
+@function fluid-ratio-range(
+  $base-size,
+  $base-width,
+  $min-width,
+  $max-width,
+  $rem-ratio: 0.4
+) {
+  $min-proportional: math.div($base-size * $min-width, $base-width);
+  $max-proportional: math.div($base-size * $max-width, $base-width);
+  $min-size: $min-proportional + ($base-size - $min-proportional) * $rem-ratio;
+  $max-size: $max-proportional - ($max-proportional - $base-size) * $rem-ratio;
+
+  @return fluid-steps(
+    (
+      $min-width: $min-size,
+      $base-width: $base-size,
+      $max-width: $max-size,
+    )
+  );
+}
+
+/// PC 用。1280px のデザイン幅でカンプどおりの値になり、768 → 1280 → 1600 を fluid-ratio-range でつなぐ
+/// @param {Number} $base-size - 1280px のときのサイズ (px)
+/// @return {String} - calc() 関数の文字列
+/// @example
+///   padding-block: fluid-pc(80);
+@function fluid-pc($base-size) {
+  @return fluid-ratio-range(
+    $base-size,
+    $design-width-pc,
+    $breakpoint-pc,
+    $design-max-width
+  );
+}
+
+/// SP 用。375px のデザイン幅でカンプどおりの値になり、0 → 375 → 767 を fluid-ratio-range でつなぐ
+/// @param {Number} $base-size - 375px のときのサイズ (px)
+/// @return {String} - calc() 関数の文字列
+/// @example
+///   font-size: fluid-sp(18);
+@function fluid-sp($base-size) {
+  @return fluid-ratio-range(
+    $base-size,
+    $design-width-sp,
+    0,
+    $breakpoint-pc - 1
+  );
 }
