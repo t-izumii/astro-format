@@ -1,11 +1,11 @@
 @use "@/styles/abstracts" as *;
 
 .o-container {
-  --_max-width: var(--max-width, #{rem(1200)});
-  --_padding: var(--padding, #{rem(20)});
+  --_container-max-width: var(--container-max-width, #{rem(1200)});
+  --_container-padding: var(--container-padding, #{rem(20)});
 
   box-sizing: unset;
-  max-width: var(--_max-width);
-  padding-inline: var(--_padding);
+  max-width: var(--_container-max-width);
+  padding-inline: var(--_container-padding);
   margin-inline: auto;
 }

@@ -1,16 +1,16 @@
 @use "@/styles/abstracts" as *;
 
 .c-picture {
-  --_width: var(--width, 100%);
-  --_width-sp: var(--width-sp, var(--_width));
-  --_fit: var(--fit, cover);
+  --_picture-width: var(--picture-width, 100%);
+  --_picture-width-sp: var(--picture-width-sp, var(--_picture-width));
+  --_picture-fit: var(--picture-fit, cover);
 
   display: inline-block;
-  width: var(--_width);
+  width: var(--_picture-width);
   max-width: 100%;
 
   @include sp {
-    width: var(--_width-sp);
+    width: var(--_picture-width-sp);
   }
 }
 
@@ -18,5 +18,5 @@
   display: block;
   width: 100%;
   height: auto;
-  object-fit: var(--_fit);
+  object-fit: var(--_picture-fit);
 }

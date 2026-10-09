@@ -26,7 +26,7 @@ export default function Page() {
           loading: "lazy",
         }}
       />
-      <Icon name="arrow" style={{ "--size": "2.5rem" }} />
+      <Icon name="arrow" style={{ "--icon-size": "2.5rem" }} />
       <Button>test</Button>
     </div>
   );

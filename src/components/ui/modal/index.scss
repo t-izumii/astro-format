@@ -1,12 +1,12 @@
 .c-modal {
-  --_width: var(--width, calc(100vw - 4rem));
-  --_height: var(--height, calc(100vh - 4rem));
+  --_modal-width: var(--modal-width, calc(100vw - 4rem));
+  --_modal-height: var(--modal-height, calc(100vh - 4rem));
 
   position: fixed;
   top: 50%;
   left: 50%;
-  width: var(--_width);
-  height: var(--_height);
+  width: var(--_modal-width);
+  height: var(--_modal-height);
   padding: 0;
   margin: 0;
   transform: translate(-50%, -50%);

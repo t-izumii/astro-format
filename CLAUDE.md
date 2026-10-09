@@ -22,7 +22,7 @@ Astro v7 + **Preact**（React ではない）の静的サイト。`base: "/"`、
 - 関連ファイルがある部品はディレクトリにまとめる。構造の `index.tsx`、スタイル、`{ComponentName}.client.ts`、固有の `spec.md`・テストを隣接させる。1 ファイルで完結するものは単独でよい。
 - 迷ったら利用するページの部品ディレクトリ内に隣接させる。実際に別ページでも同じ責務で必要になってから共通へ移す。実ページ未使用の商品カード例は `src/dev/_components/productCard/` に置く。
 - 内容は Preact の `children`、Astro の slot で渡す。ラベル・アイコンの有無・footer の有無を見た目制御の props にしない。
-- 色・寸法・間隔は `style` の公開 CSS カスタムプロパティで調整する。公開名は `--size`、内部名は `--_size` とし、部品のルートで `--_size: var(--size, 1em)` のように解決する。実際の宣言は内部変数を参照する。公開名に部品名の接頭辞を付けない。
+- 色・寸法・間隔は `style` の公開 CSS カスタムプロパティで調整する。公開名は `--icon-size`、内部名は `--_icon-size` のように部品名を含め（`--{部品名}-{名前}`）、部品のルートで `--_icon-size: var(--icon-size, 1em)` のように解決する。実際の宣言は内部変数を参照する。`--gap` や `--width` のような汎用名は継承で他部品と衝突するため使わない。
 - 内容に応じたスタイルは `:where(:has(...))` 等で部品側が判断する。内部の詳細度は低く保ち、利用側の調整は公開変数に限定する。任意の枠の生成は children / slot の有無で判定する。
 - props は標準属性・データ・振る舞い・children で表せない構造に使う。Button と Link のように役割が異なるものを prop で切り替えない。Grid / Container は div の薄い拡張とし、別の要素には `o-grid` / `o-container` クラスを直接使う。
 - DOM を包む部品の `interface Props` は対応する Preact の HTML 属性型を継承し、children と部品固有の入力だけを明記する。標準属性を個別に列挙せず、`...rest` で DOM に渡す。`Omit` や独自の共通 props 型は使わない。

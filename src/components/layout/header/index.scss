@@ -1,6 +1,6 @@
 // ヘッダーの仮スタイル。デザインに合わせてここに追加する。
 .l-header {
-  --_padding: var(--padding, 0);
+  --_header-padding: var(--header-padding, 0);
 
-  padding: var(--_padding);
+  padding: var(--_header-padding);
 }

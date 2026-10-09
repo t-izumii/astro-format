@@ -61,27 +61,27 @@ import Icon from "@/components/ui/icon";
 <Button type="submit" disabled={isSubmitting}>送信</Button>
 <Button><Icon name="arrow" />次へ</Button>
 <ActionLink href="/about/">私たちについて</ActionLink>
-<Button style={{ "--padding": "0.75rem 2rem" }}>保存</Button>
+<Button style={{ "--button-padding": "0.75rem 2rem" }}>保存</Button>
 ```
 
 Button は `button`（既定の type は `button`）、Link は `a` を描画します。Astro テンプレートでは HTML Lint の解析との衝突を避けるため、リンク部品を `ActionLink` として import します。イベントハンドラーを使う Preact 部品は Astro 側で適切な `client:*` 指定が必要です。既存の `data-modal-target` などは共通スクリプトが初期化するため hydration は不要です。
 
-表示用変数は `--gap`、`--padding`、`--font-size`、`--color`、`--background`。Button と Link で同じ名前を使います。
+表示用変数は Button が `--button-gap`、`--button-padding`、`--button-font-size`、`--button-color`、`--button-background`、Link が `--link-gap`、`--link-padding`、`--link-font-size`、`--link-color`、`--link-background`。
 
 Button の disabled・type・style・onClick・ARIA 属性は標準属性型から継承します。モーダル接続用の data 属性も利用側から渡せます。
 
 ### アイコン
 
-色は各 Icon の `--color` で個別に指定します。未指定時は親の文字色を継承します。追加する単色 SVG は塗りを `fill="currentColor"`、線を `stroke="currentColor"` にし、描画しない部分の `none` は維持します。固定色の SVG はその色を保持するため、`--color` では変わりません。
+色は各 Icon の `--icon-color` で個別に指定します。未指定時は親の文字色を継承します。追加する単色 SVG は塗りを `fill="currentColor"`、線を `stroke="currentColor"` にし、描画しない部分の `none` は維持します。固定色の SVG はその色を保持するため、`--icon-color` では変わりません。
 
 ```tsx
 <Icon name="arrow" />
-<Icon name="arrow" style={{ "--size": "2.5rem", "--size-sp": "1.5rem" }} />
-<Icon name="arrow" style={{ "--color": "#c62828" }} />
-<Icon name="arrow" style={{ "--color": "#1565c0" }} />
+<Icon name="arrow" style={{ "--icon-size": "2.5rem", "--icon-size-sp": "1.5rem" }} />
+<Icon name="arrow" style={{ "--icon-color": "#c62828" }} />
+<Icon name="arrow" style={{ "--icon-color": "#1565c0" }} />
 ```
 
-SVG は `components/ui/icon/svg/` へ追加します。既定サイズは親の文字サイズに従う `1em`。幅と高さを別々に指定する場合は `--width` / `--height`、SP 用はそれぞれ `-sp` を使います。装飾として既定で `aria-hidden="true"` を付けます。アイコンだけのボタンには Button 側の `aria-label` などで操作名を付けてください。
+SVG は `components/ui/icon/svg/` へ追加します。既定サイズは親の文字サイズに従う `1em`。幅と高さを別々に指定する場合は `--icon-width` / `--icon-height`、SP 用はそれぞれ `-sp` を使います。装飾として既定で `aria-hidden="true"` を付けます。アイコンだけのボタンには Button 側の `aria-label` などで操作名を付けてください。
 
 ### 画像
 
@@ -89,7 +89,7 @@ SVG は `components/ui/icon/svg/` へ追加します。既定サイズは親の�
 import Picture from "@/components/ui/picture";
 
 <Picture
-  style={{ "--width": "400px" }}
+  style={{ "--picture-width": "400px" }}
   sp={{
     srcSet: "/assets/images/hero-sp.jpg",
     width: 300,
@@ -107,7 +107,7 @@ import Picture from "@/components/ui/picture";
 
 画像の URL・代替文・寸法・読み込み優先度は `img`（img の属性）と `sp`（SP 用 source の属性、省略可）に渡し、children は受け取りません。`sp` の `media` は `(width < 768px)` で固定です。BASE_URL が `/` 以外なら、利用側で `import.meta.env.BASE_URL` を URL に反映します。Picture は URL を書き換えません。
 
-表示幅は `--width` / `--width-sp` で指定します。縦横比は `img` / `sp` の `width` / `height` 属性から自動で決まるため、CSS では管理しません。`width` / `height` は表示用 prop に置き換えず `img` / `sp` に残します。
+表示幅は `--picture-width` / `--picture-width-sp` で指定します。縦横比は `img` / `sp` の `width` / `height` 属性から自動で決まるため、CSS では管理しません。`width` / `height` は表示用 prop に置き換えず `img` / `sp` に残します。
 
 ### レイアウト
 
@@ -115,12 +115,14 @@ import Picture from "@/components/ui/picture";
 import Container from "@/components/object/container";
 import Grid from "@/components/object/grid";
 
-<Container style={{ "--max-width": "960px", "--padding": "16px" }}>
+<Container
+  style={{ "--container-max-width": "960px", "--container-padding": "16px" }}
+>
   <Grid
     style={{
-      "--repeat": 3,
-      "--gap": "1.25rem",
-      "--repeat-sp": 1,
+      "--grid-repeat": 3,
+      "--grid-gap": "1.25rem",
+      "--grid-repeat-sp": 1,
     }}
   >
     <p>一つ目</p>
@@ -131,7 +133,7 @@ import Grid from "@/components/object/grid";
 ```
 
 Container / Grid は div を描画します。section や ul が必要なら、その要素へ直接 `o-container` / `o-grid` を付けます。
-Grid の変数は `--layout`（列定義を直接指定）、`--repeat`、`--min-size`、`--gap`、`--column-gap`、`--row-gap`。各値に SP 用の `-sp` があります。寸法は CSS 単位付きで指定します。
+Grid の変数は `--grid-layout`（列定義を直接指定）、`--grid-repeat`、`--grid-min-size`、`--grid-gap`、`--grid-column-gap`、`--grid-row-gap`。各値に SP 用の `-sp` があります。寸法は CSS 単位付きで指定します。
 
 ### モーダル
 
@@ -143,7 +145,7 @@ Grid の変数は `--layout`（列定義を直接指定）、`--repeat`、`--min
 </Modal>
 ```
 
-ネイティブ dialog。閉じるボタン・背景クリック・Escape で閉じます。サイズは `--width` / `--height` で調整できます。ID は配置ごとに一意にします。プログラムからは `EventEmitter.emit(Events.OPEN_MODAL, { id: "sample" })` で開けます。操作名や説明は `aria-labelledby` / `aria-describedby` で渡せます。
+ネイティブ dialog。閉じるボタン・背景クリック・Escape で閉じます。サイズは `--modal-width` / `--modal-height` で調整できます。ID は配置ごとに一意にします。プログラムからは `EventEmitter.emit(Events.OPEN_MODAL, { id: "sample" })` で開けます。操作名や説明は `aria-labelledby` / `aria-describedby` で渡せます。
 
 ### カルーセルとマーキー
 
@@ -159,7 +161,7 @@ import Marquee from "@/components/ui/marquee";
 ```
 
 Carousel の `options` は Splide の移動距離・複製・ページ数の計算に関わるため維持します。`gap` もライブラリが計算に使います。`overflowOnly` ははみ出す場合だけ有効化する挙動です。`type` は breakpoints で変更できません。
-Carousel の装飾は `--slide-width`、`--arrow-background`、`--arrow-hover-background`、`--arrow-color`、`--pagination-color`、`--pagination-active-color` で調整できます。Splide の CSS を上書きする連携部分には必要な詳細度を残し、利用側は公開変数で調整します。
+Carousel の装飾は `--slide-width`、`--slide-arrow-background`、`--slide-arrow-hover-background`、`--slide-arrow-color`、`--slide-pagination-color`、`--slide-pagination-active-color` で調整できます。Splide の CSS を上書きする連携部分には必要な詳細度を残し、利用側は公開変数で調整します。
 
 Marquee の `speed` / `direction` / `pauseOnHover` / `scrollBoost` は挙動を指定します。
 
@@ -171,20 +173,20 @@ SCSS の共通変数・mixin は `styles/settings` / `styles/tools`、部品固�
 
 追加する内容や状態のセレクタは `:where()` で包み、クラス一つ相当の詳細度を基本にします。例えば `.c-example:where(:has(> img))`。任意の footer の囲み自体を省く場合は、CSS の非表示で代用せず、渡された children / slot から部品内で判断します。Astro では `Astro.slots.has()` が使えます。
 
-公開変数と内部変数を分け、部品ルートで次の形に解決します。公開名に部品名の接頭辞を付けず、実際の CSS 宣言は内部変数を参照します。
+公開変数と内部変数を分け、部品ルートで次の形に解決します。公開名は `--{部品名}-{名前}`、内部名は `--_{部品名}-{名前}` とし、グローバルや親から継承される `--gap` などの汎用名との衝突を避けます。実際の CSS 宣言は内部変数を参照します。
 
 ```scss
 .c-icon {
-  --_size: var(--size, 1em);
-  --_width: var(--width, var(--_size));
+  --_icon-size: var(--icon-size, 1em);
+  --_icon-width: var(--icon-width, var(--_icon-size));
 
-  width: var(--_width);
+  width: var(--_icon-width);
 }
 ```
 
-利用側は `<Icon name="arrow" style={{ "--size": "2rem" }} />` と書きます。内部変数は直接上書きしません。公開変数は子孫にも継承されるため、例えば親の `--width` は入れ子の Icon / Picture にも届きます。個別の値は対象部品に渡し、子で親の指定を使わない場合は `style={{ "--width": "initial" }}` で既定値に戻します。内部変数は各部品ルートで解決し直します。
+利用側は `<Icon name="arrow" style={{ "--icon-size": "2rem" }} />` と書きます。内部変数は直接上書きしません。公開変数は子孫にも継承されますが、部品名が付いているため別の部品には影響しません。同じ部品が入れ子になり、子で親の指定を使わない場合は `style={{ "--icon-size": "initial" }}` で既定値に戻します。内部変数は各部品ルートで解決し直します。
 
-旧 `--icon-size` / `--button-padding` などは、それぞれ `--size` / `--padding` に移行しています。寸法には CSS 単位を付け、`class` / `className` による部品への追加クラス指定は行いません。ページ側が所有する通常の HTML 要素には引き続きクラスを使えます。
+寸法には CSS 単位を付け、`class` / `className` による部品への追加クラス指定は行いません。ページ側が所有する通常の HTML 要素には引き続きクラスを使えます。
 
 ## スクリプト基盤
 
@@ -237,15 +239,15 @@ CSS は単一バンドル。JS は `integrations/cleanup-scripts.mjs` がビル�
 
 この変更では互換用の旧 props を残さず、リポジトリ内の利用箇所も同時に移行しています。別案件にコピーした部品は次の表で移行してください。
 
-| 以前                               | 現在                                            |
-| ---------------------------------- | ----------------------------------------------- |
-| `scripts/components/ui/*.ts`       | 各 UI の `{ComponentName}.client.ts`            |
-| `Button label="保存"`              | `<Button>保存</Button>`                         |
-| `Button href="/"`                  | `<Link href="/">トップ</Link>`                  |
-| Icon の size / width / SP 用 props | `--size` / `--width` / `-sp` 変数               |
-| Picture の img / sp                | `img` / `sp` props                              |
-| Picture の width / widthSp         | `--width` / `--width-sp`                        |
-| Container の maxWidth / padding    | `--max-width` / `--padding`                     |
-| Grid の repeat / gap など          | `--repeat` / `--gap` など（寸法は CSS 単位）    |
-| Grid / Container の as             | HTML 要素に `o-grid` / `o-container` を直接指定 |
-| Modal の dataModalId               | 標準形式の `data-modal-id`                      |
+| 以前                               | 現在                                                   |
+| ---------------------------------- | ------------------------------------------------------ |
+| `scripts/components/ui/*.ts`       | 各 UI の `{ComponentName}.client.ts`                   |
+| `Button label="保存"`              | `<Button>保存</Button>`                                |
+| `Button href="/"`                  | `<Link href="/">トップ</Link>`                         |
+| Icon の size / width / SP 用 props | `--icon-size` / `--icon-width` / `-sp` 変数            |
+| Picture の img / sp                | `img` / `sp` props                                     |
+| Picture の width / widthSp         | `--width` / `--width-sp`                               |
+| Container の maxWidth / padding    | `--container-max-width` / `--container-padding`        |
+| Grid の repeat / gap など          | `--grid-repeat` / `--grid-gap` など（寸法は CSS 単位） |
+| Grid / Container の as             | HTML 要素に `o-grid` / `o-container` を直接指定        |
+| Modal の dataModalId               | 標準形式の `data-modal-id`                             |
