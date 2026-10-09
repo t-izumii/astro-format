@@ -5,25 +5,22 @@
   --_color: var(--color, inherit);
   --_size: var(--size, 1em);
   --_width: var(--width, var(--_size));
-  --_height: var(--height, var(--_size));
   --_width-sp: var(--width-sp, var(--size-sp, var(--_width)));
-  --_height-sp: var(--height-sp, var(--size-sp, var(--_height)));
 
   display: inline-block;
   flex-shrink: 0;
   width: var(--_width);
-  height: var(--_height);
+  height: auto;
   line-height: 1;
   color: var(--_color);
 
   @include sp {
     width: var(--_width-sp);
-    height: var(--_height-sp);
   }
 }
 
 .c-icon > :where(svg) {
   display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
 }
