@@ -31,6 +31,15 @@ export default function Marquee({
           {children}
         </div>
       </div>
+      {/* 動き続ける内容の停止手段。JS が動きを開始したときだけ表示する */}
+      <button
+        className="c-marquee__toggle"
+        type="button"
+        data-marquee-toggle=""
+        hidden
+      >
+        一時停止
+      </button>
     </div>
   );
 }

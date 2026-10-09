@@ -105,7 +105,7 @@ import Picture from "@/components/ui/picture";
 />;
 ```
 
-画像の URL・代替文・寸法・読み込み優先度は `img`（img の属性）と `sp`（SP 用 source の属性、省略可）に渡し、children は受け取りません。`sp` の `media` は `(width < 768px)` で固定です。BASE_URL が `/` 以外なら、利用側で `import.meta.env.BASE_URL` を URL に反映します。Picture は URL を書き換えません。
+画像の URL・代替文・寸法・読み込み優先度は `img`（img の属性）と `sp`（SP 用 source の属性、省略可）に渡し、children は受け取りません。`sp` の `media` は `MIN_PC_WIDTH`（既定 768px）未満で固定です。BASE_URL が `/` 以外なら、利用側で `import.meta.env.BASE_URL` を URL に反映します。Picture は URL を書き換えません。
 
 表示幅は `--picture-width` / `--picture-width-sp` で指定します。縦横比は `img` / `sp` の `width` / `height` 属性から自動で決まるため、CSS では管理しません。`width` / `height` は表示用 prop に置き換えず `img` / `sp` に残します。
 
@@ -163,7 +163,8 @@ import Marquee from "@/components/ui/marquee";
 Carousel の `options` は Splide の移動距離・複製・ページ数の計算に関わるため維持します。`gap` もライブラリが計算に使います。`overflowOnly` ははみ出す場合だけ有効化する挙動です。`type` は breakpoints で変更できません。
 Carousel の装飾は `--slide-width`、`--slide-arrow-background`、`--slide-arrow-hover-background`、`--slide-arrow-color`、`--slide-pagination-color`、`--slide-pagination-active-color` で調整できます。Splide の CSS を上書きする連携部分には必要な詳細度を残し、利用側は公開変数で調整します。
 
-Marquee の `speed` / `direction` / `pauseOnHover` / `scrollBoost` は挙動を指定します。
+Marquee の `speed` / `direction` / `pauseOnHover` / `scrollBoost` は挙動を指定します。動いている間は部品が停止・再開ボタンを表示します。動きの抑制設定が有効なときや JS が動く前は、流さずに横スクロールで表示します。
+Carousel で `autoplay` を有効にすると、停止・再開ボタンを出力します。`interval` を省略した場合は Splide の既定値（5000ms）になります。
 
 **Astro から Preact へ複数の子を渡すと、一つの slot として渡されます。** Carousel のように `toChildArray` で子を分割する部品は、`.tsx` のラッパーから各子を渡します。実例は `src/dev/_components/SlideDemo.tsx`。単純に children を描画する Button / Modal は Astro から直接利用できます。
 

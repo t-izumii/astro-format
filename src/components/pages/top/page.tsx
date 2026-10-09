@@ -6,10 +6,10 @@ import Modal from "@/components/ui/modal";
 export default function Page() {
   return (
     <div>
-      <h2 className="p-home__heading">TOP</h2>
+      <h1 className="p-home__heading">TOP</h1>
       <Button data-modal-target="test">モーダルを開く</Button>
       <Modal data-modal-id="test" aria-labelledby="test-title">
-        <h3 id="test-title">テストモーダル</h3>
+        <h2 id="test-title">テストモーダル</h2>
         <p>これはテスト用のモーダルです。</p>
       </Modal>
       <Picture

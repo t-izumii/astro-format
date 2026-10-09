@@ -1,6 +1,7 @@
 import { Component, type ComponentOptions } from "@/scripts/base/Component";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { canAnimate, getMotionQuery } from "@/scripts/utils/motion";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -40,6 +41,7 @@ export class Marquee extends Component {
 
   private _elTrack: HTMLElement | null = null;
   private _elSet: HTMLElement | null = null;
+  private _elToggle: HTMLButtonElement | null = null;
   private _clones: HTMLElement[] = [];
 
   private _tween: gsap.core.Tween | null = null;
@@ -51,7 +53,14 @@ export class Marquee extends Component {
   private _repeat = 2;
   private _raf = 0;
   private _boostTimer = 0;
-  private _reduced = false;
+  /** 動きを許可されて動作中（または開始処理中）か */
+  private _active = false;
+  private _observed = false;
+  /** 待機中に停止→再開された場合、古い開始処理を捨てるための番号 */
+  private _startId = 0;
+  private _inView = true;
+  /** 停止ボタンで利用者が止めたか */
+  private _userPaused = false;
   private _destroyed = false;
   private _hovering = false;
 
@@ -63,6 +72,20 @@ export class Marquee extends Component {
   private _onLeave = () => {
     this._hovering = false;
     this._setTimeScale(1);
+  };
+
+  private _onToggle = () => {
+    this._userPaused = !this._userPaused;
+    this._applyPlayState();
+  };
+
+  // 動きの抑制設定は実行中にも変わるため追従する
+  private _onMotionChange = () => {
+    if (canAnimate()) {
+      void this._start();
+    } else {
+      this._stop();
+    }
   };
 
   constructor(elTarget: Element, options: MarqueeOptions) {
@@ -88,26 +111,72 @@ export class Marquee extends Component {
   }
 
   private async init() {
-    this._reduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
     this._buildDom();
 
-    if (this._reduced) {
-      this._root.classList.add("is-ready");
-      return;
-    }
+    this._elToggle = this._root.querySelector<HTMLButtonElement>(
+      "[data-marquee-toggle]"
+    );
+    if (this._elToggle) this._addEL(this._elToggle, "click", this._onToggle);
+    this._addEL(getMotionQuery(), "change", this._onMotionChange);
+
+    if (canAnimate()) await this._start();
+
+    this._root.classList.add("is-ready");
+  }
+
+  /** 動きを開始する */
+  private async _start() {
+    if (this._active) return;
+    this._active = true;
+    const startId = ++this._startId;
 
     await this._waitAssets();
-    if (this._destroyed) return;
+    // 待機中に破棄・抑制への切り替え・再開があった場合は開始しない
+    if (this._destroyed || startId !== this._startId || !this._active) return;
 
     this._measure();
     this._syncClones();
     this._createTween();
-    this._observe();
 
-    this._root.classList.add("is-ready");
+    if (!this._observed) {
+      this._observe();
+      this._observed = true;
+    }
+
+    this._root.classList.add("is-animating");
+    if (this._elToggle) this._elToggle.hidden = false;
+    this._applyPlayState();
+  }
+
+  /** 動きを止め、clone を外して静止状態（横スクロール）に戻す */
+  private _stop() {
+    this._active = false;
+    this._startId++;
+
+    cancelAnimationFrame(this._raf);
+    this._tween?.kill();
+    this._tween = null;
+    gsap.set(this._sets, { clearProps: "transform" });
+
+    this._clones.forEach((clone) => clone.remove());
+    this._clones = [];
+
+    this._root.classList.remove("is-animating");
+    if (this._elToggle) this._elToggle.hidden = true;
+  }
+
+  /** 画面内にあり、利用者が止めていないときだけ再生する */
+  private _applyPlayState() {
+    if (this._elToggle) {
+      this._elToggle.textContent = this._userPaused ? "再生" : "一時停止";
+    }
+
+    if (!this._tween) return;
+    if (this._inView && !this._userPaused) {
+      this._tween.play();
+    } else {
+      this._tween.pause();
+    }
   }
 
   /* ---------------- DOM ---------------- */
@@ -196,7 +265,7 @@ export class Marquee extends Component {
   }
 
   private _createTween(progress = 0) {
-    if (this._reduced || this._setWidth <= 0) return;
+    if (this._setWidth <= 0) return;
 
     const sets = this._sets;
 
@@ -220,7 +289,7 @@ export class Marquee extends Component {
 
   /** リサイズ時：進行度を保ったまま組み直す */
   private _refresh() {
-    if (this._destroyed || !this._elSet) return;
+    if (this._destroyed || !this._active || !this._elSet) return;
 
     const progress = this._tween?.progress() ?? 0;
 
@@ -231,6 +300,7 @@ export class Marquee extends Component {
     this._measure();
     this._syncClones();
     this._createTween(progress);
+    this._applyPlayState();
   }
 
   private _setTimeScale(value: number, duration = 0.4) {
@@ -248,8 +318,8 @@ export class Marquee extends Component {
     this._ro.observe(this._root);
 
     this._io = new IntersectionObserver(([entry]) => {
-      if (!this._tween) return;
-      entry.isIntersecting ? this._tween.play() : this._tween.pause();
+      this._inView = entry.isIntersecting;
+      this._applyPlayState();
     });
     this._io.observe(this._root);
 
