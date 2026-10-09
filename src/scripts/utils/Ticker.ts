@@ -1,4 +1,4 @@
-import Stats from "stats.js";
+import type Stats from "stats.js";
 
 type TTickPayload = { delta: number; fps: number };
 type TTickCallback = (payload: TTickPayload) => void;
@@ -12,6 +12,7 @@ export class Ticker {
   private static _lastTime: number | null = null;
   private static _fps = 0;
   private static _stats: Stats | null = null;
+  private static _isStatsRequested = false;
 
   static get fps() {
     return Ticker._fps;
@@ -25,10 +26,14 @@ export class Ticker {
     Ticker._callbacks.add(callback);
 
     // 開発時のみfps計測パネルを表示する
-    if (import.meta.env.DEV && Ticker._stats === null) {
-      Ticker._stats = new Stats();
-      Ticker._stats.showPanel(0);
-      document.body.appendChild(Ticker._stats.dom);
+    // 静的importだと本番バンドルにstats.jsが残るため、DEV分岐内で動的に読み込む
+    if (import.meta.env.DEV && !Ticker._isStatsRequested) {
+      Ticker._isStatsRequested = true;
+      import("stats.js").then(({ default: Stats }) => {
+        Ticker._stats = new Stats();
+        Ticker._stats.showPanel(0);
+        document.body.appendChild(Ticker._stats.dom);
+      });
     }
 
     if (Ticker._rafId === null) {
