@@ -12,3 +12,13 @@
     display: none;
   }
 }
+
+// 視覚的には隠し、スクリーンリーダーには読ませる
+.u-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
