@@ -38,6 +38,7 @@ export class Modal extends Component {
    */
   private _handleOpen(payload: TEventPayloads["OPEN_MODAL"]) {
     if (this._dialog.dataset.modalId !== payload.id) return;
+    if (this._dialog.open) return;
 
     this._onCloseCallback = payload.onClose;
     document.body.classList.add("is-modalOpen");
