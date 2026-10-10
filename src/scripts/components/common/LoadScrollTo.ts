@@ -33,8 +33,4 @@ export class LoadScrollTo extends Component {
       return null;
     }
   }
-
-  public override destroy() {
-    super.destroy();
-  }
 }

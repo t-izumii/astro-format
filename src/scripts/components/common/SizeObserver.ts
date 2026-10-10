@@ -16,11 +16,11 @@ export class SizeObserver extends Component {
         entries.forEach((entry) => {
           entry.borderBoxSize.forEach((size) => {
             this._elTarget!.style.setProperty(
-              "--width",
+              "--size-observer-width",
               `${size.inlineSize}px`
             );
             this._elTarget!.style.setProperty(
-              "--height",
+              "--size-observer-height",
               `${size.blockSize}px`
             );
           });

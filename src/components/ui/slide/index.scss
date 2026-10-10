@@ -1,19 +1,25 @@
 .c-carousel {
-  --_slide-width: var(--slide-width, 200px);
-  --_slide-arrow-background: var(--slide-arrow-background, rgb(0, 0, 0, 0.5));
-  --_slide-arrow-hover-background: var(
-    --slide-arrow-hover-background,
+  --_carousel-slide-width: var(--carousel-slide-width, 200px);
+  --_carousel-arrow-background: var(
+    --carousel-arrow-background,
+    rgb(0, 0, 0, 0.5)
+  );
+  --_carousel-arrow-hover-background: var(
+    --carousel-arrow-hover-background,
     rgb(0, 0, 0, 0.8)
   );
-  --_slide-arrow-color: var(--slide-arrow-color, #fff);
-  --_slide-pagination-color: var(--slide-pagination-color, #ccc);
-  --_slide-pagination-active-color: var(--slide-pagination-active-color, #333);
+  --_carousel-arrow-color: var(--carousel-arrow-color, #fff);
+  --_carousel-pagination-color: var(--carousel-pagination-color, #ccc);
+  --_carousel-pagination-active-color: var(
+    --carousel-pagination-active-color,
+    #333
+  );
 
   width: 100%;
 }
 
 .c-carousel__slide {
-  width: var(--_slide-width);
+  width: var(--_carousel-slide-width);
 }
 
 .c-carousel__slide > :where(img) {
@@ -24,16 +30,16 @@
 
 /* 矢印カスタマイズ */
 .c-carousel .splide__arrow {
-  background: var(--_slide-arrow-background);
+  background: var(--_carousel-arrow-background);
   opacity: 1;
 }
 
 .c-carousel .splide__arrow:hover {
-  background: var(--_slide-arrow-hover-background);
+  background: var(--_carousel-arrow-hover-background);
 }
 
 .c-carousel .splide__arrow svg {
-  fill: var(--_slide-arrow-color);
+  fill: var(--_carousel-arrow-color);
 }
 
 /* 自動再生の停止・再開ボタン */
@@ -48,9 +54,9 @@
 
 /* ページネーションカスタマイズ */
 .c-carousel .splide__pagination__page {
-  background: var(--_slide-pagination-color);
+  background: var(--_carousel-pagination-color);
 }
 
 .c-carousel .splide__pagination__page.is-active {
-  background: var(--_slide-pagination-active-color);
+  background: var(--_carousel-pagination-active-color);
 }

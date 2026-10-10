@@ -26,8 +26,4 @@ export class Scroll extends Component {
 
     this._lastScroll = scroll;
   }
-
-  public override destroy() {
-    super.destroy();
-  }
 }

@@ -48,8 +48,4 @@ export class ScrollToHandler extends Component {
       targetElement.focus({ preventScroll: true });
     }
   }
-
-  public override destroy() {
-    super.destroy();
-  }
 }

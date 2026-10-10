@@ -39,8 +39,4 @@ export class ScrollTo extends Component {
       });
     }
   }
-
-  public override destroy() {
-    super.destroy();
-  }
 }

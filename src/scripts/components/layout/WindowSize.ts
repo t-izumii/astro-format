@@ -22,8 +22,4 @@ export class WindowSize extends Component {
       this._componentOptions!.windowWidth >= MIN_PC_WIDTH ? MEDIA_PC : MEDIA_SP;
     EventEmitter.emit(Events.WINDOW_RESIZED, undefined);
   }
-
-  public override destroy() {
-    super.destroy();
-  }
 }

@@ -13,7 +13,7 @@ export class MediaChange extends Component {
     this._mql = window.matchMedia(`(min-width: ${MIN_PC_WIDTH}px)`);
 
     this._onChange = this._onChange.bind(this);
-    this._mql.addEventListener("change", this._onChange);
+    this._addEL(this._mql, "change", this._onChange);
   }
 
   /**
@@ -24,9 +24,5 @@ export class MediaChange extends Component {
 
     this._componentOptions!.media = media;
     EventEmitter.emit(Events.MEDIA_CHANGED, { media });
-  }
-
-  protected override _onDestroy() {
-    this._mql.removeEventListener("change", this._onChange);
   }
 }

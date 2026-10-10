@@ -5,6 +5,7 @@ import { fileURLToPath, pathToFileURL } from "url";
 import preact from "@astrojs/preact";
 import imageOptimize from "./integrations/image-optimize.mjs";
 import cleanupScripts from "./integrations/cleanup-scripts.mjs";
+import formatHtml from "./integrations/format-html.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const assetsDir = "assets";
@@ -102,5 +103,7 @@ export default defineConfig({
     cleanupScripts(),
     // dist出力後にsharpで画像最適化（APNGは素通し）
     imageOptimize(),
+    // 出力HTMLをPrettierで整形（HTMLを書き換える処理より後に置く）
+    formatHtml(),
   ],
 });

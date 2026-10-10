@@ -26,14 +26,14 @@ src/
 ├── scripts/              # 共通の実行基盤と初期化登録
 ├── styles/               # リセット・共通値・SCSS 集約
 ├── data/                 # サイト・ページメタ情報
-└── dev/                  # 開発専用カタログ・業務部品の見本
+└── dev/                  # 開発専用カタログ・デモ
 ```
 
 `src/pages/` はルーティング専用です。ルートファイルではレイアウトとページ部品を呼び出し、ページメタ情報を指定します。ページ専用の部品は `src/components/pages/{ページ名}/` に置きます。関連するスタイル・挙動・仕様・テストも部品の隣に置き、必要になったものだけ追加します。実際に複数ページで共有するときに `components/ui/` などの共通の配置先へ移します。ファイル名に所属ページ名を重ねません。
 
 ページの SCSS は部品の隣に置き、`components/pages/_index.scss` → `styles/pages/_index.scss` で集約します。共通部品のスタイルも `components/ui/_index.scss` などで集約します。共通 CSS は `layouts/Layout.astro` が読み込みます。基礎・共通部品・ページ固有の順に適用します。
 
-`src/dev` はビルド対象外です。商品カードは未使用の業務部品の見本としてここに置き、実ページへ採用する際に利用先へ移します。
+`src/dev` はビルド対象外です。開発専用カタログ（`/components`）とデモをここに置きます。
 
 ## 部品の使い方
 
@@ -81,7 +81,7 @@ Button の disabled・type・style・onClick・ARIA 属性は標準属性型か�
 <Icon name="arrow" style={{ "--icon-color": "#1565c0" }} />
 ```
 
-SVG は `components/ui/icon/svg/` へ追加します。既定サイズは親の文字サイズに従う `1em`。幅と高さを別々に指定する場合は `--icon-width` / `--icon-height`、SP 用はそれぞれ `-sp` を使います。装飾として既定で `aria-hidden="true"` を付けます。アイコンだけのボタンには Button 側の `aria-label` などで操作名を付けてください。
+SVG は `components/ui/icon/svg/` へ追加します。既定サイズは親の文字サイズに従う `1em`。幅だけを指定する場合は `--icon-width`、SP 用は `--icon-size-sp` / `--icon-width-sp` を使います。高さは SVG の縦横比で決まります。装飾として既定で `aria-hidden="true"` を付けます。アイコンだけのボタンには Button 側の `aria-label` などで操作名を付けてください。
 
 ### 画像
 
@@ -161,7 +161,7 @@ import Marquee from "@/components/ui/marquee";
 ```
 
 Carousel の `options` は Splide の移動距離・複製・ページ数の計算に関わるため維持します。`gap` もライブラリが計算に使います。`overflowOnly` ははみ出す場合だけ有効化する挙動です。`type` は breakpoints で変更できません。
-Carousel の装飾は `--slide-width`、`--slide-arrow-background`、`--slide-arrow-hover-background`、`--slide-arrow-color`、`--slide-pagination-color`、`--slide-pagination-active-color` で調整できます。Splide の CSS を上書きする連携部分には必要な詳細度を残し、利用側は公開変数で調整します。
+Carousel の装飾は `--carousel-slide-width`、`--carousel-arrow-background`、`--carousel-arrow-hover-background`、`--carousel-arrow-color`、`--carousel-pagination-color`、`--carousel-pagination-active-color` で調整できます。Splide の CSS を上書きする連携部分には必要な詳細度を残し、利用側は公開変数で調整します。
 
 Marquee の `speed` / `direction` / `pauseOnHover` / `scrollBoost` は挙動を指定します。動いている間は部品が停止・再開ボタンを表示します。動きの抑制設定が有効なときや JS が動く前は、流さずに横スクロールで表示します。
 Carousel で `autoplay` を有効にすると、停止・再開ボタンを出力します。`interval` を省略した場合は Splide の既定値（5000ms）になります。
@@ -170,7 +170,7 @@ Carousel で `autoplay` を有効にすると、停止・再開ボタンを出�
 
 ## CSS の設計
 
-SCSS の共通変数・mixin は `styles/settings` / `styles/tools`、部品固有のスタイルは部品の隣に置きます。`@` は `src` の別名です。クラス接頭辞は UI=`c-`、レイアウト=`o-`、ページ=`p-`、業務部品=`f-`。
+SCSS の共通変数・mixin は `styles/settings` / `styles/tools`、部品固有のスタイルは部品の隣に置きます。`@` は `src` の別名です。クラス接頭辞は UI=`c-`、オブジェクト（Container / Grid）=`o-`、レイアウト（Header / Footer）=`l-`、ページ=`p-`、業務部品=`f-`。
 
 追加する内容や状態のセレクタは `:where()` で包み、クラス一つ相当の詳細度を基本にします。例えば `.c-example:where(:has(> img))`。任意の footer の囲み自体を省く場合は、CSS の非表示で代用せず、渡された children / slot から部品内で判断します。Astro では `Astro.slots.has()` が使えます。
 
@@ -193,16 +193,16 @@ SCSS の共通変数・mixin は `styles/settings` / `styles/tools`、部品固�
 
 JavaScript の接続先は `data-*` 属性に統一します。名前は kebab-case、目印だけの属性は空文字、対象や設定を表す属性には値を渡します。
 
-| 属性                                | 用途                                              |
-| ----------------------------------- | ------------------------------------------------- |
-| `data-size-observer`                | 要素の寸法を監視し、`--width` / `--height` へ反映 |
-| `data-scroll-to="#target"`          | 指定した要素へスクロール                          |
-| `data-in-view`                      | 画面内に入った要素へ状態クラスを付与              |
-| `data-modal-id="sample"`            | モーダルの初期化と識別                            |
-| `data-modal-target="sample"`        | 対応するモーダルを開く                            |
-| `data-modal-close`                  | モーダル内の閉じるボタン                          |
-| `data-carousel`                     | カルーセルを初期化                                |
-| `data-marquee` / `data-marquee-set` | マーキーの初期化 / 内容のまとまり                 |
+| 属性                                | 用途                                                                          |
+| ----------------------------------- | ----------------------------------------------------------------------------- |
+| `data-size-observer`                | 要素の寸法を監視し、`--size-observer-width` / `--size-observer-height` へ反映 |
+| `data-scroll-to="#target"`          | 指定した要素へスクロール                                                      |
+| `data-in-view`                      | 画面内に入った要素へ状態クラスを付与                                          |
+| `data-modal-id="sample"`            | モーダルの初期化と識別                                                        |
+| `data-modal-target="sample"`        | 対応するモーダルを開く                                                        |
+| `data-modal-close`                  | モーダル内の閉じるボタン                                                      |
+| `data-carousel`                     | カルーセルを初期化                                                            |
+| `data-marquee` / `data-marquee-set` | マーキーの初期化 / 内容のまとまり                                             |
 
 ```html
 <button type="button" data-modal-target="sample">開く</button>
@@ -226,7 +226,7 @@ EventEmitter は型付きイベントを microtask で配信します。毎フ�
 | -------------------------------------------- | -------------------------------------------------- |
 | `npm install`                                | 依存をインストールし、Husky を有効化               |
 | `npm run dev`                                | localhost:4321（`/components` に開発専用カタログ） |
-| `npm run build`                              | dist を再生成し、出力 HTML を Prettier で整形      |
+| `npm run build`                              | dist を再生成（後処理はインテグレーションが実行）  |
 | `npm run preview`                            | 本番出力のプレビュー                               |
 | `npm run lint:js` / `lint:css` / `lint:html` | ESLint / Stylelint / markuplint                    |
 | `npm run format` / `format:check`            | Prettier 整形 / 確認                               |
@@ -234,7 +234,11 @@ EventEmitter は型付きイベントを microtask で配信します。毎フ�
 
 Husky + lint-staged がステージ済みの対象を Lint・整形します。Astro 用 Prettier プラグインも設定済みです。
 
-CSS は単一バンドル。JS は `integrations/cleanup-scripts.mjs` がビルド後に `assets/scripts/script.js` へ集約します。画像は `integrations/image-optimize.mjs` が sharp で最適化し、APNG は検出して素通し、アニメ GIF / WebP はフレームを保持します。画像サイズが増える場合は元を維持します。HTML は圧縮せず、出力後に整形します。
+CSS は単一バンドル。JS は `integrations/cleanup-scripts.mjs` がビルド後に `assets/scripts/script.js` へ集約します。画像は `integrations/image-optimize.mjs` が sharp で最適化し、APNG は検出して素通し、アニメ GIF / WebP はフレームを保持します。画像サイズが増える場合は元を維持します。HTML は圧縮せず、`integrations/format-html.mjs` が出力後に Prettier で整形します。
+
+対象ブラウザは Vite の既定値（`baseline-widely-available`）に従います。Vite 8.0.16 では Chrome / Edge 111、Firefox 114、Safari / iOS 16.4 以降です。この範囲は Vite のメジャー更新で上がることがあるため、更新時はリリースノートで確認してください。案件で対象ブラウザの要件がある場合は、`astro.config.mjs` の `vite.build.target` に指定します。
+
+ビルド時に変換されるのは構文だけで、未対応の API は補われません。新しい CSS / JS の機能を使うときは、対象の範囲で動くかを確認してください。
 
 ## 以前の API からの移行
 
@@ -247,7 +251,7 @@ CSS は単一バンドル。JS は `integrations/cleanup-scripts.mjs` がビル�
 | `Button href="/"`                  | `<Link href="/">トップ</Link>`                         |
 | Icon の size / width / SP 用 props | `--icon-size` / `--icon-width` / `-sp` 変数            |
 | Picture の img / sp                | `img` / `sp` props                                     |
-| Picture の width / widthSp         | `--width` / `--width-sp`                               |
+| Picture の width / widthSp         | `--picture-width` / `--picture-width-sp`               |
 | Container の maxWidth / padding    | `--container-max-width` / `--container-padding`        |
 | Grid の repeat / gap など          | `--grid-repeat` / `--grid-gap` など（寸法は CSS 単位） |
 | Grid / Container の as             | HTML 要素に `o-grid` / `o-container` を直接指定        |

@@ -23,8 +23,4 @@ export class ModalOpen extends Component {
     // OPEN_MODALイベントをemit（対象は data-modal-id が一致する Modal）
     EventEmitter.emit(Events.OPEN_MODAL, { id });
   }
-
-  public override destroy() {
-    super.destroy();
-  }
 }

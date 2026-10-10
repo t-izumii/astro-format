@@ -9,7 +9,7 @@ Astro v7 + **Preact**（React ではない）の静的サイト。`base: "/"`、
 ## コマンド
 
 - `npm run dev` … 開発サーバー（`http://localhost:4321/`）
-- `npm run build` … `clean && astro build && format:dist`
+- `npm run build` … `clean && astro build`（HTML 整形などの後処理はインテグレーション）
 - `npm run lint:js` / `lint:css` / `lint:html` … （`:fix` で自動修正）
 - `npm run format` / `format:check` … Prettier
 - `npm run typecheck` … `astro check`（.astro を含む型チェック。`astro build` は型を検査しない）
@@ -21,7 +21,7 @@ Astro v7 + **Preact**（React ではない）の静的サイト。`base: "/"`、
 - `src/pages/` の責務はルーティングだけとし、部品・スタイル・挙動は置かない。ルートファイルはレイアウト・ページ部品を呼び出し、ページメタ情報を指定する。
 - 共通 UI は `src/components/ui/`、ページ固有は `src/components/pages/{ページ名}/` に置く。所属はディレクトリで表し、ファイル名にページ名を重ねない。
 - 関連ファイルがある部品はディレクトリにまとめる。構造の `index.tsx`、スタイル、`{ComponentName}.client.ts`、固有の `spec.md`・テストを隣接させる。1 ファイルで完結するものは単独でよい。
-- 迷ったら利用するページの部品ディレクトリ内に隣接させる。実際に別ページでも同じ責務で必要になってから共通へ移す。実ページ未使用の商品カード例は `src/dev/_components/productCard/` に置く。
+- 迷ったら利用するページの部品ディレクトリ内に隣接させる。実際に別ページでも同じ責務で必要になってから共通へ移す。
 - 内容は Preact の `children`、Astro の slot で渡す。ラベル・アイコンの有無・footer の有無を見た目制御の props にしない。
 - 色・寸法・間隔は `style` の公開 CSS カスタムプロパティで調整する。公開名は `--icon-size`、内部名は `--_icon-size` のように部品名を含め（`--{部品名}-{名前}`）、部品のルートで `--_icon-size: var(--icon-size, 1em)` のように解決する。実際の宣言は内部変数を参照する。`--gap` や `--width` のような汎用名は継承で他部品と衝突するため使わない。
 - 内容に応じたスタイルは `:where(:has(...))` 等で部品側が判断する。内部の詳細度は低く保ち、利用側の調整は公開変数に限定する。任意の枠の生成は children / slot の有無で判定する。
@@ -47,9 +47,9 @@ Astro v7 + **Preact**（React ではない）の静的サイト。`base: "/"`、
 
 ### スタイル（SCSS / ITCSS）
 
-- `@/styles/_abstracts` は `astro.config.mjs` の `additionalData` で**全 scss に自動 injection 済み**。各ファイルで `@use "@/styles/abstracts"` を重複させない。
+- `@/styles/_abstracts` は `astro.config.mjs` の `additionalData` で注入されるが、対象は Vite が直接処理するエントリーの scss だけ。**`@forward` で読み込まれる部品・base の scss には注入されない**ため、変数や mixin を使うファイルは先頭に `@use "@/styles/abstracts" as *;` を書く（削除するとビルドが Undefined variable で落ちる）。
 - コンポーネント scss は各ディレクトリに置き、`src/components/ui/_index.scss` 等で `@forward "./xxx/";` 集約する。
-- クラス接頭辞: ui=`c-` / layout=`l-` / 業務部品=`f-` / pages=`p-`。BEM 命名。
+- クラス接頭辞: ui=`c-` / object（Container・Grid）=`o-` / layout（Header・Footer）=`l-` / 業務部品=`f-` / pages=`p-`。BEM 命名。
 - パスエイリアス `@` → `src`。
 
 ### ビルドパイプライン（インテグレーション）
@@ -57,6 +57,8 @@ Astro v7 + **Preact**（React ではない）の静的サイト。`base: "/"`、
 - 後処理は **`integrations/` の Astro インテグレーション**（`astro:build:done`）で行う。**npm の build スクリプトに後処理を足さない**（二重処理になる）。
   - `cleanup-scripts.mjs` … チャンクを単一 `assets/scripts/script.js` に集約。
   - `image-optimize.mjs` … sharp で画像最適化。**APNG は `acTL` 検出で素通し**（sharp が APNG を潰すため再エンコードしない）。
+  - `format-html.mjs` … 出力 HTML を Prettier で整形。HTML を書き換えるインテグレーションより後に登録する。
+- 対象ブラウザは Vite の既定値（`baseline-widely-available`）に従う。雛形では `vite.build.target` を書かず、案件で要件があるときだけ指定する。ポリフィルは入らないため、新しい API は対象の範囲で動くか確認する。
 - 画像最適化は imageOptimize が担当。別の画像圧縮処理を併用して APNG を静止画化しない。
 - **dev 専用ページ・プレビューは `src/pages` の外（`src/dev/`）に置く**。`cssCodeSplit: false` のため、`src/pages` に置くと本番 CSS バンドルを汚染する。`/components` は `astro.config.mjs` の `devComponentsPreview` が dev 時のみ inject する。
 
