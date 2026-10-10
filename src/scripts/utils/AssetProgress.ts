@@ -13,6 +13,17 @@ export type TAssetProgress = {
 const RESOURCE_SELECTOR =
   'img:not([loading="lazy"]), script[src], link[rel="stylesheet"], video, audio, iframe';
 
+// 要素が読み込む URL。srcset / <source> で決まる URL は選択後の currentSrc で取る。
+// 計測時点で URL が確定しない要素は数えず、window の load イベントで完了を保証する
+const getResourceUrl = (el: Element): string => {
+  if (el instanceof HTMLImageElement) return el.currentSrc || el.src;
+  if (el instanceof HTMLMediaElement) return el.currentSrc || el.src;
+  if (el instanceof HTMLScriptElement) return el.src;
+  if (el instanceof HTMLLinkElement) return el.href;
+  if (el instanceof HTMLIFrameElement) return el.src;
+  return "";
+};
+
 /**
  * ページ内アセットの読み込み進捗を計測する静的クラス。
  *
@@ -28,6 +39,10 @@ export class AssetProgress {
   private static _loadedBytes = 0;
   private static _loadedCount = 0;
   private static _totalCount = 0;
+  // フォント・CSS の背景画像・fetch など対象外のリソースで完了と判定しないよう、
+  // 対象要素の URL と照合して数える
+  private static _targetUrls = new Set<string>();
+  private static _loadedUrls = new Set<string>();
 
   /**
    * 計測を開始する（複数回呼び出しても初回のみ実行される）
@@ -36,8 +51,12 @@ export class AssetProgress {
     if (AssetProgress._isInitialized) return;
     AssetProgress._isInitialized = true;
 
-    AssetProgress._totalCount =
-      document.querySelectorAll(RESOURCE_SELECTOR).length;
+    document.querySelectorAll(RESOURCE_SELECTOR).forEach((el) => {
+      const url = getResourceUrl(el);
+      // data: / blob: は Resource Timing のエントリーが作られない
+      if (/^https?:/.test(url)) AssetProgress._targetUrls.add(url);
+    });
+    AssetProgress._totalCount = AssetProgress._targetUrls.size;
 
     if (
       AssetProgress._totalCount === 0 ||
@@ -78,9 +97,18 @@ export class AssetProgress {
   private static _handleEntries = (list: PerformanceObserverEntryList) => {
     list.getEntries().forEach((entry) => {
       const resourceEntry = entry as PerformanceResourceTiming;
+      const url = resourceEntry.name;
+      if (
+        !AssetProgress._targetUrls.has(url) ||
+        AssetProgress._loadedUrls.has(url)
+      ) {
+        return;
+      }
+
+      AssetProgress._loadedUrls.add(url);
       AssetProgress._loadedBytes +=
         resourceEntry.transferSize || resourceEntry.encodedBodySize || 0;
-      AssetProgress._loadedCount += 1;
+      AssetProgress._loadedCount = AssetProgress._loadedUrls.size;
     });
 
     EventEmitter.emit(Events.ASSET_LOAD_PROGRESS, AssetProgress.getProgress());

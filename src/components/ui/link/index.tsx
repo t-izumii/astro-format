@@ -5,7 +5,12 @@ interface Props extends AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;
 }
 
-export default function Link({ children, ...rest }: Props) {
+export default function Link({
+  children,
+  class: _class,
+  className: _className,
+  ...rest
+}: Props) {
   return (
     <a {...rest} className="c-link">
       {children}

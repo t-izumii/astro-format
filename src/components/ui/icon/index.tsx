@@ -10,7 +10,12 @@ interface Props extends HTMLAttributes<HTMLSpanElement> {
   name: string;
 }
 
-export default function Icon({ name, ...rest }: Props) {
+export default function Icon({
+  name,
+  class: _class,
+  className: _className,
+  ...rest
+}: Props) {
   const svgContent = icons[`./svg/${name}.svg`] || "";
   return (
     <span

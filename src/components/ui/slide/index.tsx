@@ -34,6 +34,8 @@ export default function Carousel({
   children,
   overflowOnly = false,
   options = {},
+  class: _class,
+  className: _className,
   ...rest
 }: Props) {
   const {

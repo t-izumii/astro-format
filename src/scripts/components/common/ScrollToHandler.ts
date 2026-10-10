@@ -1,6 +1,7 @@
 import { gsap } from "gsap";
 import { Component, type ComponentOptions } from "../../base/Component";
 import { Events, type TEventPayloads } from "../../constants/events";
+import { canAnimate } from "../../utils/motion";
 
 export class ScrollToHandler extends Component {
   constructor(elTarget: Element, options: ComponentOptions) {
@@ -23,10 +24,10 @@ export class ScrollToHandler extends Component {
 
     const scrollOffset = (offset ?? 0) + headerHeight;
 
-    // GSAPでスクロール実行
+    // GSAPでスクロール実行（動きの抑制設定時は即時に移動する）
     gsap.to(window, {
       scrollTo: { y: target, offsetY: scrollOffset },
-      duration,
+      duration: canAnimate() ? duration : 0,
       ease: "power3.inOut",
       onComplete: () => {
         // フォーカス設定

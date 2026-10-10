@@ -12,6 +12,7 @@ Astro v7 + **Preact**（React ではない）の静的サイト。`base: "/"`、
 - `npm run build` … `clean && astro build && format:dist`
 - `npm run lint:js` / `lint:css` / `lint:html` … （`:fix` で自動修正）
 - `npm run format` / `format:check` … Prettier
+- `npm run typecheck` … `astro check`（.astro を含む型チェック。`astro build` は型を検査しない）
 
 コミット時は Husky + lint-staged が `eslint --fix` / `stylelint --fix` / `prettier --write` を自動実行する。
 
@@ -27,7 +28,7 @@ Astro v7 + **Preact**（React ではない）の静的サイト。`base: "/"`、
 - props は標準属性・データ・振る舞い・children で表せない構造に使う。Button と Link のように役割が異なるものを prop で切り替えない。Grid / Container は div の薄い拡張とし、別の要素には `o-grid` / `o-container` クラスを直接使う。
 - DOM を包む部品の `interface Props` は対応する Preact の HTML 属性型を継承し、children と部品固有の入力だけを明記する。標準属性を個別に列挙せず、`...rest` で DOM に渡す。`Omit` や独自の共通 props 型は使わない。
 - 属性型は `import type { ButtonHTMLAttributes } from "preact"` のように直接 import する。非推奨の `JSX.ButtonHTMLAttributes` / `JSX.HTMLAttributes` などは使わない。
-- 内部クラスは部品で固定する。継承型は `class` / `className` も受け付けるが、利用側から追加クラスは渡さず、表示調整は公開 CSS 変数で行う。部品固有の制御 props は分割代入し、DOM に流さない。props が不要な部品に空の定義を追加しない。
+- 内部クラスは部品で固定する。継承型は `class` / `className` も受け付けるが、利用側から追加クラスは渡さず、表示調整は公開 CSS 変数で行う。`...rest` を受ける部品は **`class: _class, className: _className` を分割代入して捨て**、内部クラスは `className=` で書く（preact-render-to-string は `class` があると `className` を捨てるため、`rest` に `class` が残ると内部クラスが消える。ルートに `class=` を書く方法は markuplint の jsx 検査に弾かれる）。未使用変数は ESLint の `ignoreRestSiblings` で許可している。部品固有の制御 props は分割代入し、DOM に流さない。props が不要な部品に空の定義を追加しない。
 - JavaScript の接続には kebab-case の `data-*` 属性を使う。初期化登録・DOM 検索・出力側を同時に更新する。`data-modal-target` / `data-scroll-to` のような設定属性が目印を兼ねる場合は重複したフックを追加しない。状態クラスや外部ライブラリの必須クラスとは区別する。
 - **構造と挙動の責任は分け、配置は隣接させる**。UI の挙動は各部品の `.client.ts`、ページを横断する実行基盤は `src/scripts/`。挙動は `Component` を継承し、`src/scripts/index.ts` の `PAGE_COMPONENTS` に登録する。`.client.ts` という名前だけでは実行されない。
 - 挙動クラスは `constructor(elTarget, options)` / `_setEventListeners()` / `protected override _onDestroy()` の形に揃える。購読は必ず基底経由にする（いずれも `destroy` で自動解除される）: DOM リスナーは `_addEL`、毎フレーム処理は `_addRAF`（`Ticker`）、イベントバスは **`_addEE`**（`EventEmitter.on` を直接呼ばない）。

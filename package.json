@@ -16,6 +16,7 @@
     "lint:html": "markuplint \"src/**/*.{html,astro}\" \"src/**/*.tsx\"",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "typecheck": "astro check",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -24,7 +25,7 @@
       "prettier --write"
     ],
     "*.{css,scss}": [
-      "stylelint --fix",
+      "stylelint --fix --allow-empty-input",
       "prettier --write"
     ],
     "*.{json,md,yml,yaml}": [
@@ -42,6 +43,7 @@
     "throttle-debounce": "^5.0.2"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.10",
     "@markuplint/astro-parser": "^4.6.23",
     "@markuplint/jsx-parser": "^4.7.23",
     "@splidejs/splide": "^4.1.4",
@@ -64,6 +66,7 @@
     "sharp": "^0.34.5",
     "stylelint": "^17.0.0",
     "stylelint-config-recess-order": "^7.6.0",
-    "stylelint-config-standard-scss": "^17.0.0"
+    "stylelint-config-standard-scss": "^17.0.0",
+    "typescript": "^5.9.3"
   }
 }

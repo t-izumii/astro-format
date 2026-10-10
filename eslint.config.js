@@ -41,7 +41,11 @@ export default [
     rules: {
       // コア版は型シグネチャの引数名を未使用と誤検知するため TS 版に置き換える
       "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars": "error",
+      // ...rest と並べた分割代入は「DOM に渡さない props を取り除く」用途のため未使用扱いにしない
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { ignoreRestSiblings: true },
+      ],
     },
   },
   // Prettierとの競合回避（最後に配置）

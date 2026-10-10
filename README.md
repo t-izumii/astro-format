@@ -222,15 +222,15 @@ EventEmitter は型付きイベントを microtask で配信します。毎フ�
 
 ## コマンドとビルド
 
-| コマンド                                     | 内容                                                        |
-| -------------------------------------------- | ----------------------------------------------------------- |
-| `npm install`                                | 依存をインストールし、Husky を有効化                        |
-| `npm run dev`                                | localhost:4321（`/components` に開発専用カタログ）          |
-| `npm run build`                              | dist を再生成し、出力 HTML を Prettier で整形               |
-| `npm run preview`                            | 本番出力のプレビュー                                        |
-| `npm run lint:js` / `lint:css` / `lint:html` | ESLint / Stylelint / markuplint                             |
-| `npm run format` / `format:check`            | Prettier 整形 / 確認                                        |
-| `npx tsc --noEmit`                           | TypeScript のチェック（Astro テンプレートはビルドでも確認） |
+| コマンド                                     | 内容                                               |
+| -------------------------------------------- | -------------------------------------------------- |
+| `npm install`                                | 依存をインストールし、Husky を有効化               |
+| `npm run dev`                                | localhost:4321（`/components` に開発専用カタログ） |
+| `npm run build`                              | dist を再生成し、出力 HTML を Prettier で整形      |
+| `npm run preview`                            | 本番出力のプレビュー                               |
+| `npm run lint:js` / `lint:css` / `lint:html` | ESLint / Stylelint / markuplint                    |
+| `npm run format` / `format:check`            | Prettier 整形 / 確認                               |
+| `npm run typecheck`                          | `astro check` で .astro / .ts / .tsx の型を確認    |
 
 Husky + lint-staged がステージ済みの対象を Lint・整形します。Astro 用 Prettier プラグインも設定済みです。
 

@@ -14,6 +14,8 @@ export default function Marquee({
   direction,
   pauseOnHover,
   scrollBoost,
+  class: _class,
+  className: _className,
   ...rest
 }: Props) {
   return (

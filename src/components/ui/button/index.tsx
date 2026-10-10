@@ -4,7 +4,13 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ComponentChildren;
 }
 
-export default function Button({ children, type = "button", ...rest }: Props) {
+export default function Button({
+  children,
+  type = "button",
+  class: _class,
+  className: _className,
+  ...rest
+}: Props) {
   return (
     <button {...rest} type={type} className="c-button">
       {children}

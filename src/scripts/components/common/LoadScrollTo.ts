@@ -13,8 +13,7 @@ export class LoadScrollTo extends Component {
   }
 
   private _handleLoad() {
-    const url = new URL(window.location.href);
-    const target = url.hash;
+    const target = this._getHashSelector(window.location.hash);
 
     if (target && document.querySelector(target)) {
       // SCROLL_TOイベントをemit
@@ -22,6 +21,16 @@ export class LoadScrollTo extends Component {
         target: target,
         options: { duration: 1, offsetHeader: false },
       });
+    }
+  }
+
+  private _getHashSelector(hash: string): string | null {
+    if (hash.length <= 1) return null;
+
+    try {
+      return `#${CSS.escape(decodeURIComponent(hash.slice(1)))}`;
+    } catch {
+      return null;
     }
   }
 

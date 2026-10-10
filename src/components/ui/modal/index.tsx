@@ -5,7 +5,12 @@ interface Props extends DialogHTMLAttributes<HTMLDialogElement> {
   "data-modal-id": string;
 }
 
-export default function Modal({ children, ...rest }: Props) {
+export default function Modal({
+  children,
+  class: _class,
+  className: _className,
+  ...rest
+}: Props) {
   return (
     <dialog {...rest} className="c-modal">
       <div className="c-modal__container">

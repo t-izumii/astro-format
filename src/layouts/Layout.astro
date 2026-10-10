@@ -16,10 +16,12 @@ export interface Props {
   canonical?: string;
 }
 
-// pageSlugが渡された場合はpages.tsから取得、そうでなければpropsを使用
-const pageMetaInput = Astro.props.pageSlug
-  ? getPageMeta(Astro.props.pageSlug)
-  : Astro.props;
+// pageSlugが渡された場合はpages.tsの値を土台にし、直接渡したpropsで上書きする
+const { pageSlug, ...overrides } = Astro.props;
+const pageMetaInput = {
+  ...(pageSlug && getPageMeta(pageSlug)),
+  ...overrides,
+};
 
 const pageMeta = generatePageMeta(pageMetaInput);
 
