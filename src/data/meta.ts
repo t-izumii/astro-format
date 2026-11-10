@@ -40,7 +40,7 @@ export const siteMeta: SiteMeta = {
   // 基本情報
   title: "Astro Basics",
   description: "Astro で構築されたウェブサイト",
-  siteUrl: "https://example.com", // baseUrlを含む完全なURL
+  siteUrl: import.meta.env.SITE, // astro.config.mjs の site（値はそちらで変更する）
   locale: "ja_JP",
 
   // OGP
