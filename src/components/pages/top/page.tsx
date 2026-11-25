@@ -26,7 +26,9 @@ export default function Page() {
           loading: "lazy",
         }}
       />
-      <Icon name="arrow" style={{ "--icon-size": "2.5rem" }} />
+      <span className="p-home__arrow">
+        <Icon name="arrow" />
+      </span>
       <Button>test</Button>
     </div>
   );
