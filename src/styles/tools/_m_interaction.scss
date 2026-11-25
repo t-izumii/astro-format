@@ -1,12 +1,13 @@
-// ホバーの見た目（ホバーできる端末に限る）。キーボード操作でも同じ見た目にするため :focus-visible にも当てる
+// hover effect (タッチデバイス除外)
 @mixin hover {
   @media (hover: hover) {
-    // stylelint-disable-next-line selector-pseudo-class-disallowed-list -- :hover はこの mixin の中だけで書き、ホバーできない端末に見た目を残さない
+    // stylelint-disable-next-line selector-pseudo-class-disallowed-list -- :hover を書くのはこの mixin だけにする
     &:where(:any-link, :enabled, summary):hover {
       @content;
     }
   }
 
+  // キーボード操作でも同じ見た目にする
   &:focus-visible {
     @content;
   }

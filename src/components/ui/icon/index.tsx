@@ -23,7 +23,7 @@ export default function Icon({
       aria-hidden="true"
       {...rest}
       className="c-icon"
-      // eslint-disable-next-line no-restricted-syntax -- svg/ にある自前の SVG ファイルを埋め込むだけで、外部の文字列は入らない
+      // eslint-disable-next-line no-restricted-syntax -- 埋め込むのは svg/ の自前のファイルだけ
       dangerouslySetInnerHTML={{ __html: svgContent }}
     />
   );

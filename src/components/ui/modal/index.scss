@@ -1,4 +1,4 @@
-// stylelint-disable rule-selector-property-disallowed-list -- 画面に重ねて表示する部品のため、位置と余白を部品自身で決める
+// stylelint-disable rule-selector-property-disallowed-list -- 画面に重ねて表示するため、位置は部品自身で決める
 .c-modal {
   --_modal-width: var(--modal-width, calc(100vw - 4rem));
   --_modal-height: var(--modal-height, calc(100svh - 4rem));

@@ -1,9 +1,7 @@
 @use "sass:meta";
 
-// カスケードレイヤーの順番。後ろのレイヤーほど優先される。
-// レイヤーが違えば詳細度に関係なく後ろが勝ち、同じレイヤーの中は詳細度と記述順で決まる。
 // settings / tools は CSS を出力しないため含めない。
-// @forward は @layer の中に書けないため、meta.load-css で各レイヤーに読み込む。
+// @forward は @layer の中に書けないため、meta.load-css で読み込む
 @layer generic, base, vendor, objects, components, pages, trumps;
 
 @layer generic {

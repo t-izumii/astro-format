@@ -5,8 +5,6 @@ import eslintConfigPrettier from "eslint-config-prettier";
 import tsParser from "@typescript-eslint/parser";
 import tsPlugin from "@typescript-eslint/eslint-plugin";
 
-// docs/guidelines のうち、構文で検出できるものを no-restricted-syntax で禁止する。
-// 例外は eslint-disable-next-line に「-- 理由」を付けて残す
 const guidelineSyntax = [
   {
     selector:
@@ -56,7 +54,6 @@ const guidelineSyntax = [
   },
 ];
 
-// 部品の挙動では、購読を基底クラス経由にして destroy で解除させる（cleanup-on-remove）
 const componentSyntax = [
   {
     selector: "CallExpression[callee.property.name='addEventListener']",
@@ -81,8 +78,6 @@ export default [
       "scripts/cleanup-scripts.js",
     ],
   },
-  // ESLint の推奨ルール。ブラウザと Node.js のグローバル変数を定義しないと
-  // no-undef の誤検知や no-implied-eval の見逃しが起きる
   js.configs.recommended,
   {
     languageOptions: {
@@ -91,8 +86,7 @@ export default [
   },
   // Astro推奨設定
   ...eslintPluginAstro.configs.recommended,
-  // .astro のフロントマターは TypeScript。ImageMetadata などの型を未定義と誤検知するため、
-  // TS と同じく未定義の検出は astro check（型チェック）に任せる
+  // ImageMetadata などの Astro の型を未定義と誤検知するため、astro check に任せる
   {
     files: ["**/*.astro"],
     rules: { "no-undef": "off" },
@@ -108,20 +102,16 @@ export default [
     },
     plugins: { "@typescript-eslint": tsPlugin },
   },
-  // TS では no-undef などを型チェックに任せる（typescript-eslint の推奨どおり）
   tsPlugin.configs["flat/eslint-recommended"],
   {
     rules: {
       "no-unused-vars": "error",
-      // デバッグ用の出力を残さない。失敗の記録（warn / error）は残してよい（remove-dead-code）
       "no-console": ["error", { allow: ["warn", "error"] }],
       "prefer-const": "error",
       "no-var": "error",
-      // 文字列をコードとして実行しない（no-eval）
       "no-eval": "error",
       "no-implied-eval": "error",
       "no-new-func": "error",
-      // javascript: の URL を書かない（validate-url-scheme の一部）
       "no-script-url": "error",
       "no-restricted-syntax": ["error", ...guidelineSyntax],
     },
@@ -137,11 +127,10 @@ export default [
         "error",
         { ignoreRestSiblings: true },
       ],
-      // ! で null の可能性を消さず、存在を確かめてから使う（missing-element-safe）
       "@typescript-eslint/no-non-null-assertion": "error",
     },
   },
-  // 部品の挙動。no-restricted-syntax は後の設定で置き換わるため、共通の禁止も並べ直す
+  // no-restricted-syntax は後の設定で丸ごと置き換わるため、共通の禁止も含める
   {
     files: ["src/components/**/*.client.ts", "src/scripts/components/**/*.ts"],
     rules: {

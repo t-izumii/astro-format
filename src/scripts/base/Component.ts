@@ -62,7 +62,7 @@ export class Component {
     event: any,
     callback: EventListenerCallback
   ) {
-    // destroy 後は購読しない（登録すると解除されずに残る）
+    // destroy 後に登録すると解除されずに残るため、何もしない（_addEE・_addRAF も同じ）
     if (!this._eventListeners) return;
 
     this._eventListeners.push({ target, event, callback });
@@ -107,7 +107,6 @@ export class Component {
     event: T,
     callback: (payload: TEventPayloads[T]) => void
   ) {
-    // destroy 後は購読しない（登録すると解除されずに残る）
     if (!this._emitterListeners) return;
 
     this._emitterListeners.push({ event, callback });
@@ -137,7 +136,6 @@ export class Component {
    * @param callback
    */
   protected _addRAF(callback: TTickCallback) {
-    // destroy 後は購読しない（登録すると解除されずに残る）
     if (!this._rafCallbacks) return;
 
     this._rafCallbacks.add(callback);

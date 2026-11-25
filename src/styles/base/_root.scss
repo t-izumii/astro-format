@@ -13,10 +13,8 @@
 
   --scale: tan(atan2(var(--vw), #{$design-width-pc}px));
 
-  // フォントファミリー。body が参照し、部品は継承する。
-  // カスタムプロパティの値は stylelint（value-keyword-case）に小文字へ直されるが、
-  // Chrome は BlinkMacSystemFont を大文字と小文字を区別して扱い、小文字では効かない。
-  // フォント名は引用符で囲み、元の表記のまま残す。
+  // フォントファミリー
+  // 引用符で囲む。stylelint に小文字へ直されると、Chrome が BlinkMacSystemFont を認識しない
   --font-family-base:
     -apple-system, "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue",
     "Arial", sans-serif;

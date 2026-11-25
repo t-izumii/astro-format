@@ -30,11 +30,7 @@
   height: auto;
 }
 
-/*
- * 矢印とページネーションは Splide が生成し、見た目を変える値を受け取れないため、
- * Splide のクラスを部品の中から上書きする。Splide の CSS は vendor レイヤーにあり
- * 詳細度を上げなくても勝つので、Splide のクラスは :where() で包む
- */
+// 矢印とページネーションは Splide が生成し、値を受け取れないため、Splide のクラスを直接上書きする
 
 /* 矢印カスタマイズ */
 .c-carousel :where(.splide__arrow) {
