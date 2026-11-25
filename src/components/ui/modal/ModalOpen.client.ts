@@ -9,8 +9,10 @@ export class ModalOpen extends Component {
   }
 
   private _setEventListeners() {
+    if (!this._elTarget) return;
+
     this._handleClick = this._handleClick.bind(this);
-    this._addEL(this._elTarget!, "click", this._handleClick);
+    this._addEL(this._elTarget, "click", this._handleClick);
   }
 
   private _handleClick(e: PointerEvent) {

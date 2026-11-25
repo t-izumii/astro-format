@@ -19,9 +19,14 @@
     "prepare": "husky"
   },
   "lint-staged": {
-    "*.{js,mjs,ts,tsx,astro}": [
+    "*.{js,mjs,ts}": [
       "eslint --fix",
       "prettier --write"
+    ],
+    "*.{tsx,astro}": [
+      "eslint --fix",
+      "prettier --write",
+      "markuplint"
     ],
     "*.{css,scss}": [
       "stylelint --fix --allow-empty-input",
@@ -44,6 +49,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@eslint/js": "^9.39.5",
     "@markuplint/astro-parser": "^4.6.23",
     "@markuplint/jsx-parser": "^4.7.23",
     "@types/node": "^25.3.3",
@@ -54,6 +60,7 @@
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.0",
     "eslint-plugin-astro": "^1.5.0",
+    "globals": "^17.14.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
     "markuplint": "^4.14.1",

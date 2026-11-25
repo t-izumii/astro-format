@@ -16,10 +16,13 @@ export class WindowSize extends Component {
   }
 
   private _onResize() {
-    this._componentOptions!.windowWidth = window.innerWidth;
-    this._componentOptions!.windowHeight = window.innerHeight;
-    this._componentOptions!.media =
-      this._componentOptions!.windowWidth >= MIN_PC_WIDTH ? MEDIA_PC : MEDIA_SP;
+    // debounce の待ち時間中に destroy されると options の参照は null になる
+    const options = this._componentOptions;
+    if (!options) return;
+
+    options.windowWidth = window.innerWidth;
+    options.windowHeight = window.innerHeight;
+    options.media = options.windowWidth >= MIN_PC_WIDTH ? MEDIA_PC : MEDIA_SP;
     EventEmitter.emit(Events.WINDOW_RESIZED, undefined);
   }
 }

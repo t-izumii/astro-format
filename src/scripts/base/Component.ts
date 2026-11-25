@@ -62,7 +62,10 @@ export class Component {
     event: any,
     callback: EventListenerCallback
   ) {
-    this._eventListeners!.push({ target, event, callback });
+    // destroy 後は購読しない（登録すると解除されずに残る）
+    if (!this._eventListeners) return;
+
+    this._eventListeners.push({ target, event, callback });
     target.addEventListener(event, callback);
   }
 
@@ -80,7 +83,9 @@ export class Component {
     target.removeEventListener(event, callback);
 
     // remove the listener from array
-    this._eventListeners = this._eventListeners!.filter((listener) => {
+    if (!this._eventListeners) return;
+
+    this._eventListeners = this._eventListeners.filter((listener) => {
       return !(
         listener.target === target &&
         listener.event === event &&
@@ -102,7 +107,10 @@ export class Component {
     event: T,
     callback: (payload: TEventPayloads[T]) => void
   ) {
-    this._emitterListeners!.push({ event, callback });
+    // destroy 後は購読しない（登録すると解除されずに残る）
+    if (!this._emitterListeners) return;
+
+    this._emitterListeners.push({ event, callback });
     EventEmitter.on(event, callback);
   }
 
@@ -117,7 +125,9 @@ export class Component {
   ) {
     EventEmitter.off(event, callback);
 
-    this._emitterListeners = this._emitterListeners!.filter((listener) => {
+    if (!this._emitterListeners) return;
+
+    this._emitterListeners = this._emitterListeners.filter((listener) => {
       return !(listener.event === event && listener.callback === callback);
     });
   }
@@ -127,7 +137,10 @@ export class Component {
    * @param callback
    */
   protected _addRAF(callback: TTickCallback) {
-    this._rafCallbacks!.add(callback);
+    // destroy 後は購読しない（登録すると解除されずに残る）
+    if (!this._rafCallbacks) return;
+
+    this._rafCallbacks.add(callback);
     Ticker.on(callback);
   }
 
@@ -136,7 +149,7 @@ export class Component {
    * @param callback
    */
   protected _removeRAF(callback: TTickCallback) {
-    this._rafCallbacks!.delete(callback);
+    this._rafCallbacks?.delete(callback);
     Ticker.off(callback);
   }
 
@@ -174,19 +187,19 @@ export class Component {
     this._onDestroy();
 
     // イベントの購読を解除
-    this._eventListeners!.forEach((listener) => {
+    this._eventListeners?.forEach((listener) => {
       listener.target.removeEventListener(listener.event, listener.callback);
     });
     this._eventListeners = null;
 
     // EventEmitterの購読を解除
-    this._emitterListeners!.forEach((listener) => {
+    this._emitterListeners?.forEach((listener) => {
       EventEmitter.off(listener.event, listener.callback);
     });
     this._emitterListeners = null;
 
     // rafの購読を解除
-    this._rafCallbacks!.forEach((callback) => {
+    this._rafCallbacks?.forEach((callback) => {
       Ticker.off(callback);
     });
     this._rafCallbacks = null;

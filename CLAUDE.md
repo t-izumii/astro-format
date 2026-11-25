@@ -6,7 +6,8 @@
 
 - Astro v7 + **Preact**（React ではない）の静的サイト。CSS は単一バンドル（`cssCodeSplit: false`）。
 - 型は `npm run typecheck` で確認する（`astro build` は型を検査しない）。IDE 診断に出る `.astro` 同士の import エラーは、再インデックスで消える一時表示のことが多い。
-- コミット時は lint-staged が ESLint / Stylelint / Prettier を自動で実行する。
+- コミット時は lint-staged が ESLint / Stylelint / markuplint / Prettier を自動で実行する。
+- `docs/guidelines` のうち構文で判定できるルールは、ESLint・Stylelint・markuplint が検査する（独自のメッセージにはガイドライン名が付く）。例外は `// eslint-disable-next-line ルール名 -- 理由` / `// stylelint-disable-next-line ルール名 -- 理由` のように理由を付けて無効化する。Lint を通っても、表示や内容の判断が要るルールは別に確かめる。
 - LLM / AI 関連の実装方針を変える場合や、外部送信を伴う操作は事前に確認する。
 
 ## 配置
@@ -33,6 +34,7 @@
 - `styles/style.scss` が `@layer generic, base, vendor, objects, components, pages, trumps;` の各レイヤーへ `meta.load-css()` で読み込む。外部ライブラリの CSS は `vendor` に置き、詳細度を上げて対抗しない。`.astro` の `<style>` はレイヤーの外になり全レイヤーに勝つため、本番では使わない（`src/dev` は例外）。`!important` は使わない。
 - `additionalData` の abstracts はエントリーにしか注入されない。変数や mixin を使う部品・base の scss は、先頭に `@use "@/styles/abstracts" as *;` を書く。
 - 部品の scss は `components/ui/_index.scss` などで `@forward "./xxx/";` して集約する。接頭辞は ui=`c-`、object=`o-`、layout=`l-`、業務部品=`f-`、pages=`p-`（BEM）。`@` は `src` の別名。
+- ホバーの見た目は `:hover` を直接書かず、mixin の `hover` で書く（`(hover: hover)` に限り、`:focus-visible` にも当てる）。Splide など外部ライブラリが生成する要素は、部品の中から `.c-x :where(.splide__xxx)` の形で上書きする（vendor レイヤーに勝つので詳細度は上げない）。
 - 書体は `base/_root.scss` の `--font-family-base` を `body` から継承する。部品で `font-family` を指定しない。この変数のフォント名は引用符で囲む（stylelint が小文字に直すと、Chrome が `BlinkMacSystemFont` を認識しない）。
 
 ## スクリプト

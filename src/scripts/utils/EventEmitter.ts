@@ -73,7 +73,6 @@ export class EventEmitter {
     const targetListeners = EventEmitter._listeners[event];
 
     if (!targetListeners || targetListeners.size < 1) {
-      // console.error("[EventEmitter] Targets not found.", event);
       return;
     }
 

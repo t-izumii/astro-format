@@ -129,6 +129,8 @@ SCSS の共通変数・mixin は `styles/settings` / `styles/tools`、部品固�
 
 書体は `styles/base/_root.scss` の `--font-family-base` で決め、`body` から継承させます。部品では `font-family` を指定しません。
 
+ホバーの見た目は `:hover` を直接書かず、mixin の `hover`（`styles/tools/_m_interaction.scss`）で書きます。ホバーできる端末（`(hover: hover)`）に限って当て、キーボードで操作したときも同じ見た目になるよう `:focus-visible` にも当てます。
+
 ## スクリプト基盤
 
 JavaScript の接続先は `data-*` 属性に統一します。名前は kebab-case、目印だけの属性は空文字、対象や設定を表す属性には値を渡します。
@@ -172,7 +174,9 @@ EventEmitter は型付きイベントを microtask で配信します。毎フ�
 | `npm run format` / `format:check`            | Prettier 整形 / 確認                               |
 | `npm run typecheck`                          | `astro check` で .astro / .ts / .tsx の型を確認    |
 
-Husky + lint-staged がステージ済みの対象を Lint・整形します。Astro 用 Prettier プラグインも設定済みです。
+コミット時は Husky + lint-staged が、ステージしたファイルを検査・整形します。JS / TS には ESLint と Prettier、TSX と Astro にはさらに markuplint、CSS / SCSS には Stylelint と Prettier、JSON・Markdown・YAML には Prettier を実行します。Astro 用 Prettier プラグインも設定済みです。
+
+`docs/guidelines` のルールのうち、コードの書き方で判定できるもの（`!important`、見た目用のクラスでの要素の取得、`role="menu"` など）は、ESLint・Stylelint・markuplint で検査します。独自に書いたメッセージには、対応するガイドラインのファイル名を括弧で付けています。ガイドラインの例外に当たる場合は、無効化のコメントに `-- 理由` を付けて残します（例: `// stylelint-disable-next-line selector-disallowed-list -- Splide が生成する svg にはクラスがない`）。Stylelint は理由のない無効化をエラーにします。Lint が検査するのはルールの一部なので、Lint を通ってもガイドラインを満たしたことにはなりません。表示や内容の判断が要るルールは、レビューで確かめます。
 
 CSS は単一バンドル。JS は `integrations/cleanup-scripts.mjs` がビルド後に `assets/scripts/script.js` へ集約します。画像は `integrations/image-optimize.mjs` が sharp で最適化し、APNG は検出して素通し、アニメ GIF / WebP はフレームを保持します。画像サイズが増える場合は元を維持します。HTML は圧縮せず、`integrations/format-html.mjs` が出力後に Prettier で整形します。
 

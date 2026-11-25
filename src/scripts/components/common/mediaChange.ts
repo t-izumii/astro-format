@@ -22,7 +22,9 @@ export class MediaChange extends Component {
   private _onChange(e: MediaQueryListEvent) {
     const media = e.matches ? MEDIA_PC : MEDIA_SP;
 
-    this._componentOptions!.media = media;
+    if (this._componentOptions) {
+      this._componentOptions.media = media;
+    }
     EventEmitter.emit(Events.MEDIA_CHANGED, { media });
   }
 }

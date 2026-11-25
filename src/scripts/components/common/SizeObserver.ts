@@ -11,15 +11,21 @@ export class SizeObserver extends Component {
   }
 
   private _setEventListeners() {
+    if (!this._elTarget) return;
+
     this._rObserver = new ResizeObserver(
       debounce(100, (entries: ResizeObserverEntry[]) => {
+        // debounce の待ち時間中に destroy されると要素の参照は null になる
+        const el = this._elTarget;
+        if (!el) return;
+
         entries.forEach((entry) => {
           entry.borderBoxSize.forEach((size) => {
-            this._elTarget!.style.setProperty(
+            el.style.setProperty(
               "--size-observer-width",
               `${size.inlineSize}px`
             );
-            this._elTarget!.style.setProperty(
+            el.style.setProperty(
               "--size-observer-height",
               `${size.blockSize}px`
             );
@@ -27,7 +33,7 @@ export class SizeObserver extends Component {
         });
       })
     );
-    this._rObserver.observe(this._elTarget!);
+    this._rObserver.observe(this._elTarget);
   }
 
   protected override _onDestroy() {

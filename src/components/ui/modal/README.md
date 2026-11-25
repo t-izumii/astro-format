@@ -19,10 +19,10 @@ import Modal from "@/components/ui/modal";
 
 ## 公開変数
 
-| 変数             | 内容 | 既定値               |
-| ---------------- | ---- | -------------------- |
-| `--modal-width`  | 幅   | `calc(100vw - 4rem)` |
-| `--modal-height` | 高さ | `calc(100vh - 4rem)` |
+| 変数             | 内容 | 既定値                |
+| ---------------- | ---- | --------------------- |
+| `--modal-width`  | 幅   | `calc(100vw - 4rem)`  |
+| `--modal-height` | 高さ | `calc(100svh - 4rem)` |
 
 部品を包むページ側の要素のクラスで指定し、部品へ継承させます。
 
