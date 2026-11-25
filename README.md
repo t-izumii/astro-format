@@ -180,7 +180,7 @@ EventEmitter は型付きイベントを microtask で配信します。毎フ�
 
 CSS は単一バンドル。JS は `integrations/cleanup-scripts.mjs` がビルド後に `assets/scripts/script.js` へ集約します。画像は `integrations/image-optimize.mjs` が sharp で最適化し、APNG は検出して素通し、アニメ GIF / WebP はフレームを保持します。画像サイズが増える場合は元を維持します。HTML は圧縮せず、`integrations/format-html.mjs` が出力後に Prettier で整形します。
 
-対象ブラウザは Vite の既定値（`baseline-widely-available`）に従います。Vite 8.0.16 では Chrome / Edge 111、Firefox 114、Safari / iOS 16.4 以降です。この範囲は Vite のメジャー更新で上がることがあるため、更新時はリリースノートで確認してください。案件で対象ブラウザの要件がある場合は、`astro.config.mjs` の `vite.build.target` に指定します。
+対象ブラウザは Vite の既定値（`baseline-widely-available`）に従います。Vite 8.3.8 では Chrome / Edge 111、Firefox 114、Safari / iOS 16.4 以降です。この範囲は Vite のメジャー更新で上がることがあるため、更新時はリリースノートで確認してください。案件で対象ブラウザの要件がある場合は、`astro.config.mjs` の `vite.build.target` に指定します。
 
 ビルド時に変換されるのは構文だけで、未対応の API は補われません。新しい CSS / JS の機能を使うときは、対象の範囲で動くかを確認してください。
 
