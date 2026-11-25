@@ -31,7 +31,7 @@ src/
 
 `src/pages/` はルーティング専用です。ルートファイルではレイアウトとページ部品を呼び出し、ページメタ情報を指定します。ページ専用の部品は `src/components/pages/{ページ名}/` に置きます。関連するスタイル・挙動・仕様・テストも部品の隣に置き、必要になったものだけ追加します。実際に複数ページで共有するときに `components/ui/` などの共通の配置先へ移します。ファイル名に所属ページ名を重ねません。
 
-ページの SCSS は部品の隣に置き、`components/pages/_index.scss` → `styles/pages/_index.scss` で集約します。共通部品のスタイルも `components/ui/_index.scss` などで集約します。共通 CSS は `layouts/Layout.astro` が読み込みます。基礎・共通部品・ページ固有の順に適用します。
+ページの SCSS は部品の隣に置き、`components/pages/_index.scss` → `styles/pages/_index.scss` で集約します。共通部品のスタイルも `components/ui/_index.scss` などで集約します。共通 CSS は `layouts/Layout.astro` が読み込みます。`styles/style.scss` がカスケードレイヤーに振り分け、基礎・共通部品・ページ固有の順に優先させます（「[CSS の設計](#css-の設計)」）。
 
 `src/dev` はビルド対象外です。開発専用カタログ（`/components`）とデモをここに置きます。
 
@@ -172,7 +172,27 @@ Carousel で `autoplay` を有効にすると、停止・再開ボタンを出�
 
 SCSS の共通変数・mixin は `styles/settings` / `styles/tools`、部品固有のスタイルは部品の隣に置きます。`@` は `src` の別名です。クラス接頭辞は UI=`c-`、オブジェクト（Container / Grid）=`o-`、レイアウト（Header / Footer）=`l-`、ページ=`p-`、業務部品=`f-`。
 
-追加する内容や状態のセレクタは `:where()` で包み、クラス一つ相当の詳細度を基本にします。例えば `.c-example:where(:has(> img))`。任意の footer の囲み自体を省く場合は、CSS の非表示で代用せず、渡された children / slot から部品内で判断します。Astro では `Astro.slots.has()` が使えます。
+### カスケードレイヤー
+
+`styles/style.scss` は、CSS をカスケードレイヤー（`@layer`）に分けて読み込みます。表の下のレイヤーほど優先されます。レイヤーが違えば詳細度に関係なく下のレイヤーが勝つため、リセットや外部ライブラリの強いセレクタに部品が負けません。
+
+| レイヤー     | 読み込むディレクトリ                   | 内容                                   |
+| ------------ | -------------------------------------- | -------------------------------------- |
+| `generic`    | `styles/generic/`                      | リセット（destyle.css）                |
+| `base`       | `styles/base/`                         | 要素の基本スタイル・`:root`・keyframes |
+| `vendor`     | `styles/vendor/`                       | 外部ライブラリの CSS（Splide）         |
+| `objects`    | `components/object/`                   | Container / Grid                       |
+| `components` | `components/ui/`、`components/layout/` | 共通 UI・ヘッダー・フッター            |
+| `pages`      | `components/pages/`                    | ページ固有                             |
+| `trumps`     | `styles/trumps/`                       | ユーティリティ（`.u-*`）               |
+
+外部ライブラリの CSS は `styles/vendor/` に追加し、部品側で詳細度を上げて対抗しません。同じレイヤーの中は、これまでどおり詳細度と記述順で決まります。
+
+レイヤーに入っていない CSS は、すべてのレイヤーに勝ちます。`.astro` の `<style>`（`is:global` を含む）はレイヤーの外になるため、本番の部品とページでは使わず、スタイルは SCSS に書きます（`src/dev` のデモは例外）。`!important` はレイヤーの優先順位を逆転させるため使いません。
+
+### セレクタと変数
+
+同じレイヤーの中で、追加する内容や状態のセレクタは `:where()` で包み、クラス一つ相当の詳細度を基本にします。例えば `.c-example:where(:has(> img))`。任意の footer の囲み自体を省く場合は、CSS の非表示で代用せず、渡された children / slot から部品内で判断します。Astro では `Astro.slots.has()` が使えます。
 
 公開変数と内部変数を分け、部品ルートで次の形に解決します。公開名は `--{部品名}-{名前}`、内部名は `--_{部品名}-{名前}` とし、グローバルや親から継承される `--gap` などの汎用名との衝突を避けます。実際の CSS 宣言は内部変数を参照します。
 
@@ -188,6 +208,8 @@ SCSS の共通変数・mixin は `styles/settings` / `styles/tools`、部品固�
 利用側は `<Icon name="arrow" style={{ "--icon-size": "2rem" }} />` と書きます。内部変数は直接上書きしません。公開変数は子孫にも継承されますが、部品名が付いているため別の部品には影響しません。同じ部品が入れ子になり、子で親の指定を使わない場合は `style={{ "--icon-size": "initial" }}` で既定値に戻します。内部変数は各部品ルートで解決し直します。
 
 寸法には CSS 単位を付け、`class` / `className` による部品への追加クラス指定は行いません。ページ側が所有する通常の HTML 要素には引き続きクラスを使えます。
+
+書体は `styles/base/_root.scss` の `--font-family-base` で決め、`body` から継承させます。部品では `font-family` を指定しません。
 
 ## スクリプト基盤
 

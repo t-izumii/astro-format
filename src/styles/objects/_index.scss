@@ -1,3 +1,3 @@
 // 装飾されていないデザイン
-// 実体は src/components/object に移動。カスケード順を保つためここから forward する。
+// 実体は src/components/object に移動。style.scss が objects レイヤーに読み込むため、ここから forward する。
 @forward "../../components/object/";

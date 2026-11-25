@@ -47,7 +47,10 @@ Astro v7 + **Preact**（React ではない）の静的サイト。`base: "/"`、
 
 ### スタイル（SCSS / ITCSS）
 
-- `@/styles/_abstracts` は `astro.config.mjs` の `additionalData` で注入されるが、対象は Vite が直接処理するエントリーの scss だけ。**`@forward` で読み込まれる部品・base の scss には注入されない**ため、変数や mixin を使うファイルは先頭に `@use "@/styles/abstracts" as *;` を書く（削除するとビルドが Undefined variable で落ちる）。
+- `@/styles/_abstracts` は `astro.config.mjs` の `additionalData` で注入されるが、対象は Vite が直接処理するエントリーの scss だけ。**`meta.load-css` や `@forward` で読み込まれる部品・base の scss には注入されない**ため、変数や mixin を使うファイルは先頭に `@use "@/styles/abstracts" as *;` を書く（削除するとビルドが Undefined variable で落ちる）。
+- **カスケードレイヤー**: `styles/style.scss` が `@layer generic, base, vendor, objects, components, pages, trumps;` で順番を宣言し、各ディレクトリを `meta.load-css()` でレイヤーに読み込む（`@forward` / `@use` は `@layer` の中に書けない）。レイヤーが違えば詳細度に関係なく後ろが勝ち、同じレイヤーの中は詳細度と記述順で決まる。外部ライブラリの CSS は `styles/vendor/` に置き、部品側で詳細度を上げて対抗しない。集約先を増やすときは対応するレイヤーに入れる。
+- **レイヤーに入らない CSS はすべてのレイヤーに勝つ**。`.astro` の `<style>`（`is:global` を含む）はレイヤーの外になるため、本番の部品・ページでは使わず SCSS に書く（`src/dev` のデモは例外）。`!important` はレイヤーの優先順位を逆転させるので使わない。
+- 書体は `base/_root.scss` の `--font-family-base` を `body` が参照し、部品は継承する（部品で `font-family` を指定しない）。この変数のフォント名は引用符で囲む。stylelint の `value-keyword-case` がカスタムプロパティ内の名前を小文字に直し、Chrome は小文字の `blinkmacsystemfont` を認識しないため。
 - コンポーネント scss は各ディレクトリに置き、`src/components/ui/_index.scss` 等で `@forward "./xxx/";` 集約する。
 - クラス接頭辞: ui=`c-` / object（Container・Grid）=`o-` / layout（Header・Footer）=`l-` / 業務部品=`f-` / pages=`p-`。BEM 命名。
 - パスエイリアス `@` → `src`。
