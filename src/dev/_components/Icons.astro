@@ -8,27 +8,42 @@ import Icon from "@/components/ui/icon";
     <span class="p-catalog__item"
       ><Icon name="arrow" /><small>既定値 1em</small></span
     >
-    <span class="p-catalog__item"
-      ><Icon name="arrow" style={{ "--icon-size": "1.5rem" }} /><small
-        >24px</small
-      ></span
+    <span class="p-catalog__item p-catalog__iconMd"
+      ><Icon name="arrow" /><small>24px</small></span
     >
-    <span class="p-catalog__item"
-      ><Icon
-        name="arrow"
-        style={{ "--icon-size": "2.5rem", "--icon-size-sp": "1.5rem" }}
-      /><small>PC 40px / SP 24px</small></span
+    <span class="p-catalog__item p-catalog__iconLg"
+      ><Icon name="arrow" /><small>PC 40px / SP 24px</small></span
     >
-    <span class="p-catalog__item"
-      ><Icon name="arrow" style={{ "--icon-width": "4rem" }} /><small
-        >幅 64px（高さは auto）</small
-      ></span
+    <span class="p-catalog__item p-catalog__iconWide"
+      ><Icon name="arrow" /><small>幅 64px（高さは auto）</small></span
     >
   </div>
   <div class="p-catalog__row p-catalog__row--middle">
-    <Icon name="arrow" style={{ "--icon-color": "#c62828" }} />
-    <Icon name="arrow" style={{ "--icon-color": "#1565c0" }} />
-    <Icon name="arrow" style={{ "--icon-color": "#2e7d32" }} />
+    <span class="p-catalog__iconRed"><Icon name="arrow" /></span>
+    <span class="p-catalog__iconBlue"><Icon name="arrow" /></span>
+    <span class="p-catalog__iconGreen"><Icon name="arrow" /></span>
     <small>同じアイコンを個別の色で表示</small>
   </div>
 </section>
+
+<style is:global>
+  .p-catalog__iconMd {
+    --icon-size: 1.5rem;
+  }
+  .p-catalog__iconLg {
+    --icon-size: 2.5rem;
+    --icon-size-sp: 1.5rem;
+  }
+  .p-catalog__iconWide {
+    --icon-width: 4rem;
+  }
+  .p-catalog__iconRed {
+    --icon-color: #c62828;
+  }
+  .p-catalog__iconBlue {
+    --icon-color: #1565c0;
+  }
+  .p-catalog__iconGreen {
+    --icon-color: #2e7d32;
+  }
+</style>

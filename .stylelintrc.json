@@ -3,10 +3,60 @@
     "stylelint-config-standard-scss",
     "stylelint-config-recess-order"
   ],
+  "reportDescriptionlessDisables": true,
   "overrides": [
     {
       "files": ["*.scss", "**/*.scss"],
       "customSyntax": "postcss-scss"
+    },
+    {
+      "files": ["src/components/**/*.scss"],
+      "rules": {
+        "selector-disallowed-list": [
+          [
+            "/^[a-z][a-z0-9-]*(?=$|[\\s:.\\[#>+~])/",
+            "/\\s[a-z][a-z0-9-]*(?=$|[\\s:.\\[#])/"
+          ],
+          {
+            "splitList": true,
+            "ignore": ["keyframe-selectors"],
+            "message": "部品のスタイルを要素セレクタや子孫の要素で書かない（no-broad-selectors）。直下の子は > :where(要素) で指す"
+          }
+        ],
+        "rule-selector-property-disallowed-list": [
+          {
+            "/^\\.c-[a-z0-9]+(-[a-z0-9]+)*$/": [
+              "/^margin/",
+              "/^inset/",
+              "top",
+              "right",
+              "bottom",
+              "left",
+              "float"
+            ]
+          },
+          {
+            "message": "部品のいちばん外側に、外側の余白や配置を持たせない（no-outer-margin）。間隔は置く側で決める"
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/components/pages/**/*.scss"],
+      "rules": {
+        "selector-disallowed-list": [
+          [
+            "/^[a-z][a-z0-9-]*(?=$|[\\s:.\\[#>+~])/",
+            "/\\s[a-z][a-z0-9-]*(?=$|[\\s:.\\[#])/",
+            "/\\.[co]-/"
+          ],
+          {
+            "splitList": true,
+            "ignore": ["keyframe-selectors"],
+            "message": "要素セレクタや子孫の要素で書かず（no-broad-selectors）、ページから部品の中を指さない（no-context-overrides）。部品の見た目は公開変数で変える"
+          }
+        ]
+      }
     }
   ],
   "rules": {
@@ -34,6 +84,56 @@
     "no-descending-specificity": null,
     "color-function-notation": "legacy",
     "alpha-value-notation": "number",
-    "no-invalid-position-declaration": null
+    "no-invalid-position-declaration": null,
+    "declaration-no-important": [
+      true,
+      { "message": "!important を使わない（no-important）" }
+    ],
+    "selector-max-id": [
+      0,
+      {
+        "message": "ID セレクタで詳細度を上げない（no-specificity-wars）"
+      }
+    ],
+    "selector-no-qualifying-type": [
+      true,
+      {
+        "message": "要素名を付けて詳細度を上げない（no-specificity-wars）"
+      }
+    ],
+    "selector-max-specificity": [
+      "0,2,0",
+      {
+        "message": "詳細度を上げて勝たない（no-specificity-wars）。優先順位はレイヤーで決め、条件は :where() で包む"
+      }
+    ],
+    "unit-disallowed-list": [
+      ["vh"],
+      {
+        "message": "画面の高さには vh ではなく svh か dvh を使う（no-100vh）"
+      }
+    ],
+    "declaration-property-unit-disallowed-list": [
+      { "font-size": ["px"] },
+      {
+        "message": "文字サイズは rem などの相対単位で書く（relative-font-size）"
+      }
+    ],
+    "declaration-property-value-disallowed-list": [
+      {
+        "outline": ["none", "0"],
+        "outline-style": ["none"],
+        "outline-width": ["0"]
+      },
+      {
+        "message": "フォーカスの表示を消さない（keep-focus-visible）"
+      }
+    ],
+    "selector-pseudo-class-disallowed-list": [
+      ["hover"],
+      {
+        "message": ":hover は直接書かず、mixin の hover を使う（hover-capable-only）"
+      }
+    ]
   }
 }

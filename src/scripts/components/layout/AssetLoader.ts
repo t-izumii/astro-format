@@ -30,13 +30,6 @@ export class AssetLoader extends Component {
   private _handleAssetLoadProgress(
     payload: TEventPayloads["ASSET_LOAD_PROGRESS"]
   ) {
-    if (import.meta.env.DEV) {
-      console.log(
-        `[AssetLoader] progress(raw) ${Math.round(payload.progress * 100)}%`,
-        payload
-      );
-    }
-
     gsap.to(this._easedProgress, {
       value: payload.progress,
       duration: EASE_DURATION,
@@ -50,12 +43,6 @@ export class AssetLoader extends Component {
     EventEmitter.emit(Events.ASSET_LOAD_PROGRESS_EASED, {
       progress: this._easedProgress.value,
     });
-
-    if (import.meta.env.DEV) {
-      console.log(
-        `[AssetLoader] progress(eased) ${Math.round(this._easedProgress.value * 100)}%`
-      );
-    }
   }
 
   private _handleAssetLoaded() {
@@ -79,9 +66,6 @@ export class AssetLoader extends Component {
   }
 
   private _finishLoading() {
-    if (import.meta.env.DEV) {
-      console.log("[AssetLoader] loaded");
-    }
     this._elTarget?.classList.add("is-loaded");
   }
 

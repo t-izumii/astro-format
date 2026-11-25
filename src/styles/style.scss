@@ -1,7 +1,33 @@
-@forward "./generic/";
-@forward "./base/";
-@forward "./vendor/";
-@forward "./objects/";
-@forward "./components/";
-@forward "./pages/";
-@forward "./trumps/";
+@use "sass:meta";
+
+// settings / tools は CSS を出力しないため含めない。
+// @forward は @layer の中に書けないため、meta.load-css で読み込む
+@layer generic, base, vendor, objects, components, pages, trumps;
+
+@layer generic {
+  @include meta.load-css("./generic/");
+}
+
+@layer base {
+  @include meta.load-css("./base/");
+}
+
+@layer vendor {
+  @include meta.load-css("./vendor/");
+}
+
+@layer objects {
+  @include meta.load-css("./objects/");
+}
+
+@layer components {
+  @include meta.load-css("./components/");
+}
+
+@layer pages {
+  @include meta.load-css("./pages/");
+}
+
+@layer trumps {
+  @include meta.load-css("./trumps/");
+}

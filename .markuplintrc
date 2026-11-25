@@ -18,7 +18,19 @@
     "./node_modules/**/*"
   ],
   "rules": {
-    "character-reference": false
+    "character-reference": false,
+    "invalid-attr": {
+      "options": {
+        "disallowAttrs": [
+          "accesskey",
+          {
+            "name": "role",
+            "value": { "enum": ["menu", "menubar", "menuitem"] }
+          }
+        ],
+        "allowAttrs": [{ "name": "tabindex", "value": { "enum": ["-1", "0"] } }]
+      }
+    }
   },
   "pretenders": [
     {
@@ -26,6 +38,18 @@
       "as": "script"
     }
   ],
+  "overrideMode": "merge",
+  "overrides": {
+    "./src/components/{ui,object,layout}/**/*": {
+      "rules": {
+        "no-hard-code-id": {
+          "value": true,
+          "severity": "error",
+          "reason": "複数置かれうる部品の中で id を固定しない（no-hardcoded-ids）"
+        }
+      }
+    }
+  },
   "nodeRules": [
     {
       "selector": "[key]",
@@ -37,6 +61,27 @@
       "selector": "[data-scope='c-icon'][dangerouslySetInnerHTML]",
       "rules": {
         "invalid-attr": false
+      }
+    },
+    {
+      "selector": "head",
+      "rules": {
+        "disallowed-element": {
+          "value": [
+            "meta[name='viewport'][content*='user-scalable' i]",
+            "meta[name='viewport'][content*='maximum-scale' i]"
+          ],
+          "reason": "拡大を禁止する viewport の指定を書かない（allow-zoom）"
+        }
+      }
+    },
+    {
+      "selector": "form button",
+      "rules": {
+        "required-attr": {
+          "value": ["type"],
+          "reason": "フォームの中のボタンには type を書く（explicit-button-type）"
+        }
       }
     }
   ]

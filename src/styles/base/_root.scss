@@ -14,9 +14,10 @@
   --scale: tan(atan2(var(--vw), #{$design-width-pc}px));
 
   // フォントファミリー
+  // 引用符で囲む。stylelint に小文字へ直されると、Chrome が BlinkMacSystemFont を認識しない
   --font-family-base:
-    -apple-system, blinkmacsystemfont, "Segoe UI", "Helvetica Neue", arial,
-    sans-serif;
+    -apple-system, "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue",
+    "Arial", sans-serif;
 
   // カスタムイージング
   --easing-smooth: cubic-bezier(0.4, 0, 0.2, 1);

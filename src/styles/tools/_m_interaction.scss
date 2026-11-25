@@ -1,11 +1,13 @@
 // hover effect (タッチデバイス除外)
 @mixin hover {
-  @media (any-hover) {
+  @media (hover: hover) {
+    // stylelint-disable-next-line selector-pseudo-class-disallowed-list -- :hover を書くのはこの mixin だけにする
     &:where(:any-link, :enabled, summary):hover {
       @content;
     }
   }
 
+  // キーボード操作でも同じ見た目にする
   &:focus-visible {
     @content;
   }

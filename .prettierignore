@@ -9,3 +9,6 @@ dist/
 *.min.js
 *.min.css
 package-lock.json
+
+# コーディングガイドライン。元の書式を保つため整形しない
+docs/guidelines/

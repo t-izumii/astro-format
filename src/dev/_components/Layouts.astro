@@ -5,31 +5,30 @@ import Grid from "@/components/object/grid";
 
 <section class="p-catalog__section">
   <h2 class="p-catalog__title">Container / Grid</h2>
-  <Container
-    data-size-observer=""
-    data-in-view=""
-    style={{
-      "--container-max-width": "720px",
-      "--container-padding": "16px",
-      background: "#f0f0f0",
-    }}
-  >
-    <Grid
-      style={{
-        "--grid-repeat": 3,
-        "--grid-repeat-sp": 1,
-        "--grid-gap": "20px",
-        "--grid-row-gap-sp": "12px",
-      }}
+  <div class="p-catalog__layoutDemo">
+    <Container
+      data-size-observer=""
+      data-in-view=""
+      style={{ background: "#f0f0f0" }}
     >
-      <p class="p-catalog__gridItem">一つ目</p><p class="p-catalog__gridItem">
-        二つ目
-      </p><p class="p-catalog__gridItem">三つ目</p>
-    </Grid>
-  </Container>
+      <Grid>
+        <p class="p-catalog__gridItem">一つ目</p><p class="p-catalog__gridItem">
+          二つ目
+        </p><p class="p-catalog__gridItem">三つ目</p>
+      </Grid>
+    </Container>
+  </div>
 </section>
 
 <style is:global>
+  .p-catalog__layoutDemo {
+    --container-max-width: 720px;
+    --container-padding: 16px;
+    --grid-repeat: 3;
+    --grid-repeat-sp: 1;
+    --grid-gap: 20px;
+    --grid-row-gap-sp: 12px;
+  }
   .p-catalog__gridItem {
     padding: 1rem;
     border: 1px solid #999;

@@ -1,3 +1,5 @@
+@use "@/styles/abstracts" as *;
+
 .c-carousel {
   --_carousel-slide-width: var(--carousel-slide-width, 200px);
   --_carousel-arrow-background: var(
@@ -28,17 +30,20 @@
   height: auto;
 }
 
+// 矢印とページネーションは Splide が生成し、値を受け取れないため、Splide のクラスを直接上書きする
+
 /* 矢印カスタマイズ */
-.c-carousel .splide__arrow {
+.c-carousel :where(.splide__arrow) {
   background: var(--_carousel-arrow-background);
   opacity: 1;
+
+  @include hover {
+    background: var(--_carousel-arrow-hover-background);
+  }
 }
 
-.c-carousel .splide__arrow:hover {
-  background: var(--_carousel-arrow-hover-background);
-}
-
-.c-carousel .splide__arrow svg {
+// stylelint-disable-next-line selector-disallowed-list -- Splide が生成する矢印の svg にはクラスがない
+.c-carousel :where(.splide__arrow) svg {
   fill: var(--_carousel-arrow-color);
 }
 
@@ -53,10 +58,10 @@
 }
 
 /* ページネーションカスタマイズ */
-.c-carousel .splide__pagination__page {
+.c-carousel :where(.splide__pagination__page) {
   background: var(--_carousel-pagination-color);
 }
 
-.c-carousel .splide__pagination__page.is-active {
+.c-carousel :where(.splide__pagination__page.is-active) {
   background: var(--_carousel-pagination-active-color);
 }

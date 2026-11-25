@@ -1,79 +1,58 @@
 # CLAUDE.md
 
-このリポジトリで作業する際の指針。詳細な背景は `README.md` を参照。
+このリポジトリで作業するときの指針。背景と詳細はルートの `README.md`、部品の使い方は各部品の `README.md` を参照。
 
 ## 概要
 
-Astro v7 + **Preact**（React ではない）の静的サイト。`base: "/"`、CSS は単一バンドル（`cssCodeSplit: false`）。
+- Astro v7 + **Preact**（React ではない）の静的サイト。CSS は単一バンドル（`cssCodeSplit: false`）。
+- 型は `npm run typecheck` で確認する（`astro build` は型を検査しない）。IDE 診断に出る `.astro` 同士の import エラーは、再インデックスで消える一時表示のことが多い。
+- コミット時は lint-staged が ESLint / Stylelint / markuplint / Prettier を自動で実行する。
+- `docs/guidelines` のうち構文で判定できるルールは、ESLint・Stylelint・markuplint が検査する（独自のメッセージにはガイドライン名が付く）。例外は `// eslint-disable-next-line ルール名 -- 理由` / `// stylelint-disable-next-line ルール名 -- 理由` のように理由を付けて無効化する。Lint を通っても、表示や内容の判断が要るルールは別に確かめる。
+- LLM / AI 関連の実装方針を変える場合や、外部送信を伴う操作は事前に確認する。
 
-## コマンド
+## 配置
 
-- `npm run dev` … 開発サーバー（`http://localhost:4321/`）
-- `npm run build` … `clean && astro build`（HTML 整形などの後処理はインテグレーション）
-- `npm run lint:js` / `lint:css` / `lint:html` … （`:fix` で自動修正）
-- `npm run format` / `format:check` … Prettier
-- `npm run typecheck` … `astro check`（.astro を含む型チェック。`astro build` は型を検査しない）
+- `src/pages/` はルーティングだけ。レイアウトとページ部品を呼び出し、ページメタ情報を指定する。
+- 共通 UI は `src/components/ui/`、ページ固有は `src/components/pages/{ページ名}/`。迷ったら使うページの下に置き、実際に別ページでも必要になってから共通へ移す。ファイル名にページ名を重ねない。
+- 部品の関連ファイル（`index.tsx`、スタイル、`{Name}.client.ts`、`README.md`、テスト）は同じディレクトリに置く。部品の使い方と公開変数は部品の `README.md` に書き、ルートの README には書かない。
+- dev 専用のページは `src/dev/` に置く（`src/pages` に置くと本番の CSS バンドルに混ざる）。`/components` は `devComponentsPreview` が dev 時だけ追加する。
 
-コミット時は Husky + lint-staged が `eslint --fix` / `stylelint --fix` / `prettier --write` を自動実行する。
+## 部品の作り方
 
-## コンポーネント設計と配置
+- 内容は `children`（Astro では slot）で渡す。ラベル・アイコン・footer の有無を見た目用の props にしない。任意の枠は children / slot の有無で出し分ける。
+- props は標準属性・children・CSS で表せないデータや振る舞いに使う。Button と Link のように役割が違うものを prop で切り替えない。Grid / Container は div の薄い拡張で、別の要素には `o-grid` / `o-container` クラスを直接付ける。
+- `interface Props` は対応する Preact の HTML 属性型（`import type { ButtonHTMLAttributes } from "preact"`）を継承し、children と固有の入力だけを書く。標準属性は `...rest` で DOM に渡す。`JSX.*Attributes`、`Omit`、独自の共通 props 型は使わない。props が不要な部品に空の定義を作らない。
+- `...rest` を受ける部品は **`class: _class, className: _className` を分割代入して捨て**、内部クラスは `className=` で書く（preact-render-to-string は `class` があると `className` を捨てる。ルートの `class=` は markuplint に弾かれる）。固有の制御 props も分割代入し、DOM に流さない。
+- JSX を書くファイルは `.tsx`。子の型は `ComponentChildren`（`React.ReactNode` は使わない）、子を分けるときは `toChildArray`。
+- Astro テンプレートから Preact 部品へ渡した children は 1 つの子になる。要素ごとに分けたいときは `.tsx` 側から渡す（例: カタログは `.tsx` のデモを経由する）。
 
-- `src/pages/` の責務はルーティングだけとし、部品・スタイル・挙動は置かない。ルートファイルはレイアウト・ページ部品を呼び出し、ページメタ情報を指定する。
-- 共通 UI は `src/components/ui/`、ページ固有は `src/components/pages/{ページ名}/` に置く。所属はディレクトリで表し、ファイル名にページ名を重ねない。
-- 関連ファイルがある部品はディレクトリにまとめる。構造の `index.tsx`、スタイル、`{ComponentName}.client.ts`、固有の `spec.md`・テストを隣接させる。1 ファイルで完結するものは単独でよい。
-- 迷ったら利用するページの部品ディレクトリ内に隣接させる。実際に別ページでも同じ責務で必要になってから共通へ移す。
-- 内容は Preact の `children`、Astro の slot で渡す。ラベル・アイコンの有無・footer の有無を見た目制御の props にしない。
-- 色・寸法・間隔は `style` の公開 CSS カスタムプロパティで調整する。公開名は `--icon-size`、内部名は `--_icon-size` のように部品名を含め（`--{部品名}-{名前}`）、部品のルートで `--_icon-size: var(--icon-size, 1em)` のように解決する。実際の宣言は内部変数を参照する。`--gap` や `--width` のような汎用名は継承で他部品と衝突するため使わない。
-- 内容に応じたスタイルは `:where(:has(...))` 等で部品側が判断する。内部の詳細度は低く保ち、利用側の調整は公開変数に限定する。任意の枠の生成は children / slot の有無で判定する。
-- props は標準属性・データ・振る舞い・children で表せない構造に使う。Button と Link のように役割が異なるものを prop で切り替えない。Grid / Container は div の薄い拡張とし、別の要素には `o-grid` / `o-container` クラスを直接使う。
-- DOM を包む部品の `interface Props` は対応する Preact の HTML 属性型を継承し、children と部品固有の入力だけを明記する。標準属性を個別に列挙せず、`...rest` で DOM に渡す。`Omit` や独自の共通 props 型は使わない。
-- 属性型は `import type { ButtonHTMLAttributes } from "preact"` のように直接 import する。非推奨の `JSX.ButtonHTMLAttributes` / `JSX.HTMLAttributes` などは使わない。
-- 内部クラスは部品で固定する。継承型は `class` / `className` も受け付けるが、利用側から追加クラスは渡さず、表示調整は公開 CSS 変数で行う。`...rest` を受ける部品は **`class: _class, className: _className` を分割代入して捨て**、内部クラスは `className=` で書く（preact-render-to-string は `class` があると `className` を捨てるため、`rest` に `class` が残ると内部クラスが消える。ルートに `class=` を書く方法は markuplint の jsx 検査に弾かれる）。未使用変数は ESLint の `ignoreRestSiblings` で許可している。部品固有の制御 props は分割代入し、DOM に流さない。props が不要な部品に空の定義を追加しない。
-- JavaScript の接続には kebab-case の `data-*` 属性を使う。初期化登録・DOM 検索・出力側を同時に更新する。`data-modal-target` / `data-scroll-to` のような設定属性が目印を兼ねる場合は重複したフックを追加しない。状態クラスや外部ライブラリの必須クラスとは区別する。
-- **構造と挙動の責任は分け、配置は隣接させる**。UI の挙動は各部品の `.client.ts`、ページを横断する実行基盤は `src/scripts/`。挙動は `Component` を継承し、`src/scripts/index.ts` の `PAGE_COMPONENTS` に登録する。`.client.ts` という名前だけでは実行されない。
-- 挙動クラスは `constructor(elTarget, options)` / `_setEventListeners()` / `protected override _onDestroy()` の形に揃える。購読は必ず基底経由にする（いずれも `destroy` で自動解除される）: DOM リスナーは `_addEL`、毎フレーム処理は `_addRAF`（`Ticker`）、イベントバスは **`_addEE`**（`EventEmitter.on` を直接呼ばない）。
-- **`destroy()` はオーバーライドしない。固有の後始末は `_onDestroy()` に書く**（テンプレートメソッド）。二重呼び出しのガードと呼び出し順は基底が持つので、サブクラス側にガードも `super` 呼び出しも要らない。SPA 遷移では同一インスタンスに destroy が重ねて走り得るため、ガードをサブクラスに書かせる形にしない。
-- コンポーネント間通知は `src/scripts/utils/EventEmitter.ts`。イベント名と payload 型は `src/scripts/constants/events.ts` の `Events` / `TEventPayloads` に追加する。
-- **毎フレームのイベントをバスに流さない**。rAF は `src/scripts/utils/Ticker.ts` が単独で持ち、コンポーネントからは `_addRAF` で購読する。
-- `emit` は `queueMicrotask` 越しに配信する。**emit した直後に同じ同期ブロックで `on` した購読者にも届く**（`AssetProgress.init()` が計測対象 0 件のときコンストラクタ内から同期 emit し、その 2 行下で `on` しているのが実例）。同期配信に変えるとここが黙って落ちる。
+## スタイル
 
-## 必ず守るルール（過去にハマった点）
+- 部品の表示調整は公開変数 `--{部品名}-{名前}` だけで行う。部品ルートで `--_{部品名}-{名前}: var(--{部品名}-{名前}, 既定値)` に解決し、宣言は内部変数を参照する。`--gap` のような汎用名は使わない。
+- 値は `style` 属性で渡さず、部品を包むページ側の要素のクラスに CSS で指定して継承させる（中の同じ部品すべてに効く）。部品に追加クラスは渡さない。
+- 内容や状態に応じたセレクタは `:where()` で包み、クラス 1 つ分の詳細度に保つ（例: `.c-x:where(:has(> img))`）。
+- `styles/style.scss` が `@layer generic, base, vendor, objects, components, pages, trumps;` の各レイヤーへ `meta.load-css()` で読み込む。外部ライブラリの CSS は `vendor` に置き、詳細度を上げて対抗しない。`.astro` の `<style>` はレイヤーの外になり全レイヤーに勝つため、本番では使わない（`src/dev` は例外）。`!important` は使わない。
+- `additionalData` の abstracts はエントリーにしか注入されない。変数や mixin を使う部品・base の scss は、先頭に `@use "@/styles/abstracts" as *;` を書く。
+- 部品の scss は `components/ui/_index.scss` などで `@forward "./xxx/";` して集約する。接頭辞は ui=`c-`、object=`o-`、layout=`l-`、業務部品=`f-`、pages=`p-`（BEM）。`@` は `src` の別名。
+- ホバーの見た目は `:hover` を直接書かず、mixin の `hover` で書く（`(hover: hover)` に限り、`:focus-visible` にも当てる）。Splide など外部ライブラリが生成する要素は、部品の中から `.c-x :where(.splide__xxx)` の形で上書きする（vendor レイヤーに勝つので詳細度は上げない）。
+- 書体は `base/_root.scss` の `--font-family-base` を `body` から継承する。部品で `font-family` を指定しない。この変数のフォント名は引用符で囲む（stylelint が小文字に直すと、Chrome が `BlinkMacSystemFont` を認識しない）。
 
-### Preact / TSX
+## スクリプト
 
-- **JSX を書くファイルは必ず `.tsx`**（`.ts` だと JSX をパースできずエラー）。
-- 子要素の型は **`ComponentChildren`（`preact`）**。`React.ReactNode` は使わない。複数子を扱うときは `toChildArray`。
-- **Astro テンプレートから Preact コンポーネントへ children を渡すと 1 スロット扱いになる**。`toChildArray` で要素ごとに分割したい場合は、Preact（`.tsx`）側から discrete な子として渡すこと（例: プレビューは `.tsx` デモを経由）。
+- JavaScript の接続には kebab-case の `data-*` 属性を使い、初期化登録・DOM 検索・出力側を同時に直す。`data-modal-target` のように設定属性が目印を兼ねるときは、フックを重ねない。
+- 挙動は `Component` を継承して部品の `.client.ts` に書き、`src/scripts/index.ts` の `PAGE_COMPONENTS` に登録する（ファイル名だけでは実行されない）。ページ横断の基盤は `src/scripts/` に置く。
+- 形は `constructor(elTarget, options)` / `_setEventListeners()` / `protected override _onDestroy()` にそろえる。購読は基底経由で行い（DOM は `_addEL`、毎フレームは `_addRAF`、イベントバスは `_addEE`。`EventEmitter.on` を直接呼ばない）、destroy 時に自動で解除させる。
+- **`destroy()` はオーバーライドしない**。後始末は `_onDestroy()` に書く。二重呼び出しのガードは基底が持つ（SPA 遷移で destroy が重なり得る）。
+- イベント名と payload 型は `src/scripts/constants/events.ts` の `Events` / `TEventPayloads` に足す。毎フレームの処理はバスに流さず、`Ticker` を `_addRAF` で購読する。
+- `emit` は `queueMicrotask` で配信するため、emit 直後に同じ同期ブロックで `on` した購読者にも届く（`AssetProgress.init()` がこれに依存）。同期配信に変えない。
+- Splide の `type`（slide / loop）は breakpoints で変えられない（mount 時に固定。`BreakpointOptions` にも入れない）。SP だけ loop にするときはベースの `type` を切り替える。はみ出したときだけカルーセルにするには `overflowOnly` を使う。
 
-### スタイル（SCSS / ITCSS）
+## ビルド
 
-- `@/styles/_abstracts` は `astro.config.mjs` の `additionalData` で注入されるが、対象は Vite が直接処理するエントリーの scss だけ。**`@forward` で読み込まれる部品・base の scss には注入されない**ため、変数や mixin を使うファイルは先頭に `@use "@/styles/abstracts" as *;` を書く（削除するとビルドが Undefined variable で落ちる）。
-- コンポーネント scss は各ディレクトリに置き、`src/components/ui/_index.scss` 等で `@forward "./xxx/";` 集約する。
-- クラス接頭辞: ui=`c-` / object（Container・Grid）=`o-` / layout（Header・Footer）=`l-` / 業務部品=`f-` / pages=`p-`。BEM 命名。
-- パスエイリアス `@` → `src`。
-
-### ビルドパイプライン（インテグレーション）
-
-- 後処理は **`integrations/` の Astro インテグレーション**（`astro:build:done`）で行う。**npm の build スクリプトに後処理を足さない**（二重処理になる）。
-  - `cleanup-scripts.mjs` … チャンクを単一 `assets/scripts/script.js` に集約。
-  - `image-optimize.mjs` … sharp で画像最適化。**APNG は `acTL` 検出で素通し**（sharp が APNG を潰すため再エンコードしない）。
-  - `format-html.mjs` … 出力 HTML を Prettier で整形。HTML を書き換えるインテグレーションより後に登録する。
-- 対象ブラウザは Vite の既定値（`baseline-widely-available`）に従う。雛形では `vite.build.target` を書かず、案件で要件があるときだけ指定する。ポリフィルは入らないため、新しい API は対象の範囲で動くか確認する。
-- 画像最適化は imageOptimize が担当。別の画像圧縮処理を併用して APNG を静止画化しない。
-- **dev 専用ページ・プレビューは `src/pages` の外（`src/dev/`）に置く**。`cssCodeSplit: false` のため、`src/pages` に置くと本番 CSS バンドルを汚染する。`/components` は `astro.config.mjs` の `devComponentsPreview` が dev 時のみ inject する。
-
-### Lint
-
-- `.astro` の Prettier 整形には `prettier-plugin-astro` が必要（`.prettierrc` 設定済み）。
-- markuplint は `<img>` に `width` / `height` を必須にする。
-- Prettier はダブルクォート（`singleQuote: false`）。
-
-### Splide（スライド）
-
-- `type`（slide/loop）は **breakpoints で変更不可**（mount 時固定）。`BreakpointOptions` 型にも入れない。SP だけ loop にしたい等はベース `type` を切り替える。
-- 「はみ出した時だけカルーセル」は `overflowOnly`（`overflow` イベントで `arrows`/`pagination`/`drag`/`clones` をトグル）。
-
-## 作業の進め方
-
-- 変更後は IDE 診断で型エラーを確認する（`.astro` 同士の import エラーは再インデックスで消える一時表示のことが多い）。
-- LLM/AI 関連の実装方針を変える場合や外部送信を伴う操作は、事前に確認する。
+- 出力はファイル納品にも使うため、JS は `assets/scripts/script.js`、CSS は `assets/styles/style.css` の 1 ファイルずつにまとめ、HTML は整形して出す。
+- 後処理は `integrations/` の Astro インテグレーション（`astro:build:done`）で行い、npm の build スクリプトに足さない（二重処理になる）。
+  - `cleanup-scripts.mjs` … チャンクを `assets/scripts/script.js` に束ね直し、`assets/chunk/` を消す。エントリーは `src/layouts/script.astro` の `<script>` から作られるチャンク名で探すため、スクリプトの読み込みは `script.astro` 経由のままにする。
+  - `image-optimize.mjs` … sharp で画像を最適化する。APNG は `acTL` を検出して再エンコードしない。ほかの画像圧縮を併用しない。
+  - `format-html.mjs` … 出力 HTML を Prettier で整形する（`compressHTML: false`）。HTML を書き換えるインテグレーションより後に登録する。
+- JS / CSS の minify は `vite.build.minify: "oxc"` / `cssMinify: "lightningcss"`。本番の CSS では先頭のレイヤー順の宣言が省かれるが、レイヤーのブロックが宣言と同じ順で並ぶため優先順位は変わらない。
+- 対象ブラウザは Vite の既定（`baseline-widely-available`）。`vite.build.target` は案件で要件があるときだけ書く。ポリフィルは入らない。

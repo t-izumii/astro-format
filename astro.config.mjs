@@ -40,7 +40,6 @@ function isIndexablePage(pageUrl) {
 
   if (!htmlFile) {
     // 対応付けが壊れて除外が効かなくなったことに気づけるよう、ビルドログに出す
-    // eslint-disable-next-line no-console
     console.warn(
       `[sitemap] 出力HTMLが見つからないため noindex を判定できません: ${pageUrl}`
     );

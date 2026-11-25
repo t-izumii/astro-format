@@ -17,6 +17,9 @@ pnpm-debug.log*
 .env
 .env.production
 
+# ai env
+.claude/settings.local.json
+
 # macOS-specific files
 .DS_Store
 

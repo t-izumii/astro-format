@@ -3,15 +3,34 @@
 Astro v7 + Preact の静的サイト制作環境。SCSS、GSAP、Splide を使用します。
 [コンポーネント哲学](https://claude.ai/code/artifact/888399b6-1090-4073-9647-cf8296bb8095)を、この環境の Preact / SCSS / Component 基底クラスに合わせて適用しています。
 
+## セットアップ
+
+Node.js のバージョンは `.node-version` で指定しています。nodenv などのバージョン管理ツールで同じ版に切り替えてから、依存をインストールして開発サーバーを起動します。
+
+```sh
+npm install
+npm run dev
+```
+
+そのほかのコマンドは「[コマンドとビルド](#コマンドとビルド)」を参照してください。
+
+## サイト情報の設定
+
+公開先の URL は `astro.config.mjs` の `site` に書きます。sitemap と、canonical / OGP の絶対 URL はこの値から作られます。サイト名・説明・OGP 画像・favicon は `src/data/meta.ts` の `siteMeta`、ページごとのタイトルと説明は `src/data/pages.ts` で設定します。
+
 ## 配置と責任
 
 ```text
 src/
 ├── components/
 │   ├── ui/
-│   │   ├── button/        # index.tsx、index.scss
+│   │   ├── button/        # index.tsx、index.scss、README.md
+│   │   ├── icon/          # SVG は svg/ に追加
 │   │   ├── link/          # 遷移用。Button とは別の部品
-│   │   └── modal/         # index.tsx、index.scss、Modal.client.ts、ModalOpen.client.ts
+│   │   ├── marquee/       # 横に流れる帯
+│   │   ├── modal/         # index.tsx、index.scss、README.md、Modal.client.ts、ModalOpen.client.ts
+│   │   ├── picture/       # PC と SP で画像を切り替え
+│   │   └── slide/         # カルーセル（Splide）
 │   ├── object/            # container / grid
 │   ├── layout/            # 共通ヘッダー・フッター
 │   │   ├── header/        # index.tsx、index.scss
@@ -29,15 +48,17 @@ src/
 └── dev/                  # 開発専用カタログ・デモ
 ```
 
-`src/pages/` はルーティング専用です。ルートファイルではレイアウトとページ部品を呼び出し、ページメタ情報を指定します。ページ専用の部品は `src/components/pages/{ページ名}/` に置きます。関連するスタイル・挙動・仕様・テストも部品の隣に置き、必要になったものだけ追加します。実際に複数ページで共有するときに `components/ui/` などの共通の配置先へ移します。ファイル名に所属ページ名を重ねません。
+`src/pages/` はルーティング専用です。ルートファイルではレイアウトとページ部品を呼び出し、ページメタ情報を指定します。ページ専用の部品は `src/components/pages/{ページ名}/` に置きます。関連するスタイル・挙動・説明（`README.md`）・テストも部品の隣に置き、必要になったものだけ追加します。実際に複数ページで共有するときに `components/ui/` などの共通の配置先へ移します。ファイル名に所属ページ名を重ねません。
 
-ページの SCSS は部品の隣に置き、`components/pages/_index.scss` → `styles/pages/_index.scss` で集約します。共通部品のスタイルも `components/ui/_index.scss` などで集約します。共通 CSS は `layouts/Layout.astro` が読み込みます。基礎・共通部品・ページ固有の順に適用します。
+ページの SCSS は部品の隣に置き、`components/pages/_index.scss` → `styles/pages/_index.scss` で集約します。共通部品のスタイルも `components/ui/_index.scss` などで集約します。共通 CSS は `layouts/Layout.astro` が読み込みます。`styles/style.scss` がカスケードレイヤーに振り分け、基礎・共通部品・ページ固有の順に優先させます（「[CSS の設計](#css-の設計)」）。
 
 `src/dev` はビルド対象外です。開発専用カタログ（`/components`）とデモをここに置きます。
 
-## 部品の使い方
+## 部品の作り方
 
-中身は `children`（Astro では slot）、表示調整は CSS、データや挙動は必要な props で渡します。`style`、`aria-*`、`data-*` などの標準属性は `...rest` で DOM に渡します。内部クラスは部品側で固定します。呼び出し側の文字やアイコンを部品の prop で組み立てません。
+各部品の使い方と公開変数は、部品のディレクトリにある `README.md` に書きます（例: `src/components/ui/picture/README.md`）。このルートの README には書きません。
+
+中身は `children`（Astro では slot）、表示調整は CSS の公開変数、データや挙動は必要な props で渡します。`aria-*`、`data-*` などの標準属性は `...rest` で DOM に渡します。内部クラスは部品側で固定します。呼び出し側の文字やアイコンを部品の prop で組み立てません。
 
 DOM を包む部品は、対応する Preact の HTML 属性型を継承します。各部品には children と固有の入力だけを明記し、標準属性を重複して列挙しません。Header・Footer など入力のない部品には props を定義しません。
 
@@ -49,130 +70,33 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 ```
 
-属性型は `preact` から直接 import します。`JSX.ButtonHTMLAttributes` などの旧参照は非推奨のため使いません。Link の必須の遷移先、Modal の必須の識別子、Carousel / Marquee の動作設定は部品側で明記しています。継承型は class / className も許容しますが、利用側から追加クラスを渡さず、公開 CSS 変数で調整する運用です。Layout のページメタ情報や開発用デモの固有入力は通常の interface で定義します。
-
-### ボタンとリンク
-
-```tsx
-import Button from "@/components/ui/button";
-import ActionLink from "@/components/ui/link";
-import Icon from "@/components/ui/icon";
-
-<Button type="submit" disabled={isSubmitting}>送信</Button>
-<Button><Icon name="arrow" />次へ</Button>
-<ActionLink href="/about/">私たちについて</ActionLink>
-<Button style={{ "--button-padding": "0.75rem 2rem" }}>保存</Button>
-```
-
-Button は `button`（既定の type は `button`）、Link は `a` を描画します。Astro テンプレートでは HTML Lint の解析との衝突を避けるため、リンク部品を `ActionLink` として import します。イベントハンドラーを使う Preact 部品は Astro 側で適切な `client:*` 指定が必要です。既存の `data-modal-target` などは共通スクリプトが初期化するため hydration は不要です。
-
-表示用変数は Button が `--button-gap`、`--button-padding`、`--button-font-size`、`--button-color`、`--button-background`、Link が `--link-gap`、`--link-padding`、`--link-font-size`、`--link-color`、`--link-background`。
-
-Button の disabled・type・style・onClick・ARIA 属性は標準属性型から継承します。モーダル接続用の data 属性も利用側から渡せます。
-
-### アイコン
-
-色は各 Icon の `--icon-color` で個別に指定します。未指定時は親の文字色を継承します。追加する単色 SVG は塗りを `fill="currentColor"`、線を `stroke="currentColor"` にし、描画しない部分の `none` は維持します。固定色の SVG はその色を保持するため、`--icon-color` では変わりません。
-
-```tsx
-<Icon name="arrow" />
-<Icon name="arrow" style={{ "--icon-size": "2.5rem", "--icon-size-sp": "1.5rem" }} />
-<Icon name="arrow" style={{ "--icon-color": "#c62828" }} />
-<Icon name="arrow" style={{ "--icon-color": "#1565c0" }} />
-```
-
-SVG は `components/ui/icon/svg/` へ追加します。既定サイズは親の文字サイズに従う `1em`。幅だけを指定する場合は `--icon-width`、SP 用は `--icon-size-sp` / `--icon-width-sp` を使います。高さは SVG の縦横比で決まります。装飾として既定で `aria-hidden="true"` を付けます。アイコンだけのボタンには Button 側の `aria-label` などで操作名を付けてください。
-
-### 画像
-
-```tsx
-import Picture from "@/components/ui/picture";
-
-<Picture
-  style={{ "--picture-width": "400px" }}
-  sp={{
-    srcSet: "/assets/images/hero-sp.jpg",
-    width: 300,
-    height: 400,
-  }}
-  img={{
-    src: "/assets/images/hero.jpg",
-    alt: "メインビジュアルの説明",
-    width: 600,
-    height: 400,
-    loading: "lazy",
-  }}
-/>;
-```
-
-画像の URL・代替文・寸法・読み込み優先度は `img`（img の属性）と `sp`（SP 用 source の属性、省略可）に渡し、children は受け取りません。`sp` の `media` は `MIN_PC_WIDTH`（既定 768px）未満で固定です。BASE_URL が `/` 以外なら、利用側で `import.meta.env.BASE_URL` を URL に反映します。Picture は URL を書き換えません。
-
-表示幅は `--picture-width` / `--picture-width-sp` で指定します。縦横比は `img` / `sp` の `width` / `height` 属性から自動で決まるため、CSS では管理しません。`width` / `height` は表示用 prop に置き換えず `img` / `sp` に残します。
-
-### レイアウト
-
-```tsx
-import Container from "@/components/object/container";
-import Grid from "@/components/object/grid";
-
-<Container
-  style={{ "--container-max-width": "960px", "--container-padding": "16px" }}
->
-  <Grid
-    style={{
-      "--grid-repeat": 3,
-      "--grid-gap": "1.25rem",
-      "--grid-repeat-sp": 1,
-    }}
-  >
-    <p>一つ目</p>
-    <p>二つ目</p>
-    <p>三つ目</p>
-  </Grid>
-</Container>;
-```
-
-Container / Grid は div を描画します。section や ul が必要なら、その要素へ直接 `o-container` / `o-grid` を付けます。
-Grid の変数は `--grid-layout`（列定義を直接指定）、`--grid-repeat`、`--grid-min-size`、`--grid-gap`、`--grid-column-gap`、`--grid-row-gap`。各値に SP 用の `-sp` があります。寸法は CSS 単位付きで指定します。
-
-### モーダル
-
-```tsx
-<Button data-modal-target="sample">開く</Button>
-<Modal data-modal-id="sample" aria-labelledby="sample-title">
-  <h2 id="sample-title">確認</h2>
-  <p>内容をここに書きます。</p>
-</Modal>
-```
-
-ネイティブ dialog。閉じるボタン・背景クリック・Escape で閉じます。サイズは `--modal-width` / `--modal-height` で調整できます。ID は配置ごとに一意にします。プログラムからは `EventEmitter.emit(Events.OPEN_MODAL, { id: "sample" })` で開けます。操作名や説明は `aria-labelledby` / `aria-describedby` で渡せます。
-
-### カルーセルとマーキー
-
-```tsx
-import Carousel from "@/components/ui/slide";
-import Marquee from "@/components/ui/marquee";
-
-<Carousel aria-label="制作実績" options={{ type: "loop", autoWidth: true, gap: "1rem" }}>
-  <img src="/assets/images/work-1.jpg" alt="制作実績1" width={800} height={400} />
-  <img src="/assets/images/work-2.jpg" alt="制作実績2" width={800} height={400} />
-</Carousel>
-<Marquee speed={60} pauseOnHover><span>お知らせ</span></Marquee>
-```
-
-Carousel の `options` は Splide の移動距離・複製・ページ数の計算に関わるため維持します。`gap` もライブラリが計算に使います。`overflowOnly` ははみ出す場合だけ有効化する挙動です。`type` は breakpoints で変更できません。
-Carousel の装飾は `--carousel-slide-width`、`--carousel-arrow-background`、`--carousel-arrow-hover-background`、`--carousel-arrow-color`、`--carousel-pagination-color`、`--carousel-pagination-active-color` で調整できます。Splide の CSS を上書きする連携部分には必要な詳細度を残し、利用側は公開変数で調整します。
-
-Marquee の `speed` / `direction` / `pauseOnHover` / `scrollBoost` は挙動を指定します。動いている間は部品が停止・再開ボタンを表示します。動きの抑制設定が有効なときや JS が動く前は、流さずに横スクロールで表示します。
-Carousel で `autoplay` を有効にすると、停止・再開ボタンを出力します。`interval` を省略した場合は Splide の既定値（5000ms）になります。
-
-**Astro から Preact へ複数の子を渡すと、一つの slot として渡されます。** Carousel のように `toChildArray` で子を分割する部品は、`.tsx` のラッパーから各子を渡します。実例は `src/dev/_components/SlideDemo.tsx`。単純に children を描画する Button / Modal は Astro から直接利用できます。
+属性型は `preact` から直接 import します。`JSX.ButtonHTMLAttributes` などの旧参照は非推奨のため使いません。部品固有の必須入力や動作設定は、各部品の `Props` に明記します。継承型は class / className も許容しますが、利用側から追加クラスを渡さず、公開 CSS 変数で調整する運用です。Layout のページメタ情報や開発用デモの固有入力は通常の interface で定義します。
 
 ## CSS の設計
 
 SCSS の共通変数・mixin は `styles/settings` / `styles/tools`、部品固有のスタイルは部品の隣に置きます。`@` は `src` の別名です。クラス接頭辞は UI=`c-`、オブジェクト（Container / Grid）=`o-`、レイアウト（Header / Footer）=`l-`、ページ=`p-`、業務部品=`f-`。
 
-追加する内容や状態のセレクタは `:where()` で包み、クラス一つ相当の詳細度を基本にします。例えば `.c-example:where(:has(> img))`。任意の footer の囲み自体を省く場合は、CSS の非表示で代用せず、渡された children / slot から部品内で判断します。Astro では `Astro.slots.has()` が使えます。
+### カスケードレイヤー
+
+`styles/style.scss` は、CSS をカスケードレイヤー（`@layer`）に分けて読み込みます。表の下のレイヤーほど優先されます。レイヤーが違えば詳細度に関係なく下のレイヤーが勝つため、リセットや外部ライブラリの強いセレクタに部品が負けません。
+
+| レイヤー     | 読み込むディレクトリ                   | 内容                                   |
+| ------------ | -------------------------------------- | -------------------------------------- |
+| `generic`    | `styles/generic/`                      | リセット（destyle.css）                |
+| `base`       | `styles/base/`                         | 要素の基本スタイル・`:root`・keyframes |
+| `vendor`     | `styles/vendor/`                       | 外部ライブラリの CSS（Splide）         |
+| `objects`    | `components/object/`                   | Container / Grid                       |
+| `components` | `components/ui/`、`components/layout/` | 共通 UI・ヘッダー・フッター            |
+| `pages`      | `components/pages/`                    | ページ固有                             |
+| `trumps`     | `styles/trumps/`                       | ユーティリティ（`.u-*`）               |
+
+外部ライブラリの CSS は `styles/vendor/` に追加し、部品側で詳細度を上げて対抗しません。同じレイヤーの中は、これまでどおり詳細度と記述順で決まります。
+
+レイヤーに入っていない CSS は、すべてのレイヤーに勝ちます。`.astro` の `<style>`（`is:global` を含む）はレイヤーの外になるため、本番の部品とページでは使わず、スタイルは SCSS に書きます（`src/dev` のデモは例外）。`!important` はレイヤーの優先順位を逆転させるため使いません。
+
+### セレクタと変数
+
+同じレイヤーの中で、追加する内容や状態のセレクタは `:where()` で包み、クラス一つ相当の詳細度を基本にします。例えば `.c-example:where(:has(> img))`。任意の footer の囲み自体を省く場合は、CSS の非表示で代用せず、渡された children / slot から部品内で判断します。Astro では `Astro.slots.has()` が使えます。
 
 公開変数と内部変数を分け、部品ルートで次の形に解決します。公開名は `--{部品名}-{名前}`、内部名は `--_{部品名}-{名前}` とし、グローバルや親から継承される `--gap` などの汎用名との衝突を避けます。実際の CSS 宣言は内部変数を参照します。
 
@@ -185,9 +109,27 @@ SCSS の共通変数・mixin は `styles/settings` / `styles/tools`、部品固�
 }
 ```
 
-利用側は `<Icon name="arrow" style={{ "--icon-size": "2rem" }} />` と書きます。内部変数は直接上書きしません。公開変数は子孫にも継承されますが、部品名が付いているため別の部品には影響しません。同じ部品が入れ子になり、子で親の指定を使わない場合は `style={{ "--icon-size": "initial" }}` で既定値に戻します。内部変数は各部品ルートで解決し直します。
+利用側は `style` 属性を使わず、部品を包むページ側の要素のクラスに CSS で公開変数を指定し、部品へ継承させます。内部変数は直接上書きしません。
 
-寸法には CSS 単位を付け、`class` / `className` による部品への追加クラス指定は行いません。ページ側が所有する通常の HTML 要素には引き続きクラスを使えます。
+```tsx
+<span className="p-home__arrow">
+  <Icon name="arrow" />
+</span>
+```
+
+```scss
+.p-home__arrow {
+  --icon-size: 2rem;
+}
+```
+
+指定はその要素の中にある同じ部品すべてに継承されます。部品名が付いているため、別の部品には影響しません。1 つだけ変えるときは、その部品だけを包みます。入れ子になった内側の部品で親の指定を使わない場合は、内側を包む要素で `--icon-size: initial` を指定して既定値に戻します。内部変数は各部品ルートで解決し直します。
+
+寸法には CSS 単位を付け、`class` / `className` による部品への追加クラス指定は行いません。部品を包む要素など、ページ側が所有する通常の HTML 要素にはクラスを使えます。
+
+書体は `styles/base/_root.scss` の `--font-family-base` で決め、`body` から継承させます。部品では `font-family` を指定しません。
+
+ホバーの見た目は `:hover` を直接書かず、mixin の `hover`（`styles/tools/_m_interaction.scss`）で書きます。ホバーできる端末（`(hover: hover)`）に限って当て、キーボードで操作したときも同じ見た目になるよう `:focus-visible` にも当てます。
 
 ## スクリプト基盤
 
@@ -232,11 +174,13 @@ EventEmitter は型付きイベントを microtask で配信します。毎フ�
 | `npm run format` / `format:check`            | Prettier 整形 / 確認                               |
 | `npm run typecheck`                          | `astro check` で .astro / .ts / .tsx の型を確認    |
 
-Husky + lint-staged がステージ済みの対象を Lint・整形します。Astro 用 Prettier プラグインも設定済みです。
+コミット時は Husky + lint-staged が、ステージしたファイルを検査・整形します。JS / TS には ESLint と Prettier、TSX と Astro にはさらに markuplint、CSS / SCSS には Stylelint と Prettier、JSON・Markdown・YAML には Prettier を実行します。Astro 用 Prettier プラグインも設定済みです。
+
+`docs/guidelines` のルールのうち、コードの書き方で判定できるもの（`!important`、見た目用のクラスでの要素の取得、`role="menu"` など）は、ESLint・Stylelint・markuplint で検査します。独自に書いたメッセージには、対応するガイドラインのファイル名を括弧で付けています。ガイドラインの例外に当たる場合は、無効化のコメントに `-- 理由` を付けて残します（例: `// stylelint-disable-next-line selector-disallowed-list -- Splide が生成する svg にはクラスがない`）。Stylelint は理由のない無効化をエラーにします。Lint が検査するのはルールの一部なので、Lint を通ってもガイドラインを満たしたことにはなりません。表示や内容の判断が要るルールは、レビューで確かめます。
 
 CSS は単一バンドル。JS は `integrations/cleanup-scripts.mjs` がビルド後に `assets/scripts/script.js` へ集約します。画像は `integrations/image-optimize.mjs` が sharp で最適化し、APNG は検出して素通し、アニメ GIF / WebP はフレームを保持します。画像サイズが増える場合は元を維持します。HTML は圧縮せず、`integrations/format-html.mjs` が出力後に Prettier で整形します。
 
-対象ブラウザは Vite の既定値（`baseline-widely-available`）に従います。Vite 8.0.16 では Chrome / Edge 111、Firefox 114、Safari / iOS 16.4 以降です。この範囲は Vite のメジャー更新で上がることがあるため、更新時はリリースノートで確認してください。案件で対象ブラウザの要件がある場合は、`astro.config.mjs` の `vite.build.target` に指定します。
+対象ブラウザは Vite の既定値（`baseline-widely-available`）に従います。Vite 8.3.8 では Chrome / Edge 111、Firefox 114、Safari / iOS 16.4 以降です。この範囲は Vite のメジャー更新で上がることがあるため、更新時はリリースノートで確認してください。案件で対象ブラウザの要件がある場合は、`astro.config.mjs` の `vite.build.target` に指定します。
 
 ビルド時に変換されるのは構文だけで、未対応の API は補われません。新しい CSS / JS の機能を使うときは、対象の範囲で動くかを確認してください。
 

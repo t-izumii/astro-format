@@ -19,9 +19,14 @@
     "prepare": "husky"
   },
   "lint-staged": {
-    "*.{js,mjs,ts,tsx,astro}": [
+    "*.{js,mjs,ts}": [
       "eslint --fix",
       "prettier --write"
+    ],
+    "*.{tsx,astro}": [
+      "eslint --fix",
+      "prettier --write",
+      "markuplint"
     ],
     "*.{css,scss}": [
       "stylelint --fix --allow-empty-input",
@@ -32,21 +37,22 @@
     ]
   },
   "dependencies": {
-    "@astrojs/preact": "^6.0.0",
-    "@astrojs/sitemap": "^3.7.4",
+    "@astrojs/preact": "^6.1.6",
+    "@astrojs/sitemap": "^3.7.6",
     "@fluejs/noscroll": "^1.0.0",
     "@splidejs/splide": "^4.1.4",
-    "astro": "^7.0.0",
+    "astro": "^7.4.13",
     "gsap": "^3.14.2",
     "lil-gui": "^0.21.0",
     "preact": "^10.28.3",
     "throttle-debounce": "^5.0.2"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.10",
+    "@astrojs/check": "^0.9.12",
+    "@eslint/js": "^9.39.5",
     "@markuplint/astro-parser": "^4.6.23",
     "@markuplint/jsx-parser": "^4.7.23",
-    "@types/node": "^25.3.3",
+    "@types/node": "^26.6.7",
     "@types/stats.js": "^0.17.4",
     "@types/throttle-debounce": "^5.0.2",
     "@typescript-eslint/eslint-plugin": "^8.55.0",
@@ -54,6 +60,7 @@
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.0",
     "eslint-plugin-astro": "^1.5.0",
+    "globals": "^17.14.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
     "markuplint": "^4.14.1",

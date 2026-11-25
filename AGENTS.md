@@ -1,7 +1,7 @@
 # 制作ルール
 
 このリポジトリでは、[CLAUDE.md](CLAUDE.md) のコンポーネント設計・配置・実装上の注意を共通ルールとして適用する。技術スタックは Astro + Preact。
-使い方と移行表は [README.md](README.md) を参照する。
+部品の使い方は各部品ディレクトリの `README.md`、移行表はルートの [README.md](README.md) を参照する。
 
 - `src/pages/` はルーティング専用。ページ固有の実装と関連ファイルは `src/components/pages/{ページ名}/` に置く。
 - 変更前に対象と利用箇所を確認する。
